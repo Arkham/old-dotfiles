@@ -1,0 +1,1 @@
+/home/arkham/.vimrc
