@@ -1,5 +1,5 @@
 #!/bin/bash
-# Dot files backup & deploy script
+# Dotfiles backup & deploy script
 
 dotfiles=( ~/.bashrc \
             /etc/X11/xorg.conf \
