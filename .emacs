@@ -6,8 +6,8 @@
 (setq inhibit-splash-screen t)
 
 ;; Theme
-(require 'color-theme)
-(color-theme-subtle-hacker)
+;;(require 'color-theme)
+;;(color-theme-subtle-hacker)
 
 ;; Scrollbar on the right
 (setq scroll-bar-mode-explicit t)
