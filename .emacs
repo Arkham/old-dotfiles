@@ -1,24 +1,24 @@
-;;
-;; ~/.emacs
-;;
-
 ;; Remove splash screen
 (setq inhibit-splash-screen t)
 
 ;; Theme
-;;(require 'color-theme)
-;;(color-theme-subtle-hacker)
+(require 'color-theme)
+(color-theme-ld-dark)
 
 ;; Scrollbar on the right
 (setq scroll-bar-mode-explicit t)
 (set-scroll-bar-mode `right) 
 
-;; Emacs sessions
-(desktop-load-default)
-(desktop-read)
-
 ;; Global syntax highlighting
 (global-font-lock-mode 1)
+
+;; Configure TABs
+(setq-default indent-tabs-mode nil)
+(setq default-tab-width 4)
+(setq c-basic-offset 4)
+(c-set-offset 'substatement-open 0)
+(setq show-trailing-whitespace t)
+(setq indicate-empty-lines t)
 
 ;; Fix colored shell
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -36,31 +36,31 @@
 (setq-default TeX-master nil)
 
 ;; Split windows vertically
-(defun th-display-buffer (buffer force-other-window)
-  "If BUFFER is visible, select it.
-
-   If it's not visible and there's only one window, split the
-   current window and select BUFFER in the new window. If the
-   current window (before the split) is more than 120 columns wide, 
-   split horizontally, else split vertically.
-
-   If the current buffer contains more than one window, select
-   BUFFER in the least recently used window.
-
-   This function returns the window which holds BUFFER.
-   FORCE-OTHER-WINDOW is ignored."
-  (or (get-buffer-window buffer)
-      (if (one-window-p)
-          (let ((new-win (if (> (window-width) 120)
-                             (split-window-horizontally)
-                           (split-window-vertically))))
-            (set-window-buffer new-win buffer)
-            new-win)
-        (let ((new-win (get-lru-window)))
-          (set-window-buffer new-win buffer)
-          new-win))))
-
-(setq display-buffer-function 'th-display-buffer)
+;;(defun th-display-buffer (buffer force-other-window)
+;;  "If BUFFER is visible, select it.
+;;
+;;   If it's not visible and there's only one window, split the
+;;   current window and select BUFFER in the new window. If the
+;;   current window (before the split) is more than 120 columns wide, 
+;;   split horizontally, else split vertically.
+;;
+;;   If the current buffer contains more than one window, select
+;;   BUFFER in the least recently used window.
+;;
+;;   This function returns the window which holds BUFFER.
+;;   FORCE-OTHER-WINDOW is ignored."
+;;  (or (get-buffer-window buffer)
+;;      (if (one-window-p)
+;;          (let ((new-win (if (> (window-width) 120)
+;;                             (split-window-horizontally)
+;;                           (split-window-vertically))))
+;;            (set-window-buffer new-win buffer)
+;;            new-win)
+;;        (let ((new-win (get-lru-window)))
+;;          (set-window-buffer new-win buffer)
+;;          new-win))))
+;;
+;;(setq display-buffer-function 'th-display-buffer)
 
 ;; load the d-abbrev lib
 (require 'dabbrev)
@@ -130,3 +130,9 @@
 (autoload 'tex-mode-flyspell-verify "flyspell" "" t)
 (setq-default ispell-program-name "aspell")
 (setq-default ispell-extra-args '("--mode=tex"))
+
+;; Emacs sessions
+;;(desktop-load-default)
+;;(desktop-read)
+(desktop-save-mode 1)
+(require 'dirvars)
