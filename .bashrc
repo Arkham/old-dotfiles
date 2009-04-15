@@ -39,7 +39,7 @@ shopt -s checkwinsize   # Check window size (rows, columns) after each command.
 shopt -s dotglob        # Files beginning with . are returned in path-name expansions.
 
 ## Aliases
-alias rm="rm -I"
+alias rm="rm -i"
 alias mv="mv -i"
 alias cp="cp -i"
 #
