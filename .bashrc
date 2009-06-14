@@ -68,7 +68,6 @@ alias g-ondemand="sudo cpufreq-selector -g ondemand &"
 export HISTSIZE=1000
 export HISTFILESIZE=1000
 export HISTCONTROL="ignoreboth"
-export PATH="$PATH:/usr/local/bin"
 export EDITOR="/usr/bin/vim"
 export BROWSER="firefox -new-tab"
 export LESSOPEN="|lesspipe.sh %s"

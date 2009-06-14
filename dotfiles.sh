@@ -7,6 +7,8 @@ dotfiles=( ~/.bashrc \
            ~/.scripts/conkyMoc.sh \
            ~/.scripts/conkyForecast.template \
            ~/.Xdefaults \
+           ~/.vimrc \
+           ~/.emacs \
            /etc/X11/xorg.conf \
            /etc/rc.conf \
            /etc/syslog-ng.conf )
