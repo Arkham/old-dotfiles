@@ -1,0 +1,42 @@
+Xft.dpi:85
+Xft.hinting:true
+Xft.hintstyle:hintslight
+
+urxvt*internalBorder: 0
+urxvt.saveLines: 10000
+urxvt.scrollBar: false
+urxvt.secondaryScroll: true
+urxvt.font: xft:terminus:size=8:antialias=true
+urxvt.boldFont: xft:terminus:size=8:antialias=true
+
+urxvt*perl-ext-common:        default,matcher
+urxvt*urlLauncher:        /usr/bin/firefox
+urxvt*matcher.button:        1
+urxvt*matcher.pattern.1:   \\bwww\\.[\\w-]+\\.[\\w./?&@#-]*[\\w/-]
+
+urxvt.depth: 32
+urxvt*geometry: 68×22
+urxvt*foreground:  #f0f0f0
+urxvt*background:  Black
+!urxvt*background:  rgba:2121/2121/2121/eeee
+urxvt*cursorColor: #f0f0f0
+
+urxvt*color0:      #2e3436
+urxvt*color1:      #cc0000
+urxvt*color2:      #4e9a06
+urxvt*color3:      #c4a000
+urxvt*color4:      #3465a4
+urxvt*color5:      #5c3566
+urxvt*color6:      #16989A
+urxvt*color7:      #D3D7CF
+urxvt*color8:      #555753
+urxvt*color9:      #EF2929
+urxvt*color10:     #8AE234
+urxvt*color11:     #FCE94F
+urxvt*color12:     #729FCF
+urxvt*color13:     #75507b
+urxvt*color14:     #34E2E2
+urxvt*color15:     #ffffff
+
+XTerm*foreground: White
+XTerm*background: Black
