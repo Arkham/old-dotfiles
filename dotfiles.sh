@@ -2,9 +2,14 @@
 # Dotfiles backup & deploy script
 
 dotfiles=( ~/.bashrc \
-            /etc/X11/xorg.conf \
-            /etc/rc.conf \
-            /etc/syslog-ng.conf )
+           ~/.conkyrc \
+           ~/.conkyForecast.config
+           ~/.scripts/conkyMoc.sh \
+           ~/.scripts/conkyForecast.template \
+           ~/.Xdefaults \
+           /etc/X11/xorg.conf \
+           /etc/rc.conf \
+           /etc/syslog-ng.conf )
 
 ACTION=${1:-"backup"}
 
