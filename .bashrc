@@ -57,8 +57,6 @@ alias cd...="cd ../.."
 alias cd....="cd ../../.."
 alias mkdir="mkdir -p"
 #
-alias vi="vim"
-alias top="htop"
 alias recent="ls -lAt | head"
 alias update="yaourt -Syu --aur"
 #
@@ -86,14 +84,21 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
 ## Functions
+# pacsearch() - Colorize pacman output
+pacsearch () {
+       echo -e "$(pacman -Ss $@ | sed \
+       -e 's#core/.*#\\033[1;31m&\\033[0;37m#g' \
+       -e 's#extra/.*#\\033[0;32m&\\033[0;37m#g' \
+       -e 's#community/.*#\\033[1;35m&\\033[0;37m#g' \
+       -e 's#^.*/.* [0-9].*#\\033[0;36m&\\033[0;37m#g' )"
+}
 
-# mkdircd() -- Mkdir and cd into it {{{
+# mkdircd() -- Mkdir and cd into it
 function mkdircd () {
     mkdir -p "$@" && eval cd "\"\$$#\"";
 }
-# }}}
 
-# ex() -- Extract compressed files (tarballs, zip, etc) {{{
+# ex() -- Extract compressed files (tarballs, zip, etc)
 ex() {
     for file in "$@"; do
         if [ -f "$file" ]; then
@@ -121,7 +126,11 @@ ex() {
         fi
 done
 }
-# }}}
+
+## Remove dead.letter
+if [ -f ~/dead.letter ] ; then
+    rm -f ~/dead.letter
+fi
 
 ## Something to read :P
 fortune -c && echo
