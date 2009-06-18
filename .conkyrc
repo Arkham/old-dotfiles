@@ -30,7 +30,7 @@ alignment top_right
 gap_x 25
 gap_y 50
 
-no_buffers no
+no_buffers yes
 net_avg_samples 2
 
 override_utf8_locale yes
@@ -79,7 +79,7 @@ ${voffset 4}${color0}${font PizzaDude Bullets:size=14}T${font}${color}   Downloa
 ${voffset 4}${color0}${font PizzaDude Bullets:size=14}a${font}${color}   Local ip: ${alignr}${color2}${addr ppp0}${color}
 ${endif}${else}${voffset 4}${color0}${font PizzaDude Bullets:size=12}4${font}${color}   Network Unavailable
 ${endif}
-MOC - Listening to: ${hr 2}
+MOC - PLAYING ${hr 2}
 ${execpi 10  ~/.scripts/conkyMoc.sh}
 WEATHER ${hr 2}
 ${if_existing /proc/net/route wlan0}

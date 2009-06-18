@@ -1,3 +1,6 @@
+"" No backups
+set nobackup
+set nowritebackup
 "" Tab options
 set tabstop=4
 set shiftwidth=4
@@ -11,7 +14,8 @@ set hlsearch
 "" Increment hist
 set history=100
 "" Shell-like completion
-set wildmode=list:longest
+set wildmenu
+set wildmode=list:longest,full
 "" File-type highlighting and configuration.
 syntax on
 filetype on

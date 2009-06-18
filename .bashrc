@@ -132,4 +132,4 @@ if [ -f ~/dead.letter ] ; then
 fi
 
 ## Something to read :P
-fortune -c && echo
+#fortune -c && echo
