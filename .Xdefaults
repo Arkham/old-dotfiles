@@ -21,7 +21,7 @@ URxvt*matcher.button:        1
 URxvt*matcher.pattern.1:   \\bwww\\.[\\w-]+\\.[\\w./?&@#-]*[\\w/-]
 
 URxvt.depth: 32
-URxvt*geometry: 80×30
+URxvt*geometry: 80×30+0+30
 URxvt*foreground:  #f0f0f0
 URxvt*background:  Black
 !URxvt*background:  rgba:2121/2121/2121/eeee

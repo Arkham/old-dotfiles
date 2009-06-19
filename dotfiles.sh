@@ -9,6 +9,7 @@ dotfiles=( ~/.bashrc \
            ~/.Xdefaults \
            ~/.vimrc \
            ~/.emacs \
+           ~/.config/awesome/rc.lua \
            /etc/X11/xorg.conf \
            /etc/rc.conf \
            /etc/syslog-ng.conf )
