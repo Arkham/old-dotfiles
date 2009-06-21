@@ -1,0 +1,5 @@
+#!/bin/bash
+TEMP=`sensors | grep temp1 | awk '{ print $2}'`
+SPEED=`grep "cpu MHz" /proc/cpuinfo | awk '{ print $4}' | cut -f1 -d'.'`
+echo "$TEMP [${SPEED}MHz]"
+exit 0

@@ -18,7 +18,7 @@ maximum_width 185
 default_color white
 draw_shades no
 
-draw_borders yes
+draw_borders no
 border_margin 15
 border_width 1
 
@@ -51,7 +51,7 @@ ${color0}${font StyleBats:size=16}l${font}${color}   Processes: ${color2}${align
          ${top name 6}${font Liberation Sans:style=Bold:size=8}${color1} ${alignr 10}${top cpu 6}${alignr }${top mem 6}${color}${font}
 
 DATE ${hr 2}
-${alignc 25}${color2}${font Impact:size=30}${time %H:%M}${font}${color}
+${alignc 28}${color2}${font Impact:size=30}${time %H:%M}${font}${color}
 ${alignc}${time %A %d %Y}
 
 NETWORK ${hr 2}

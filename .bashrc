@@ -57,6 +57,7 @@ alias cd...="cd ../.."
 alias cd....="cd ../../.."
 alias mkdir="mkdir -p"
 #
+alias x="screen startx"
 alias recent="ls -lAt | head"
 alias update="yaourt -Syu --aur"
 #

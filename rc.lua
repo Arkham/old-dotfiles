@@ -231,8 +231,16 @@ for s = 1, screen.count() do
         name = 'cpuwidget'
     })
 
-    wicked.register(cpuwidget, wicked.widgets.cpu,
-        ' <span color="#4C9EFF">CPU:</span> ')
+    function read_cpuinfo()
+        local fd = io.popen('cpuinfo')
+        local value = fd:read()
+        fd:close()
+
+        return {value}
+    end
+
+    wicked.register(cpuwidget, read_cpuinfo,
+        ' <span color="#4C9EFF">CPU:</span> $1 ', 10)
 
     -- cpugraph
     cpugraphwidget = widget({
@@ -263,7 +271,7 @@ for s = 1, screen.count() do
     })
     
     wicked.register(memwidget, wicked.widgets.mem,
-        ' <span color="#4C9EFF"> RAM:</span> ')
+        ' <span color="#4C9EFF"> RAM:</span> $2MB/$3MB ', 10)
     
     -- memgraph
     memgraphwidget = widget({
@@ -304,7 +312,7 @@ for s = 1, screen.count() do
         align = 'right'
     })
 
-    wicked.register(mocpwidget, wicked.widgets.mocp, ' <span color="#4C9EFF">MOC:</span> $1', 1, nil, 80)
+    wicked.register(mocpwidget, wicked.widgets.mocp, ' <span color="#4C9EFF">MOC:</span> $1', 5, nil, 65)
 
     -- battery
     -- function to extract charge percentage
@@ -333,7 +341,7 @@ for s = 1, screen.count() do
     
     wicked.register(batterywidget, read_battery_life(0),
         ' <span color="#4C9EFF">BAT:</span> $1% ',
-        nil, nil, 2)
+        10, nil, 2)
 
    
     -- display one vertical progressbar per battery
@@ -355,7 +363,7 @@ for s = 1, screen.count() do
                                             ticks_count = 0,
                                             ticks_gap = 0 })
   
-    wicked.register(batterygraphwidget, read_battery_life(0), '$1', 1, 'battery')
+    wicked.register(batterygraphwidget, read_battery_life(0), '$1', 10, 'battery')
 
     -- Create the wibox
     mywibox[s] = wibox({ position = "top", fg = beautiful.fg_normal, bg = beautiful.bg_normal })
