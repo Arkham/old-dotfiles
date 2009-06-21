@@ -12,7 +12,9 @@ dotfiles=( ~/.bashrc \
            ~/.config/awesome/rc.lua \
            /etc/X11/xorg.conf \
            /etc/rc.conf \
-           /etc/syslog-ng.conf )
+           /etc/syslog-ng.conf \
+           /usr/local/bin/moc-lastfm \
+           /usr/local/bin/cpuinfo )
 
 ACTION=${1:-"backup"}
 

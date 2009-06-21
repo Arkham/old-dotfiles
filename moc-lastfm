@@ -1,0 +1,38 @@
+#!/bin/bash
+# send songs to last.fm 
+
+# is moc-lastfm running?
+pgrep -fl moc-lastfm &> /dev/null
+if [ $? -gt 0 ]; then
+    exit 1
+fi
+
+CUR_TITLE=""
+
+while :; do
+
+    # get info
+    INFO=`mocp --info`
+
+    if [ "$INFO" == "State: STOP" ]; then
+        # the player is stopped, try again in a minute
+        sleep 60 && continue
+    else
+        # extract all required fields
+        ARTIST=`echo "$INFO" | grep Artist | sed 's/Artist: //'` 
+        TITLE=`echo "$INFO" | grep SongTitle | sed 's/SongTitle: //'`
+        LENGTH=`echo "$INFO" | grep TotalTime | sed 's/TotalTime: //'`
+        ALBUM=`echo "$INFO" | grep Album | sed 's/Album: //'`
+
+        # is the song changed?
+        if [ "$TITLE" != "$CUR_TITLE" ]; then
+            /usr/lib/lastfmsubmitd/lastfmsubmit --artist "$ARTIST" --title "$TITLE" --length "$LENGTH" --album "$ALBUM"
+            echo "/usr/lib/lastfmsubmitd/lastfmsubmit --artist \"$ARTIST\" --title \"$TITLE\" --length \"$LENGTH\" --album \"$ALBUM\""
+            CUR_TITLE=$TITLE
+        fi
+
+        sleep 30
+    fi
+done
+
+exit 0
