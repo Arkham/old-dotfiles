@@ -18,7 +18,7 @@ theme_path = "/home/arkham/.config/awesome/themes/default/theme.lua"
 beautiful.init(theme_path)
 
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvt"
+terminal = "urxvtcd"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -128,9 +128,9 @@ for s = 1, screen.count() do
     tags[s][6].screen = s
     awful.layout.set(layouts[3], tags[s][6])
 
-    tags[s][7] = tag("[7] other")
+    tags[s][7] = tag("[7] desk")
     tags[s][7].screen = s
-    awful.layout.set(layouts[10], tags[s][7])
+    awful.layout.set(layouts[7], tags[s][7])
     
     -- I'm sure you want to see at least one tag.
     tags[s][1].selected = true

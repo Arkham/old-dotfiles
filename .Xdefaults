@@ -12,8 +12,8 @@ URxvt*internalBorder: 0
 URxvt.saveLines: 10000
 URxvt.scrollBar: false
 URxvt.secondaryScroll: true
-URxvt.font: xft:terminus:size=8:antialias=true
-URxvt.boldFont: xft:terminus:size=8:antialias=true
+URxvt.font: xft:terminus:size=10:antialias=true
+URxvt.boldFont: xft:terminus:size=10:antialias=true
 
 URxvt*perl-ext-common:        default,matcher
 URxvt*urlLauncher:        /usr/bin/firefox

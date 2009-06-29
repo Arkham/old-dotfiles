@@ -33,10 +33,12 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 ## Shopt options
-shopt -s cdspell        # This will correct minor spelling errors in a cd command.
-shopt -s histappend     # Append to history rather than overwrite.
+shopt -s cdspell        # This will correct minor spelling errors in cd command.
 shopt -s checkwinsize   # Check window size (rows, columns) after each command.
-shopt -s dotglob        # Files beginning with . are returned in path-name expansions.
+shopt -s cmdhist        # Save multi-line commands in history as single line.
+shopt -s dotglob        # Include dotfile in path-name expansions.
+shopt -s histappend     # Append to history rather than overwrite.
+shopt -s nocaseglob     # Pathname expansion will be treated as case-insensitive.
 
 ## Aliases
 alias rm="rm -i"
@@ -127,10 +129,11 @@ ex() {
 done
 }
 
-## Remove dead.letter
-if [ -f ~/dead.letter ] ; then
-    rm -f ~/dead.letter
-fi
+# scpas()/scptw() -- upload files to remote ssh servers
+function scpas() { 
+    scp "$@" ark@asengard.net:web/upload/ ; 
+}
+function scptw() { 
+    scp "$@" arkham@twilightlair.net: ; 
+}
 
-## Something to read :P
-#fortune -c && echo
