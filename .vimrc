@@ -1,3 +1,7 @@
+"" Personal
+set ruler
+set showcmd
+set showmode
 "" No backups
 set nobackup
 set nowritebackup
