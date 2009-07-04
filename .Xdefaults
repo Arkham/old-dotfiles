@@ -1,19 +1,25 @@
 !! XFT
 Xft.dpi:85
-Xft.hinting:true
-Xft.hintstyle:hintslight
+Xft*antialias:true
+Xft*hinting:true
+Xft*hintstyle:hintfull
+Xft*rgba:rgb
 
 !! XTERM
 XTerm*foreground: White
 XTerm*background: Black
+
+!! EMACS
+Emacs.FontBackend: xft
+Emacs.font: Bitstream Vera Sans Mono-10
 
 !! URXVT
 URxvt*internalBorder: 0
 URxvt.saveLines: 10000
 URxvt.scrollBar: false
 URxvt.secondaryScroll: true
-URxvt.font: xft:terminus:size=10:antialias=true
-URxvt.boldFont: xft:terminus:size=10:antialias=true
+URxvt.font: xft:Terminus:size=10:antialias=true
+URxvt.boldFont: xft:Terminus:size=10:antialias=true
 
 URxvt*perl-ext-common:        default,matcher
 URxvt*urlLauncher:        /usr/bin/firefox
@@ -24,7 +30,6 @@ URxvt.depth: 32
 URxvt*geometry: 80×30+0+30
 URxvt*foreground:  #f0f0f0
 URxvt*background:  Black
-!URxvt*background:  rgba:2121/2121/2121/eeee
 URxvt*cursorColor: #f0f0f0
 
 URxvt*color0:      #2e3436
