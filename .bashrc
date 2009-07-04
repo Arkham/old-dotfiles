@@ -45,6 +45,7 @@ alias rm="rm -i"
 alias mv="mv -i"
 alias cp="cp -i"
 #
+eval `dircolors`
 alias la="ls -lA"
 alias ls="ls -hF --color=auto"
 alias grep="grep --color=auto"
@@ -137,3 +138,8 @@ function scptw() {
     scp "$@" arkham@twilightlair.net: ; 
 }
 
+# Aur build helper
+function aurbuild() {
+    wget "http://aur.archlinux.org/packages/$1/$1.tar.gz" && \
+        tar xvzf "$1.tar.gz" && rm -i "$1.tar.gz" && cd $1 ;
+}
