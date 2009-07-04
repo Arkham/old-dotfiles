@@ -1,50 +1,77 @@
-!! XFT
-Xft.dpi:85
-Xft*antialias:true
-Xft*hinting:true
-Xft*hintstyle:hintfull
-Xft*rgba:rgb
+!------------------!
+!       XFT        !
+!------------------!
+Xft.dpi: 85
+Xft*rgba: rgb
+Xft*antialias: true
+Xft*hinting: true
+Xft*hintstyle: true
 
-!! XTERM
-XTerm*foreground: White
-XTerm*background: Black
-
-!! EMACS
+!------------------!
+!      EMACS       !
+!------------------!
 Emacs.FontBackend: xft
 Emacs.font: Bitstream Vera Sans Mono-10
 
-!! URXVT
-URxvt*internalBorder: 0
-URxvt.saveLines: 10000
-URxvt.scrollBar: false
-URxvt.secondaryScroll: true
+!------------------!
+!      URXVT       !
+!------------------!
+
+!--[term name]--!
+URxvt*termName: rxvt-unicode
+ 
+!--[font]--!
 URxvt.font: xft:Terminus:size=10:antialias=true
-URxvt.boldFont: xft:Terminus:size=10:antialias=true
+URxvt.boldFont: xft:Terminus:style=Bold:size=10:antialias=true
 
-URxvt*perl-ext-common:        default,matcher
-URxvt*urlLauncher:        /usr/bin/firefox
-URxvt*matcher.button:        1
-URxvt*matcher.pattern.1:   \\bwww\\.[\\w-]+\\.[\\w./?&@#-]*[\\w/-]
+!--[scrolling]--!
+URxvt*scrollBar: false
+URxvt*saveLines: 10000
+URxvt*internalBorder: 0
+ 
+!--[extension]--!
+URxvt*perl-ext-common: default,selection,matcher
+URxvt*urlLauncher: /usr/bin/firefox
+URxvt*matcher.button: 1
 
-URxvt.depth: 32
-URxvt*geometry: 80×30+0+30
-URxvt*foreground:  #f0f0f0
-URxvt*background:  Black
-URxvt*cursorColor: #f0f0f0
+!--[trans and fg/bg]--!
+URxvt*fadeColor: black
+URxvt*transparent: false
+URxvt*shading: 80
+URxvt*depth: 24
+URxvt*borderless: 1
 
-URxvt*color0:      #2e3436
-URxvt*color1:      #cc0000
-URxvt*color2:      #4e9a06
-URxvt*color3:      #c4a000
-URxvt*color4:      #3465a4
-URxvt*color5:      #5c3566
-URxvt*color6:      #16989A
-URxvt*color7:      #D3D7CF
-URxvt*color8:      #555753
-URxvt*color9:      #EF2929
-URxvt*color10:     #8AE234
-URxvt*color11:     #FCE94F
-URxvt*color12:     #729FCF
-URxvt*color13:     #75507b
-URxvt*color14:     #34E2E2
-URxvt*color15:     #ffffff
+!--[cursor]--!
+URxvt*cursorBlink: false
+URxvt*cursorColor: #F0F0F0
+
+!------------------!
+!      COLORS      !
+!------------------!
+! tangoesque scheme
+*background:  #000000
+*foreground:  #F0F0F0
+! Black
+*color0:  #2e3436
+*color8:  #555753
+! Red
+*color1:  #cc0000
+*color9:  #EF2929
+! Green
+*color2:  #4e9a06
+*color10: #8AE234
+! Yellow
+*color3:  #c4a000
+*color11: #FCE94F
+! Blue
+*color4:  #3465a4
+*color12: #729FCF
+! Magenta
+*color5:  #5c3566
+*color13: #75507b
+! Cyan
+*color6:  #16989A
+*color14: #34E2E2
+! White
+*color7:  #D3D7CF
+*color15: #ffffff
