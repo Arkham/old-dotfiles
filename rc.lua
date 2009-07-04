@@ -56,6 +56,7 @@ floatapps =
     ["gimp"] = true,
     ["pidgin"] = true,
     ["empathy"] = true,
+    ["Browser"] = true,
     -- by instance
     -- ["mocp"] = true
 }
