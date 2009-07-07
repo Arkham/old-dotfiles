@@ -1,28 +1,28 @@
 !------------------!
 !       XFT        !
 !------------------!
-Xft.dpi: 85
+Xft.dpi: 96
 Xft*rgba: rgb
 Xft*antialias: true
 Xft*hinting: true
-Xft*hintstyle: true
+Xft*hintstyle: hintfull
 
 !------------------!
 !      EMACS       !
 !------------------!
 Emacs.FontBackend: xft
-Emacs.font: Bitstream Vera Sans Mono-10
+Emacs.font: Bitstream Vera Sans Mono-9
 
 !------------------!
 !      URXVT       !
 !------------------!
 
 !--[term name]--!
-URxvt*termName: rxvt-unicode
+URxvt*termName: rxvt
  
 !--[font]--!
-URxvt.font: xft:Terminus:size=10:antialias=true
-URxvt.boldFont: xft:Terminus:style=Bold:size=10:antialias=true
+URxvt.font: xft:Terminus-8:
+URxvt.boldFont: xft:Terminus-8:style=Bold
 
 !--[scrolling]--!
 URxvt*scrollBar: false
@@ -49,7 +49,7 @@ URxvt*cursorColor: #F0F0F0
 !      COLORS      !
 !------------------!
 ! tangoesque scheme
-*background:  #000000
+*background:  #101010
 *foreground:  #F0F0F0
 ! Black
 *color0:  #2e3436

@@ -8,7 +8,7 @@
 ;; Theme
 (require 'color-theme)
 (color-theme-initialize)
-(color-theme-ld-dark)
+(color-theme-billw)
  
 ;; Scrollbar on the right
 (setq scroll-bar-mode-explicit t)

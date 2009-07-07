@@ -1,5 +1,5 @@
 use_xft yes
-xftfont DejaVu Sans:size=8
+xftfont DejaVu Sans:size=7
 
 update_interval 1
 total_run_times 0
@@ -51,7 +51,7 @@ ${color0}${font StyleBats:size=16}l${font}${color}   RAM  ${hr 1}
          ${top_mem name 4}${font DejaVu Sans:style=Bold:size=8}${color1} ${alignr }${top_mem mem 4}${color}${font}%
 
 DATE ${hr 2}
-${alignc 35}${color2}${font Impact:size=35}${time %H:%M}${font}${color}
+${alignc 35}${color2}${font Impact:size=32}${time %H:%M}${font}${color}
 ${alignc}${time %A %d %B %Y}
 
 NETWORK ${hr 2}

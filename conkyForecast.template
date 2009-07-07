@@ -1,8 +1,8 @@
-${voffset -5}${alignr 56}${color2}${font ConkyWeather:style=Bold:size=40}[--location=SWXX0031 --datatype=WF]${font}${color}
-${voffset -45}${color2}${font Weather:size=40}y${font}${color2}  ${voffset -35}${color2}${font Impact:size=30}[--location=SWXX0031 --datatype=HT]${font}${color}
+${voffset -15}${alignr 56}${color2}${font ConkyWeather:style=Bold:size=40}[--location=SWXX0031 --datatype=WF]${font}${color}
+${voffset -45}${color2}${font Weather:size=40}y${font}${color2}  ${voffset -40}${color2}${font Impact:size=27}[--location=SWXX0031 --datatype=HT]${font}${color}
 
 
-${voffset -15}${alignr 90}[--location=SWXX0031 --datatype=DW --startday=1 --shortweekday] ${alignr 70}[--location=SWXX0031 --datatype=DW --startday=2 --shortweekday] ${alignr 50}[--location=SWXX0031 --datatype=DW --startday=3 --shortweekday] ${alignr 27}[--location=SWXX0031 --datatype=DW --startday=4 --shortweekday]
-${voffset 0}${alignr 145}${color2}${font ConkyWeather:size=28}[--location=SWXX0031 --datatype=WF --startday=1 --endday=4 --spaces=1]${font}${color}
+${voffset -10}${alignr 90}[--location=SWXX0031 --datatype=DW --startday=1 --shortweekday] ${alignr 70}[--location=SWXX0031 --datatype=DW --startday=2 --shortweekday] ${alignr 50}[--location=SWXX0031 --datatype=DW --startday=3 --shortweekday] ${alignr 27}[--location=SWXX0031 --datatype=DW --startday=4 --shortweekday]
+${voffset 5}${alignr 155}${color2}${font ConkyWeather:size=25}[--location=SWXX0031 --datatype=WF --startday=1 --endday=4 --spaces=1]${font}${color}
 ${voffset 3}${alignr 21}[--location=SWXX0031 --datatype=HT --startday=1 --hideunits --centeredwidth=3]/[--location=SWXX0031 --datatype=LT --startday=1 --hideunits --centeredwidth=3] ${alignr 19}[--location=SWXX0031 --datatype=HT --startday=2 --hideunits --centeredwidth=3]/[--location=SWXX0031 --datatype=LT --startday=2 --hideunits --centeredwidth=3] ${alignr 17}[--location=SWXX0031 --datatype=HT --startday=3 --hideunits --centeredwidth=3]/[--location=SWXX0031 --datatype=LT --startday=3 --hideunits --centeredwidth=3] ${alignr 15}[--location=SWXX0031 --datatype=HT --startday=4 --hideunits --centeredwidth=3]/[--location=SWXX0031 --datatype=LT --startday=4 --hideunits --centeredwidth=3]
 ${voffset -80}
