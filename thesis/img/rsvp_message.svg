@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="35cm" height="8cm" viewBox="-17 311 688 156" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="-16" y="312" width="686" height="153"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-16" y="312" width="686" height="153"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="4" y="338" width="88" height="109"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="4" y="338" width="88" height="109"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="3.5" y="328.5">
+    <tspan x="3.5" y="328.5">IP Datagram</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="19" y="396.5">
+    <tspan x="19" y="396.5">IP Header</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="111.6" y="337.2" width="539.4" height="108.8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="111.6" y="337.2" width="539.4" height="108.8"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="120.8" y="354.6">
+    <tspan x="120.8" y="354.6">RSVP Message</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="126" y="370" width="88" height="62"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="126" y="370" width="88" height="62"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="140" y="389">
+    <tspan x="140" y="389">Common</tspan>
+    <tspan x="140" y="405">Message</tspan>
+    <tspan x="140" y="421"> Header</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="228.6" y="369.2" width="88" height="62"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="228.6" y="369.2" width="88" height="62"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="252.6" y="405.2">
+    <tspan x="252.6" y="405.2">Object</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="330.6" y="369.2" width="173.4" height="61.8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="330.6" y="369.2" width="173.4" height="61.8"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="521.2" y="368.4" width="88" height="62"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="521.2" y="368.4" width="88" height="62"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="542.6" y="403.1">
+    <tspan x="542.6" y="403.1">Object</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="339.2" y="388.3">
+    <tspan x="339.2" y="388.3">Object</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="346" y="401" width="59" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="346" y="401" width="59" height="20"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="350" y="414.5">
+    <tspan x="350" y="414.5">Sub-obj</tspan>
+    <tspan x="350" y="430.5"></tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="414.6" y="401.2" width="59" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="414.6" y="401.2" width="59" height="20"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="419.6" y="415.1">
+    <tspan x="419.6" y="415.1">Sub-obj</tspan>
+    <tspan x="419.6" y="431.1"></tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="484.3" y="412.1">
+    <tspan x="484.3" y="412.1">...</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="621.3" y="396.6">
+    <tspan x="621.3" y="396.6">...</tspan>
+  </text>
+</svg>
