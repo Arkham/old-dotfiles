@@ -866,7 +866,163 @@ isolate them. The main features of LMP, described in RFC4204, are:
   example using SONET/SDH technology.
 \end{itemize}
 
-\chapter{Constrained path-computation}
+\chapter{GMPLS Path Computation}
+
+This chapter will focus on the concepts on which is based path
+computation in GMPLS, starting from the basic definitions; later, it
+will proceed to describe the specific architecture and algorithms
+involved. Then, it will treat the various constraints that need to
+be analyzed.
+
+\section{Basic definitions}
+
+A \textit{transport service} is a system designed to provide a range
+of services to the end user by delivering traffic from the information
+source to the information destination while ensuring a certain
+quality; this quality of service (QOS) is arranged on the base of a
+deal between the service provider and the end user. A \textit{path} is
+a sequence of network resources of the service provider, which are
+able to provide the aforementioned service if provisioned correctly.
+
+\textit{Path computation} can be described as the whole process of
+choosing a certain path or a group of paths among the set of possible
+alternatives; this process can be done either at the time when the
+service is requested (\textit{on-line path computation}) or before any
+kind of service is requested (\textit{off-line path
+  computation}). While hybrid models support both types of behaviour,
+the GMPLS approach tends to prefer on-line computation. Another
+important architectural difference is if all paths are computed on the
+same node (\textit{centralized path computation}) or if there is a
+group of nodes which cooperate to find viable paths
+(\textit{distributed path computation}). For the sake of simplicity,
+this thesis will only treat the case of a single centralized node.
+
+\section{Path Computation Element}
+
+The Path Computation Element (PCE) is defined by the IETF in
+RFC4655 as:
+\begin{quote}
+  \textit{``An entity (component, application, or network node) that is
+  capable of computing a network path or route based on a network
+  graph and applying computational constraints.''}
+\end{quote}
+We can see that the definition of PCE is left intentionally abstract:
+the PCE might be a software component, program or a network node; it
+could even be a complete framework, aware of the network resources and
+the multiple constraints involved, which has been specifically
+designed for computing complex paths inside the network.
+
+The path computation mechanism is started when a \textit{Path
+  Computation Client} (PCC) sends a request to the PCE asking for the
+computation of a specific path (similarly to the PCE, also the PCC is
+more like an abstract entity rather than a specific device: it can be
+a GMPLS router, another PCE, etc.). The PCE calculates the path and
+sends it back to the PCC, that will then proceed to signal the new LSP
+with a relatively high confidence; although, due to the nature of the
+PCC/PCE interaction there aren't any type of guarantees that the LSP
+will be setup correctly. Figure \ref{fig:pce_pcc} shows a model which
+represents this interaction.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{img/pce_pcc}
+  \caption[PCE/PCC Model]{The PCE/PCC interaction model; in this case,
+  the PCC is represented by a LSR.}
+  \label{fig:pce_pcc}
+\end{figure}
+
+\subsection{PCE Architecture}
+As we have explained before, in the PCE architecture the
+centralized/distributed distinction is very important: multiple PCEs
+would certainly distribute the load of the requests, increase the
+scalability of the system and solve the annoying
+single-point-of-failure problem of the centralized model. On the other
+hand, it is unclear if the performance of the distributed model would
+actually improve, since the risk of calculating and assigning the same
+path increases (\textit{path contention}): this is one of the reasons
+that make the PCE reply not certainly assured.
+
+In addition to this difference, the PCE architecture distinguishes
+also between the \textit{composite} and the \textit{external} models:
+in the composite model, shown in Figure \ref{fig:pce_composite}, the
+PCE functionality is added to a GMPLS router. \\
+The signaling engine of this LSR receives the service request and,
+acting as PCC, send to the internal PCE a PCC request: the PCE uses
+this request to exchange information with the \textit{Traffic
+  Engineering Database} (TED), calculates the required path and sends
+back a PCE reply to the PCC. When this reply is received, the
+signaling engine can create a new signaling request and initiate the
+LSP establishment.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/pce_composite}
+  \caption[Composite PCE model]{A composite PCE node.}
+  \label{fig:pce_composite}
+\end{figure}
+
+In the external model, instead of adding the PCE functionality to an
+already existing device, a new and independent PCE entity is
+introduced; although, the mechanism is very similar to the composite
+model: when the head-end node receives the service request, it sends a
+path computation request to the PCE, which uses the information in the
+TED to compute the path and sends back to the head-end node a
+reply. This model is shown in Figure \ref{fig:pce_external}.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.65\textwidth]{img/pce_external}
+  \caption[External PCE model]{An external PCE node.}
+  \label{fig:pce_external}
+\end{figure}
+
+If there aren't important logical changes, then why the external PCE
+model has been proposed? There are a number of reasons that could
+explain why this model was created:
+\begin{itemize}
+\item Path computation is generally a computationally intensive
+  operation and requires a significant amount of resources: even if
+  the software is appropriately designed, the stress on the hardware
+  can't be underestimated since the PCE component must compute all the
+  primary, backup and service paths.
+\item Since it requires considerable resources to run, it is more likely
+  that the PCE won't be embedded in a regular router, but would be
+  deployed in a separate device.
+\item Since PCE is designed to provide on-line path computation, the
+  response should be quick, in the order of few seconds.
+\item The computational power required grows with the size
+  and the complexity of the network, i.e. multiple constraints like
+  bandwidth, latency, cost or QOS to keep in consideration.
+\item The main function of a router is the routing process: thus, its
+  visibility of the network is limited, its topology knowledge is
+  incomplete and it is unfit to perform the complex calculations
+  required by a modern multi-layer network.
+\item In a very large network, the size of the TED increases very
+  quickly: moving the database to a dedicated PCE server would
+  decrease the response time of the path requests.
+\item If a failure should occur in the network, the PCE could provide
+  emergency routing alternatives because of its knowledge of the
+  network and its fast response time.
+\end{itemize}
+
+As we have seen, the PCE uses the information available in the TED to
+compute the requested paths; if the PCE only uses that information,
+it's called \textit{stateless}. Instead, a PCE is called
+\textit{stateful} if it uses also the information of the
+already-computed paths and reserved resources to gain a broader
+knowledge of the network status; although this approach allows to
+optimize path computation, it also requires a greater effort in terms
+of resources and mechanisms to maintain a coherent view of the network
+status.
+
+When a client asks the computation of a certain path, the PCE extracts
+from the TED the structure and the information regarding the network
+in a form of \textit{graph} and applies a certain \textit{path computation
+algorithm} on that representation. This algorithm is therefore the
+core of the PCE logic and from its nature depends the speed, the
+reliability and the success of the whole PCE.
+
+\section{Constraint-based algorithms}
 
 \end{document}
 

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="22cm" height="18cm" viewBox="128 97 433 344" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="198" y="98" width="162" height="339"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="198" y="98" width="162" height="339"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="461.6" y="100.2" width="98.3854" height="339"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="461.6" y="100.2" width="98.3854" height="339"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="219" y="118" width="119" height="58"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="219" y="118" width="119" height="58"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="219.6" y="236.2" width="119" height="58"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="219.6" y="236.2" width="119" height="58"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="220.2" y="349.4" width="119" height="58"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="220.2" y="349.4" width="119" height="58"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="264.5" y="149">
+    <tspan x="264.5" y="149">TED</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="266.1" y="269.2">
+    <tspan x="266.1" y="269.2">PCE</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="238.7" y="373.4">
+    <tspan x="238.7" y="373.4">   Signaling</tspan>
+    <tspan x="238.7" y="389.4">Engine (PCC)</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="342.472" y1="147.031" x2="476.528" y2="147.969"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="350.271,142.086 340.236,147.016 350.201,152.085 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="468.729,152.914 478.764,147.984 468.799,142.915 "/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="385" y="124">
+    <tspan x="385" y="124">Routing </tspan>
+    <tspan x="385" y="140">Protocol</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="381" y="163">
+    <tspan x="381" y="163">(OSPF-TE)</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="343.672" y1="378.391" x2="481.135" y2="378.109"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="351.426,373.375 341.436,378.395 351.446,383.375 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="473.381,383.125 483.371,378.105 473.361,373.125 "/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="382.607" y="355.1">
+    <tspan x="382.607" y="355.1">Signaling </tspan>
+    <tspan x="382.607" y="371.1"> Protocol</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="379.607" y="394.1">
+    <tspan x="379.607" y="394.1">(RSVP-TE)</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="182.985" y1="379.5" x2="215.73" y2="378.532"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="208.117,383.759 217.965,378.466 207.822,373.764 "/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="128.985" y="375.5">
+    <tspan x="128.985" y="375.5">Service</tspan>
+    <tspan x="128.985" y="391.5">Request</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="278.5" y1="176" x2="279.055" y2="231.728"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="273.978,224.014 279.078,233.964 283.978,223.915 "/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="488.6" y="260.7">
+    <tspan x="488.6" y="260.7">Adjacent </tspan>
+    <tspan x="488.6" y="276.7">  Node</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="279.149" y1="298.672" x2="279.651" y2="344.928"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="284.233,306.381 279.124,296.436 274.233,306.49 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="274.567,337.219 279.676,347.164 284.567,337.11 "/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="294" y="208.5">
+    <tspan x="294" y="208.5">Input</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="287.985" y="318.5">
+    <tspan x="287.985" y="318.5">Request /</tspan>
+    <tspan x="287.985" y="334.5">  Reply</tspan>
+  </text>
+</svg>
