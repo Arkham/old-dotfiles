@@ -3,12 +3,14 @@
 \usepackage{lmodern}
 \usepackage[utf8x]{inputenc}
 \usepackage[english]{babel}
+\usepackage{amsmath}
 \usepackage{bytefield}
 \usepackage[small,bf]{caption}
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true}
+\usepackage{multirow}
 \usepackage{ucs}
 \usepackage{url}
 \author{Author: Ju Liu \\ Email: jul@kth.se \\\\
@@ -56,7 +58,7 @@ network was still built on Time Division Multiplexing devices that
 switched data streams instead of individual packets. In the meanwhile
 were introduced new devices that could switch the entire content of a
 fiber, or extract single wavelengths from a fiber and switch them
-separately. 
+separately.
 
 All these different technologies were basically performing MPLS-like
 switching operations on different types of switching unit. And so
@@ -79,12 +81,12 @@ automatic configuration of a path that spans through different types
 of technology, since every each of them already has its own algorithm,
 specifically designed to find an optimal path. For example, one of the
 most used protocols in IP-based networks is called Open Shortest Path
-First (OSPF), which selects the shortest path in terms of hops; optical
-networks use an extension of OSPF called Constrained Shortest Path
-First (CSPF), which chooses the shortest path that fulfills a precise
-set of requirements. At the current state of the art, there isn't an
-algorithm that could manage a network composed by different types of
-link layer technology (so called multi-layer networks).
+First (OSPF), which selects the shortest path in terms of hops;
+optical networks use an extension of OSPF called Constrained Shortest
+Path First (CSPF), which chooses the shortest path that fulfills a
+precise set of requirements. At the current state of the art, there
+isn't an algorithm that could manage a network composed by different
+types of link layer technology (so called multi-layer networks).
 
 The result of this lack is that these networks cannot be efficiently
 traffic engineered: a possible way to proceed would be to setup
@@ -108,7 +110,8 @@ place.
 
 These objectives are going to be addressed throughout this thesis:
 \begin{itemize}
-\item Investigate the specific constraints regarding multi-layer networks.
+\item Investigate the specific constraints regarding multi-layer
+  networks.
 \item Find a viable solution to the problem by integrating and
   modifying existing algorithms.
 \item Understand the current code-base, derived from the
@@ -152,11 +155,11 @@ terms of \textit{label swapping} and \textit{label switching}: in each
 step, the label is swapped and the data is forwarded depending on the
 label value.
 
-\newpage 
+\newpage
 
 In a MPLS network, the label is actually part of a header that is
 inserted between the transport protocol header and the IP header,
-called \textit{shim header} (Figure \ref{fig:mpls_label}).
+called \textit{shim header} (Figure~\ref{fig:mpls_label}).
 
 \begin{figure}[!hbp]
   \begin{center}
@@ -166,8 +169,8 @@ called \textit{shim header} (Figure \ref{fig:mpls_label}).
       \bitbox{8}{TTL}
     \end{bytefield}
     \caption[MPLS label]{the MPLS shim header: 20-bit Label, 3-bit
-      experimental field, 1-bit bottom of stack field and 8-bit Time To
-      Live field.}
+      experimental field, 1-bit bottom of stack field and 8-bit Time
+      To Live field.}
     \label{fig:mpls_label}
   \end{center}
 \end{figure}
@@ -195,7 +198,7 @@ until it reaches the \textit{egress} router, which will proceed to
 remove (\textit{pop}) the label, analyze again the IP header and send
 the packet outside the MPLS network; the ingress and the egress
 routers are also called Label Edge Routers (LER). A simple example of
-a MPLS network can be seen in Figure \ref{fig:mpls_net}.
+a MPLS network can be seen in Figure~\ref{fig:mpls_net}.
 
 \begin{figure}[!hbp]
   \centering
@@ -224,7 +227,7 @@ be setup and maintained by the routers.
 The evolution of the IP technology has allowed traditional IP routing
 to catch up and be able to manage efficiently the current speed of the
 networks, therefore weakening the initial impulse for the creation of
-MPLS. Although, MPLS has proved to be particularly suited for the
+MPLS\@. Although, MPLS has proved to be particularly suited for the
 management of networks using Traffic Engineering.
 
 Traffic engineering may be a familiar concept to civil engineers,
@@ -235,25 +238,25 @@ switches and routers as crossroads: the goal of both types of traffic
 engineer is to minimize the number of collisions while improving the
 traffic flow. How is that done? The various techniques involve
 dynamical analysis, predictions and regulation of the behavior of data
-transmitted over that network. 
+transmitted over that network.
 
 In the majority of IP networks, the algorithms used for calculating a
 path between two nodes are based on Open Shortest Path First (OSPF):
 therefore the shortest path between the nodes is chosen as the best
 path; this kind of behavior is logical if we suppose that the network
 is unused or lightly used. But what happens when the network is under
-heavy usage? In Figure \ref{fig:mpls_te} Alice is the default gateway
+heavy usage? In Figure~\ref{fig:mpls_te} Alice is the default gateway
 of LAN A and Bob is the default gateway of LAN B; when the traffic
 between the two LANs is light, the default path is the shortest and
-most efficient solution. Although, the more intense becomes the traffic
-between the LANs, the more congested will become the default path,
-even if there are clearly two unused paths available.
+most efficient solution. Although, the more intense becomes the
+traffic between the LANs, the more congested will become the default
+path, even if there are clearly two unused paths available.
 
 \begin{figure}[!hbp]
   \centering
   \includegraphics[width=0.9\textwidth]{img/mpls_te}
-  \caption[Traffic Engineering]{The more the traffic between LAN A and LAN
-    B increases, the more the dotted line becomes congested.}
+  \caption[Traffic Engineering]{The more the traffic between LAN A and
+    LAN B increases, the more the dotted line becomes congested.}
   \label{fig:mpls_te}
 \end{figure}
 
@@ -312,10 +315,10 @@ in order to better understand the GMPLS architecture: since there are
 usually many types of link layer technology involved in this kind of
 network, it is not particularly correct to define which quantity a
 device can switch, because a device could switch more than
-one. Therefore, it would be better to clarify which specific
-interface is capable of switching a certain quantity: this is done by
-a special descriptor called \textit{Interface Switching Capability
-  Descriptor} (ISCD).
+one. Therefore, it would be better to clarify which specific interface
+is capable of switching a certain quantity: this is done by a special
+descriptor called \textit{Interface Switching Capability Descriptor}
+(ISCD).
 
 \begin{figure}[!hbp]
   \begin{center}
@@ -344,13 +347,13 @@ The essential feature of MPLS has obviously still a great importance
 in GMPLS, even though there are some differences: while in MPLS the
 label is assigned to a packet in a rather unpredictable and arbitrary
 way and has no logical bound with the contents of the packet, this is
-not the case of GMPLS. In fact, if we think about \textit{what} is
+not the case of GMPLS\@. In fact, if we think about \textit{what} is
 being switched in a GMPLS network, we can quickly realize that every
 switchable data stream also represents a precise physical
 resource. For example, in an optical cross-connect a label identifies
 a specific wavelength, in a TDM system the label is associated to a
 specific time-slot and in a fiber switch the label is directly linked
-to a specific port or fiber.  
+to a specific port or fiber.
 
 Therefore, in GMPLS the label has an actual meaning and is directly
 connected to some physical property of the network. This brings some
@@ -375,7 +378,7 @@ understood by any router involved in the process.
 Given this description of what a label should be, we can understand
 how a Label Switched Path (LSP) works: every router in the path is a
 cross-connected device, which means that is programmed to receive data
-from a certain resource and forward it to another. 
+from a certain resource and forward it to another.
 
 Every resource is associated to a label that explains its
 characteristics: the LSP consists of a series of triplets
@@ -419,7 +422,7 @@ routing and signaling protocols based on the IP models: most of the IP
 protocols have been extended to support GMPLS; IPv4 or IPv6 addresses
 are used to identify interfaces. This also applies in a certain
 measure to the data plane, even though \textit{unnumbered links}
-(i.e. links without an IP address) are also supported when IP
+(i.e.\ links without an IP address) are also supported when IP
 addresses are not available. This is particularly important when the
 network is composed by optical devices which do not support the
 traditional IP addressing.
@@ -427,7 +430,7 @@ traditional IP addressing.
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.75\textwidth]{img/gmpls_mlcp}
-  \caption[MPLS network]{The dotted lines represent  the control plane
+  \caption[MPLS network]{The dotted lines represent the control plane
     links, while the normal lines represent the data plane links.}
   \label{fig:gmpls_mlcp}
 \end{figure}
@@ -447,7 +450,7 @@ dealing with different types of networks.
 \subsection{Tunnels and Hierarchies}
 
 The technique used by MPLS to establish tunnels within a network was
-\textit{label stacking}, i.e. adding more labels to a packet and
+\textit{label stacking}, i.e.\ adding more labels to a packet and
 letting the MPLS routers analyze only the topmost one; although this
 approach works in a network where packets, frames or cells are
 switched, it doesn't with the network model proposed by GMPLS, since
@@ -464,7 +467,7 @@ granularity of the different network technologies. This means that the
 LSP tunnels follow the same hierarchy of the physical architecture:
 packet may be nested in a time-slot, time-slots may be grouped in a
 wavelength and wavelengths may be nested in a fiber (as shown in
-Figure \ref{fig:gmpls_hierarchy}). 
+Figure~\ref{fig:gmpls_hierarchy}).
 
 This solution offers a better scalability to the system, allowing the
 aggregation of multiple LSP tunnels and offering the possibility of a
@@ -473,9 +476,9 @@ more efficient traffic engineering.
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.9\textwidth]{img/gmpls_hierarchy}
-  \caption[GMPLS LSP Hierarchy]{The GMPLS LSP Hierarchy: packets
-    are nested in time-slots, which are nested in wavelengths, which
-    are nested in fibers.}
+  \caption[GMPLS LSP Hierarchy]{The GMPLS LSP Hierarchy: packets are
+    nested in time-slots, which are nested in wavelengths, which are
+    nested in fibers.}
   \label{fig:gmpls_hierarchy}
 \end{figure}
 
@@ -514,7 +517,7 @@ and, more specifically, a link-state routing protocol: this means that
 it was designed to work within an Autonomous System (AS) by exchanging
 information about the link-state configuration of each router. Special
 routers called Autonomous System Boundary Routers (ASBR) distribute
-inside the network information coming from other Autonomous Systems. 
+inside the network information coming from other Autonomous Systems.
 
 To handle the traffic more efficiently and increase the scalability of
 the architecture the AS is divided into several areas: these areas are
@@ -528,14 +531,14 @@ area are called backbone routers.
 There are five types of messages that the routers can exchange in
 OSPF: Hello, Database Description, Link State Request, Link State
 Update, and Link State Acknowledge. They all share the same OSPF
-header and are briefly described in Figure \ref{fig:ospf_messages}.
+header and are briefly described in Figure~\ref{fig:ospf_messages}.
 
 Basically, each router at first exchange Hello messages with their
 neighbours to establish routing adjacency; then, they synchronize
 their link databases by exchanging link database descriptors: these
 messages contain at least one database data structure, known as Link
 State Advertisement (LSA). There are also several types of LSA which
-are explained in Figure \ref{fig:ospf_lsa}. When the database
+are explained in Figure~\ref{fig:ospf_lsa}. When the database
 descriptors of all the routers have been distributed across the
 network, the Link State Database can be built and used to calculate
 the Shortest Path First routing tables.
@@ -568,7 +571,7 @@ it is exchanged between adjacent routers at specific intervals. For
 Traffic Engineering purposes, a special type of LSA is introduced: to
 make it invisible to the normal OSPF routing, this LSA is made
 \textit{opaque}; this LSA will be ignored by every router but the ones
-involved in the GMPLS routing process. 
+involved in the GMPLS routing process.
 
 \newpage
 
@@ -602,7 +605,8 @@ bandwidth, the reservable bandwidth etc.
       carries opaque information within an AS. \\
       \hline
     \end{tabular}
-    \caption[OSPF-TE LSA Types]{OSPF-TE LSA types, names and descriptions}
+    \caption[OSPF-TE LSA Types]{OSPF-TE LSA types, names and
+      descriptions}
     \label{fig:ospf_lsa}
   \end{center}
 \end{figure}
@@ -639,7 +643,7 @@ downstream or upstream using the \textit{LSP Downstream Error} or the
 initiate the tear down by sending \textit{LSP Downstream Release} or
 \textit{LSP Upstream Release} messages. In order to distribute the
 information concerning the state of the data plane, \textit{LSP
-  Notify} messages are used. In Figure \ref{fig:rsvp_messages} we can
+  Notify} messages are used. In Figure~\ref{fig:rsvp_messages} we can
 see a mapping between these abstract messages and the ones utilized in
 RSVP-TE.
 
@@ -658,7 +662,8 @@ RSVP-TE.
       LSP Notify & Notify \\
       \hline
     \end{tabular}
-    \caption[RSVP-TE Messages]{The various types of message in RSVP-TE}
+    \caption[RSVP-TE Messages]{The various types of message in
+      RSVP-TE}
     \label{fig:rsvp_messages}
   \end{center}
 \end{figure}
@@ -674,9 +679,9 @@ protocol like rapid notification and bidirectional LSPs.
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.9\textwidth]{img/rsvp_message}
-  \caption[RSVP Message]{A RSVP Message, included in a IP data-gram and
-  composed by multiple objects; each of the objects may be composed by
-multiple sub-objects.}
+  \caption[RSVP Message]{A RSVP Message, included in a IP data-gram
+    and composed by multiple objects; each of the objects may be
+    composed by multiple sub-objects.}
   \label{fig:rsvp_message}
 \end{figure}
 
@@ -685,19 +690,20 @@ identifies the message; the encapsulated objects are instead of
 variable length and are structured as type-length-value triplets. This
 structure makes parsing much easier and provides a more flexible
 configuration. In the same way, each object may incorporate multiple
-sub-objects, which are encoded as TLV constructs as well. Figure
-\ref{fig:rsvp_message} shows how a GMPLS RSVP-TE message composed by
-objects and sub-objects is encapsulated inside a IP packet.
+sub-objects, which are encoded as TLV constructs as
+well. Figure~\ref{fig:rsvp_message} shows how a GMPLS RSVP-TE message
+composed by objects and sub-objects is encapsulated inside a IP
+packet.
 
 \subsubsection{LSP Establishment}
 One of the main improvements of RSVP-TE over RSVP is the possibility
 of creating bidirectional paths: this requires a full set of Path and
 Resv messages to be exchanged between two LSRs. The ingress LSR sends
 a \textit{Path} message downstream to the next router initiating the
-creation of the LSP. This \textit{Path} message contains the Upstream
-Label, i.e. the label to be used in the upstream direction, various
-information about the path and a Generalized Label Request object,
-needed for the LSP setup request.
+creation of the LSP\@. This \textit{Path} message contains the
+Upstream Label, i.e.\ the label to be used in the upstream direction,
+various information about the path and a Generalized Label Request
+object, needed for the LSP setup request.
 
 If the Path message is delivered correctly to the next hop, the
 upstream label is saved and a path state is reserved to guarantee the
@@ -707,7 +713,7 @@ upstream direction and forwarding the Path message to the next
 router. This process continues for each node in the path until the
 message reaches the egress LSR; when that happens, the LSP has been
 successfully established in the upstream direction, but not yet in the
-downstream one (i.e. the label distribution is downstream-on-demand,
+downstream one (i.e.\ the label distribution is downstream-on-demand,
 which means that upstream LSRs request downstream LSRs to choose the
 labels). Therefore, the egress LSR creates a \textit{Resv} message,
 similar to the Path message except that it contains a Generalized
@@ -716,7 +722,7 @@ Resv message is then forwarded back along the same path: each router
 receiving the Resv message save the state for the downstream
 direction, replaces the label and forward it. When the ingress LSP
 receives the Resv message, the LSP has been successfully setup in both
-upstream and downstream directions. Figure \ref{fig:rsvp_path} shows
+upstream and downstream directions. Figure~\ref{fig:rsvp_path} shows
 an example of this process.
 
 \begin{figure}[!htbp]
@@ -740,9 +746,10 @@ simultaneously. Additionally, using the \textit{Notify} message, any
 router can signal to the ingress or the egress LSR eventual errors and
 malfunctions and ask them to initiate the LSP removal (\textit{Rapid
   Error Notification}). Basically, these two different mechanisms can
-be used alternatively to remove an LSP (shown in Figure
-\ref{fig:rsvp_tear}): while the Notify approach is more classic, the
-PathTear/PathErr one increases considerably the signaling efficiency.
+be used alternatively to remove an LSP (shown in
+Figure~\ref{fig:rsvp_tear}): while the Notify approach is more
+classic, the PathTear/PathErr one increases considerably the signaling
+efficiency.
 
 \begin{figure}[!htbp]
   \centering
@@ -761,7 +768,7 @@ error messages, \textit{PathErr} and \textit{ResvErr}. The PathErr
 message indicates a malfunction of the Path message and is sent
 towards the ingress LSR, while the ResvErr message is used to signal
 an error during the forwarding of the Resv message and is sent towards
-the egress LSR. When a router receives these messages, it can either
+the egress LSR\@. When a router receives these messages, it can either
 try to solve the problem by itself or forward it along.
 
 \subsubsection{Explicit Route Object}
@@ -769,7 +776,7 @@ try to solve the problem by itself or forward it along.
 The Explicit Route Object (ERO) is one of the objects added to RSVP in
 order to manage traffic engineering problems: this object basically
 contains the list of the abstract nodes that have to be visited by the
-LSP. Each abstract node can be either IPv4, IPv6 or an Autonomous
+LSP\@. Each abstract node can be either IPv4, IPv6 or an Autonomous
 System. Another important distinction is if the node is ``strict'' or
 ``loose'', which mostly influences the path between the current node
 and the previous node: if a node is strict, the path followed to reach
@@ -781,12 +788,11 @@ of the previous abstract node.
   \begin{center}
     \begin{bytefield}{16}
       \bitheader{0,1,7,8,15} \\
-      \bitbox{1}{L}
-      \bitbox{7}{Type}
+      \bitbox{1}{L} \bitbox{7}{Type}
       \bitbox{8}{Length} \\
       \bitbox{16}{IPv4 Address} \\
       \bitbox{16}{IPv4 Address (Cont.)} \\
-      \bitbox{8}{Prefix Length} 
+      \bitbox{8}{Prefix Length}
       \bitbox{8}{Reserved} \\
     \end{bytefield}
     \caption[Explicit Route Object]{An example of IPv4 ERO sub-object:
@@ -814,10 +820,7 @@ ingress router in a Resv message.
   \begin{center}
     \begin{bytefield}{32}
       \bitheader{0,8,16,24,32} \\
-      \bitbox{1}{L}
-      \bitbox{7}{Type}
-      \bitbox{8}{Length}
-      \bitbox{1}{U}
+      \bitbox{1}{L} \bitbox{7}{Type} \bitbox{8}{Length} \bitbox{1}{U}
       \bitbox{7}{Reserved (0)}
       \bitbox{8}{Class Type (2)} \\
       \bitbox{32}{Generalized Label} \\
@@ -871,8 +874,8 @@ isolate them. The main features of LMP, described in RFC4204, are:
 This chapter will focus on the concepts on which is based path
 computation in GMPLS, starting from the basic definitions; later, it
 will proceed to describe the specific architecture and algorithms
-involved. Then, it will treat the various constraints that need to
-be analyzed.
+involved. Then, it will treat the various constraints that need to be
+analyzed.
 
 \section{Basic definitions}
 
@@ -899,12 +902,12 @@ this thesis will only treat the case of a single centralized node.
 
 \section{Path Computation Element}
 
-The Path Computation Element (PCE) is defined by the IETF in
-RFC4655 as:
+The Path Computation Element (PCE) is defined by the IETF in RFC4655
+as:
 \begin{quote}
-  \textit{``An entity (component, application, or network node) that is
-  capable of computing a network path or route based on a network
-  graph and applying computational constraints.''}
+  \textit{``An entity (component, application, or network node) that
+    is capable of computing a network path or route based on a network
+    graph and applying computational constraints.''}
 \end{quote}
 We can see that the definition of PCE is left intentionally abstract:
 the PCE might be a software component, program or a network node; it
@@ -920,14 +923,14 @@ a GMPLS router, another PCE, etc.). The PCE calculates the path and
 sends it back to the PCC, that will then proceed to signal the new LSP
 with a relatively high confidence; although, due to the nature of the
 PCC/PCE interaction there aren't any type of guarantees that the LSP
-will be setup correctly. Figure \ref{fig:pce_pcc} shows a model which
+will be setup correctly. Figure~\ref{fig:pce_pcc} shows a model which
 represents this interaction.
 
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.5\textwidth]{img/pce_pcc}
   \caption[PCE/PCC Model]{The PCE/PCC interaction model; in this case,
-  the PCC is represented by a LSR.}
+    the PCC is represented by a LSR.}
   \label{fig:pce_pcc}
 \end{figure}
 
@@ -944,13 +947,13 @@ that make the PCE reply not certainly assured.
 
 In addition to this difference, the PCE architecture distinguishes
 also between the \textit{composite} and the \textit{external} models:
-in the composite model, shown in Figure \ref{fig:pce_composite}, the
+in the composite model, shown in Figure~\ref{fig:pce_composite}, the
 PCE functionality is added to a GMPLS router. \\
 The signaling engine of this LSR receives the service request and,
 acting as PCC, send to the internal PCE a PCC request: the PCE uses
 this request to exchange information with the \textit{Traffic
   Engineering Database} (TED), calculates the required path and sends
-back a PCE reply to the PCC. When this reply is received, the
+back a PCE reply to the PCC\@. When this reply is received, the
 signaling engine can create a new signaling request and initiate the
 LSP establishment.
 
@@ -967,7 +970,7 @@ introduced; although, the mechanism is very similar to the composite
 model: when the head-end node receives the service request, it sends a
 path computation request to the PCE, which uses the information in the
 TED to compute the path and sends back to the head-end node a
-reply. This model is shown in Figure \ref{fig:pce_external}.
+reply. This model is shown in Figure~\ref{fig:pce_external}.
 
 \begin{figure}[!htbp]
   \centering
@@ -985,13 +988,13 @@ explain why this model was created:
   the software is appropriately designed, the stress on the hardware
   can't be underestimated since the PCE component must compute all the
   primary, backup and service paths.
-\item Since it requires considerable resources to run, it is more likely
-  that the PCE won't be embedded in a regular router, but would be
-  deployed in a separate device.
+\item Since it requires considerable resources to run, it is more
+  likely that the PCE won't be embedded in a regular router, but would
+  be deployed in a separate device.
 \item Since PCE is designed to provide on-line path computation, the
   response should be quick, in the order of few seconds.
-\item The computational power required grows with the size
-  and the complexity of the network, i.e. multiple constraints like
+\item The computational power required grows with the size and the
+  complexity of the network, i.e.\ multiple constraints like
   bandwidth, latency, cost or QOS to keep in consideration.
 \item The main function of a router is the routing process: thus, its
   visibility of the network is limited, its topology knowledge is
@@ -1017,12 +1020,231 @@ status.
 
 When a client asks the computation of a certain path, the PCE extracts
 from the TED the structure and the information regarding the network
-in a form of \textit{graph} and applies a certain \textit{path computation
-algorithm} on that representation. This algorithm is therefore the
-core of the PCE logic and from its nature depends the speed, the
-reliability and the success of the whole PCE.
+in a form of \textit{graph} and applies a certain \textit{path
+  computation algorithm} on that representation. This algorithm is
+therefore the core of the PCE logic and from its nature depends the
+speed, the reliability and the success of the whole PCE.
 
-\section{Constraint-based algorithms}
+\section{Constrained Path Computation}
+
+This section will start from the basics of path computation, defining
+what is a graph, what is a path and what are the most common path
+computation problems. Later it will explain the fundamental algorithms
+that have been discovered. The last part will then focus on how to
+extend these algorithms to support constrained path computation.
+
+\subsection{Basic definitions}
+
+The most common way to represent a network is to use a \textit{graph}
+(an example can be seen in Figure~\ref{fig:graph_example}): the
+vertices represent the network nodes and the arcs represent the links;
+each arc may also be assigned a number, the \textit{weight}, which
+represents the cost of that specific link. If we suppose that the cost
+of every link will be the same, we can use weight equal to 1 for every
+arc; if we want instead to emphasize the differences between the links
+we can also use zero or negative numbers. \\
+A \textit{path} is a sequence of adjacent arcs which connects a pair
+of vertices: in our example, the nodes A and D are connected by the
+paths A-D, A-B-E-D, A-B-E-G-F-C-D, and so on. If a path visits the
+same node twice, a \textit{loop} will be formed: the path
+A-B-E-G-F-C-A-D contains a loop, since the node A has been visited
+twice. If we sum up all the weights of the arcs that form a path, the
+total cost of the path will be found; if there are two paths
+connecting the same nodes and the first path's cost is lesser than the
+other, we'll say that the first path is \textit{shorter}. This may
+sound counter-intuitive since we normally associate the length of a
+path with the number of arcs that is composed of, but this is only true
+when the weight of every arc is 1: in that case, the length of the
+path is just the hop count.
+
+\begin{figure}[!hbp]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{img/graph_example}
+    \caption[Graph example]{A network graph representation with vertices
+      as nodes and arcs as links; each arc has a weight, which
+      represents the cost of the link.}
+    \label{fig:graph_example}
+  \end{center}
+\end{figure}
+
+What are then the most common path computation problems? Here follows
+a short list:
+\begin{itemize}
+\item \textit{Single-source shortest path}: given a source node, the
+  shortest paths to all the other nodes have to be computed.
+\item \textit{Single-destination shortest path}: given a destination
+  node, the shortest paths from all the other nodes have to be found.
+\item \textit{Single-pair shortest path}: give a pair of source node
+  and destination node, the shortest path has to be found.
+\item \textit{All-pairs shortest path}: given a network, all the
+  possible paths between the nodes have to computed.
+\end{itemize}
+
+Actually, the solution to the last three problems boils down to solve
+the first one: in the single-destination problem, if we invert the
+direction of the paths we return to the single-source problem; the
+single-pair problem is contained by the single-source and the
+all-pairs problem can be obtained by applying the single-source to
+every node in the network. Therefore, we will analyze the most
+important single-source algorithms.
+
+\subsection{Basic single-source algorithms}
+
+The most important single-source algorithms that will be discussed are
+the Bellman-Ford, the Dijkstra, the Modified Dijkstra and the Breadth
+First Search algorithms. Even if the specific procedural approach of
+these algorithms may differ, they are all based on the same set of
+assumptions:
+\begin{itemize}
+\item \textbf{A shortest path is composed by shortest paths}: if the
+  shortest path connecting nodes A and B crosses nodes C and D, then
+  it must contain also the shortest path between nodes C and D.
+\item \textbf{A shortest path is loop-less}: if a shortest path could
+  contain a loop, the same loop could be removed and the cost of the
+  loop subtracted to the cost of the path, thus creating a new path
+  shorter than the shortest path; therefore, a shortest path should
+  not contain loops. 
+\item \textbf{Use common variables}: all the aforementioned algorithms
+  associate two variables to each vertex v in the graph, the
+  \textit{path estimate} d[v] and the \textit{predecessor}
+  \(\pi\)[v]. When the computation of the algorithm terminates, the
+  path estimate will contain the cost of the shortest path between the
+  source node and the v vertex, while the predecessor will contain the
+  second-last node that forms the path. In order to build the complete
+  path between the source and the node v, it is simply required to
+  follow the predecessors' chain, starting from \(\pi[v]\), moving to
+  \(\pi[\pi[v]]\), and so on.
+\item \textbf{Use common procedures}
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Testing and verification}
+
+In this chapter, the functionality of the whole network that has been
+used as testbed will be analyzed; then, we will move to the
+verification of the software implementation and an explanation of the
+performance results.
+
+\section{Testbed environment}
+
+The testbed environment at Acreo is composed by a variety of network
+devices: while some are virtualized through VMware, some are actual
+devices. While this allowed to easily create a multi-layer GMPLS
+network and grant a good level of flexibility, some of the results
+obtained in the testbed may differ from a scenario where all nodes are
+real devices: this is caused by the different behaviour of the virtual
+interfaces and the high load assigned to the virtual machines. Here is
+a list of the physical devices:
+\begin{itemize}
+\item \textbf{Juniper IP/MPLS routers}: in the network there are three
+  Juniper M-series IP/MPLS routers. These device have not been used
+  during the testing.
+\item \textbf{Linux IP/MPLS routers}: three IP/MPLS routers have been
+  implemented patching the Linux kernel for MPLS support; each of
+  these routers run on a Dell Dimension 5150 with a 3 GHz processor
+  and 512 MB of RAM\@. They are labeled as LR1, LR2 and LR3 in
+  Figure~\ref{fig:testbed_model}.
+\item \textbf{Switchcore Ethernet switches}: these devices are
+  Switchcore Xpeedium2 RD1100 Ethernet switches. Each of these
+  switches is controlled via a serial cable by a computer with the
+  same specifics of the Linux IP/MPLS routers. These switches are
+  called SwCE1, SwCE2 and SwCE3.
+\item \textbf{Transmode optical switches}: in the testbed there are
+  also three optical switches with several modules, like transponders,
+  add-drop multiplexers and cross-connects. These devices were not
+  operational during the testing phase.
+\end{itemize}
+
+The virtual network is hosted through two different servers, a HP
+xw8400 and a Dell Optiplex GX620. Their specifics can be seen in
+Figure~\ref{fig:testbed_vm}. All the virtual machines have Ubuntu 6.06
+as operative system using the 2.6.15-16 Linux kernel: the HP server
+hosts three optical nodes (vROADM1, vROADM2 and vROADM3), an optical
+cross-connect (vOXC1) and three Ethernet/Optical boundary devices
+(vEC1, vEC2 and vEC3), while the Dell server hosts three Ethernet
+switches (vE1, vE2 and vE3).
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \begin{tabular}{|l|l|l|}
+      \hline
+      & \textbf{HP xw8400} & \textbf{Dell Optiplex GX62} \\ \hline
+      Processor & Intel Xeon 5335 & Intel Dual Core\\ \hline
+      Core speed & 2.66 GHz & 3.00 GHz \\ \hline
+      RAM & 4 GB & 3 GB \\ \hline
+      Disk storage & 1 TB & 250 GB \\ \hline
+      Operative System & 32-bit Ubuntu Feisty 7.04 & 32-bit Ubuntu Edgy
+      6.10 \\ \hline
+      Linux kernel & 2.6.20-16 & 2.6.17-17 \\ \hline
+      VMware Server & 1.0.3, build=44356 & 1.0.1, build=29996 \\ \hline
+      \multirow{3}{*}{Virtual Machines} & vROADM1, vROADM2 & vE1, vE2,
+      vE3 \\
+      & vROADM3, vOXC1 & \\
+      & vEC1, vEC2, vEC3 & \\ \hline
+    \end{tabular}
+    \caption[Virtual machines sever specifics]{Hardware and software
+      specifics of the servers deploying the virtual machines.}
+    \label{fig:testbed_vm}
+  \end{center}
+\end{figure}
+
+Since some of the network devices weren't functional during the
+testing phase, the network representation graph in
+Figure~\ref{fig:testbed_model} does not include them; instead, all the
+relevant information concerning the data and the control plane are
+listed, like nodes and links
+identifiers. Figure~\ref{fig:testbed_legend} acts as a reference to
+each node in the network.
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=1\textwidth]{img/testbed_model}
+    \caption[Testbed representation]{The testbed network.}
+    \label{fig:testbed_model}
+  \end{center}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|}
+      \hline
+      Node & Type & Description & ID \\ \hline
+      vEC1 & Virtual & Ethernet/Optical border & 172.16.100.230 \\
+      vEC2 & Virtual & Ethernet/Optical border & 172.16.100.231 \\
+      vEC3 & Virtual & Ethernet/Optical border & 172.16.100.232 \\
+      vROADM1 & Virtual & Optical Add-Drop Mux & 172.16.100.233 \\
+      vROADM2 & Virtual & Optical Add-Drop Mux & 172.16.100.234 \\
+      vROADM3 & Virtual & Optical Add-Drop Mux & 172.16.100.235 \\
+      vOXC1 & Virtual & Optical Cross-connect & 172.16.100.236 \\
+      vE1 & Virtual & Ethernet & 172.16.100.243 \\
+      vE2 & Virtual & Ethernet & 172.16.100.244 \\
+      vE3 & Virtual & Ethernet & 172.16.100.245 \\
+      vLR1 & Virtual & Linux IP/MPLS & 172.16.100.251 \\
+      vLR2 & Virtual & Linux IP/MPLS & 172.16.100.252 \\
+      vLR3 & Virtual & Linux IP/MPLS & 172.16.100.253 \\
+      LR1 & Physical & Linux IP/MPLS & 172.16.100.248 \\
+      LR2 & Physical & Linux IP/MPLS & 172.16.100.249 \\
+      LR3 & Physical & Linux IP/MPLS & 172.16.100.250 \\
+      SwCE1 & Physical & Switchcore Ethernet & 172.16.100.240 \\
+      SwCE2 & Physical & Switchcore Ethernet & 172.16.100.241 \\
+      SwCE3 & Physical & Switchcore Ethernet & 172.16.100.242 \\
+      \hline
+    \end{tabular}
+    \caption[Testbed network nodes]{Testbed network nodes reference:
+      name, type, description and identifier.}
+    \label{fig:testbed_legend}
+  \end{center}
+\end{figure}
 
 \end{document}
 
