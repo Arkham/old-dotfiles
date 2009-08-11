@@ -10,6 +10,8 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true}
+\usepackage{listings}
+\lstset{language=C,basicstyle=\footnotesize,numbers=left,numberstyle=\footnotesize,frame=shadowbox, rulesepcolor=\color{black}}
 \usepackage{multirow}
 \usepackage{ucs}
 \usepackage{url}
@@ -1106,20 +1108,75 @@ assumptions:
   not contain loops. 
 \item \textbf{Use common variables}: all the aforementioned algorithms
   associate two variables to each vertex v in the graph, the
-  \textit{path estimate} d[v] and the \textit{predecessor}
-  \(\pi\)[v]. When the computation of the algorithm terminates, the
-  path estimate will contain the cost of the shortest path between the
-  source node and the v vertex, while the predecessor will contain the
-  second-last node that forms the path. In order to build the complete
-  path between the source and the node v, it is simply required to
-  follow the predecessors' chain, starting from \(\pi[v]\), moving to
-  \(\pi[\pi[v]]\), and so on.
-\item \textbf{Use common procedures}
+  \textit{path distance estimate} \(d[v]\) and the
+  \textit{predecessor} \(p[v]\). When the computation of the algorithm
+  terminates, the path estimate will contain the cost of the shortest
+  path between the source node and the v vertex, while the predecessor
+  will contain the second-last node that forms the path. In order to
+  build the complete path between the source and the node v, it is
+  simply required to follow the predecessors' chain, starting from
+  \(p[v]\), moving to \(p[p[v]]\), and so on.
+\item \textbf{Use common procedures}: there are two procedures which
+  are used extensively by all single-source algorithms,
+  \textit{initialization} and \textit{arc relaxation}. During the
+  initialization phase, the path estimate of the source node is set to
+  zero, which is by definition the distance between the source node
+  and itself; instead, the path estimates for every other node in the
+  network is initialized to a relatively large number (this assignment
+  will result very important later while searching for the shortest
+  path); in the end, all the predecessors will be initialized to a
+  null object. In formulae:
+  \[ \left\{
+    \begin{array}{ll}
+      d[s] = 0 & \\\\
+      d[v] = \infty & \forall \; v \neq s \\\\
+      p[v] = null & \forall \; v
+    \end{array}\right. \]
+    
+  The arc relaxation procedure is a bit more complex to explain:
+  suppose that the vertices u and v are connected by an arc a of
+  weight w; if the selected shortest path between the source s and the
+  node v can be improved by visiting u, then the arc a will be visited
+  (we can also say that a is \textit{relaxed}). This procedure should
+  be the only entity allowed to modify the values of \(d[v]\) and
+  \(p[v]\). The pseudo-code describing this function should be
+  something like:
+  \begin{quote}
+    \begin{lstlisting}
+if (d[u] + w < d[v]) then
+    d[v] = d[u] + w
+    p[v] = u
+    \end{lstlisting}
+  \end{quote}
 \end{itemize}
 
+\subsubsection{Bellman-Ford}
 
+The Bellman-Ford algorithm solves the single-source path computation
+problem in a very simple yet reliable way. This algorithm can also
+analyze graphs containing negative-weight arcs: furthermore, it is
+able to detect the presence of negative weight loops. Its main
+disadvantage is the poor performance compared to the other
+algorithms. Pseudo-code:
+\begin{quote}
+\begin{lstlisting}
+for every vertex v in V do
+    d[v] = inf
+    p[v] = null
+d[s] = 0
+for every i in (0,1,...,|V|-1) do
+    for every arc a(u,v) in A do
+    if (d[u] + w < d[v]) then
+        d[v] = d[u] + w
+        p[v] = u
+for every arc a(u,v) in A
+    if (d[v] > d[u] + w(a)) then
+        return false
+return true
+\end{lstlisting}
+\end{quote}
 
-
+Let's analyze the pseudo-code:
 
 
 
