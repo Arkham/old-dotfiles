@@ -1166,8 +1166,8 @@ for every vertex v in V do
 d[s] = 0
 for every i in (0,1,...,|V|-1) do
     for every arc a(u,v) in A do
-    if (d[u] + w < d[v]) then
-        d[v] = d[u] + w
+    if (d[u] + w(a) < d[v]) then
+        d[v] = d[u] + w(a)
         p[v] = u
 for every arc a(u,v) in A
     if (d[v] > d[u] + w(a)) then
@@ -1205,9 +1205,9 @@ Let's analyze the pseudo-code:
   remain ``\(\infty\)'' and its predecessor ``null''.
 \end{itemize}
 
-This algorithm mathematical performance is O(|V||A|): the
+This algorithm mathematical performance is \(O(|V||A|)\): the
 initialization runs in O(|V|), each of the |V|-1 iterations runs in
-O(|A|) and the final negative loop check runs in O(|A|).
+\(O(|A|)\) and the final negative loop check runs in \(O(|A|)\).
 
 \subsubsection{Dijkstra}
 
@@ -1225,7 +1225,118 @@ allow the insertion new entries and the extraction of the entry with
 the minimum path distance. The pseudo-code simulating the algorithm is
 listed below:
 
-foo
+\begin{quote}
+\begin{lstlisting}
+for every vertex v in V do
+    d[v] = inf
+    p[v] = null
+d[s] = 0
+L = 0, U = V
+while U != 0 do
+    u = extract_min(U)
+    L = L + u
+    for every arc a(u,v) starting from u do
+    if (v is in U && d[v] > d[u] + w(a)) then
+        d[v] = d[u] + w(a)
+        p[v] = u
+        decrease_key(U,v)
+\end{lstlisting}
+\end{quote}
+
+\begin{itemize}
+\item Lines 1-5: initialization of the path distance estimates and the
+  predecessor array; the set of the labeled vertices L is set to empty
+  and the set of the unlabeled vertices U is filled with all the
+  vertices present in V. L is the priority queue where the vertices
+  are sorted on the base of their path distance estimate.
+\item Lines 6-8: here starts the body of the algorithm; until there is
+  an unlabeled vertice left, extract the node with the minimum path
+  distance estimate and add it to the set of labeled vertices. Note
+  that whenever a node is added to the L set, its shortest path
+  distance and predecessor have already been computed and will not be
+  modified anymore.
+\item Lines 9-13: since the shortest path distance of the vertex u is
+  defined, all the arcs originating from it and ending in unlabeled
+  vertices can be relaxed; the nodes which path distance has been
+  modified are also updated in the L priority queue.
+\end{itemize}
+
+One important annotation that can be made is that Dijkstra's algorithm
+can solve the single-pair shortest path problem in a very elegant way;
+in fact, it would suffice to add after Line 8:
+\begin{quote}
+\begin{verbatim}
+if (u == destination)
+    exit
+\end{verbatim}
+\end{quote}
+
+The performance of the Dijkstra algorithm heavily depends on the
+implementation of the priority queue: especially the speed of the
+decrease\_key() function is very important, since it gets called
+continuously; if the queue is realized using a simple array or a
+linked list, the algorithm will run in \(O(|V|^2+|A|)\). If it is
+instead implemented with a Fibonacci heap, the algorithm runs in
+\(O(|V|*log|V| + A)\), which improves significantly the performance of
+\(O(|V||A|)\) of the Bellman-Ford algorithm.
+
+\subsubsection{Modified Dijkstra}
+
+The main flaw of the original Dijkstra algorithm is that it cannot
+analyze graphs containing negative weights, which is caused by the
+intrinsic logic of the algorithm: when a vertex is added to the set of
+the labeled vertices it can't be modified anymore. This is the correct
+behaviour for graphs containing only arcs with positive weights;
+instead, when a negative-weight arc is relaxed, it could always bring
+better shortest path distances to every node, including already
+labeled ones.
+
+This is exactly what the modified version of the algorithm allows:
+even the vertices that are already in the labeled set can always get
+re-labeled. Since this modification could influence other labeled
+vertices, the re-labeled vertex is inserted back in the unlabeled
+vertices set. The modified Dijkstra algorithm cannot be used to solve
+single-pair computation problems elegantly like the original version,
+since every arc that hasn't been relaxed could improve the estimated
+path distance of the rest of the graph.
+
+\subsubsection{Breadth First Search}
+
+The Breadth First Search algorithm can also solve the single-source
+computation in a weighted graph; it supports negative-weight arcs, but
+it can't detect negative-weight loops. Instead of choosing a vertex
+and relaxing all the arcs originating from that vertex like the
+Dijkstra algorithm, the BFS keeps all the labeled vertices in a set F;
+then, it continuously tries to re-label the vertices in F by relaxing
+every arc originating from them.
+
+One interesting quality of the BFS algorithm is that if two vertices
+are connected by several paths with the same cost, it will always be
+chosen the path with the smallest number of hops: this is a desirable
+feature in GMPLS, because it simplifies the setup, the management and
+the removal of the LSP. Pseudo-code follows:
+
+\begin{quote}
+\begin{lstlisting}
+for every vertex v in V do
+    d[v] = inf
+    p[v] = null
+d[s] = 0
+F = s
+while F != 0 do
+    for every u in F do
+        for every arc a(u,v) in A
+            F = F - u
+            if (d[v] > d[u] + w(a)) then
+                d[v] = d[u] + w(a)
+                p[v] = u
+                F = F + u
+\end{lstlisting}
+\end{quote}
+
+\begin{itemize}
+\item
+\end{itemize}
 
 
 \chapter{Testing and verification}
@@ -1514,7 +1625,7 @@ Each of these test cases has been executed in three different runs
 with 10, 100 and 1000 iterations respectively. The maximum, the
 minimum and the average value has been then calculated; also the
 standard deviation has been taken into consideration. Here are the
-results of the first test case:
+results of the first test case, a simple path on the Ethernet layer:
 \begin{figure}[!htbp]
   \begin{center}
     \begin{tabular}{|l||l|l|l|l|l||l|}
@@ -1583,7 +1694,8 @@ automatically and the received set of constraints had to be fulfilled.
   \end{center}
 \end{figure}
 
-The following statistics are the result of the last test:
+The following statistics are the result of the last test, where the
+algorithm had to compute a long and complex multi-layer path:
 
 \begin{figure}[!htbp]
   \begin{center}
@@ -1625,6 +1737,123 @@ Here is a short summary of the time performances of the tests:
     \label{fig:time_graph}
   \end{center}
 \end{figure}
+
+The results of these tests confirm the expectations: the first
+computation request is really simple and requires basic constraint
+checking; the computation of this test runs faster than the second
+case, where the constraints relative to the optical layer have also to
+be taken in consideration. Furthermore, the first two tests run
+significantly faster than the last one, which is by far more complex,
+requiring multiple constraints checking and the creation/destruction
+of two nested LSP tunnels. 
+
+Analyzing the behaviour of the different tests in
+Figure~\ref{fig:time_graph}, some trends can be observed (note that
+the y axis of the graph is represented using a logarithmic scale): the
+time needed to verify the sanity of the request, remove the unfit
+links and send back the computed path is almost irrelevant compared to
+the rest of the algorithm time. Most of the time was therefore spent
+on building the internal network topology and running the path
+computation algorithm: here can be observed the influence of the path
+complexity, since it modifies the ratio between these two intervals
+from 1-to-3 in the simple cases to 1-to-10 in the last case. While the
+time used to create the internal representation of the network remains
+constant, the time spent to compute the path diversified the three
+tests, giving the most significant contribute to the total response
+time; although, the performance of the algorithm could be improved in
+some cases by implementing a cache for the network representation: if
+the network topology doesn't change, this could improve the efficiency
+of the algorithm by keeping the previously computed representation.
+
+Considering the environment where the tests have been performed, we
+can say that the whole RCE element maintains a good performance,
+assuring that all the computation requests are managed in the order of
+milliseconds; in fact, we can see that the minimum values are
+generally very close to the average values while the maximum values
+are a lot higher (also the standard deviation values are relatively
+small compared the difference between the average and the maximum
+values): this could be explained by the high-load caused by the
+multiple virtual machines running on the same physical server.
+
+\subsection{Space Efficiency}
+
+The \textit{space efficiency} of the algorithm has been analyzed
+considering the usage of memory during a series of different tests; in
+order to make the test meaningful, the results have been compared to
+the performances of other two algorithms available in the RCE, the
+Ethernet-only Dijkstra algorithm and the optical-only BFS
+algorithm. Since these algorithms do not support the computation of
+multi-layer paths, the three paths introduced in the time efficiency
+test have been re-used and assigned to each algorithm; therefore, when
+analyzing the results we have to consider the different levels of
+complexity of the associated path. The DRAGON environment has been
+restarted between each test to ensure similar start conditions.
+
+The ``valgrind'' tool has been used to verify the memory usage and the
+eventual memory leaks in the software implementation; basically, the
+program was started to monitor the behaviour of the RCE and then a
+specific number of requests was sent from a client; when the RCE had
+completed to process the requests, valgrind was terminated to generate
+a memory usage report. The presence of many extensions has made this
+task considerably easier: in particular the ``massif'' extension has
+been very useful to visually trace the memory used by each single
+function. Here follows a summary of the test results:
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \begin{tabular}{|l|c|c|c|c|}
+      \hline
+      \textbf{Type} & \textbf{Requests} & \textbf{Memory, Start}
+      & \textbf{Memory, End} & \textbf{Memory, Peak} \\ \hline
+      Ethernet & 10 & 70 KB & 80KB & 90 KB \\
+      & 100 & 70 KB & 80KB & 100 KB \\
+      & 1000 & 70 KB & 150KB & 160 KB \\ \hline
+      Optical & 10 & 65 KB & 80 KB & 85 KB \\
+      & 100 & 70 KB & 80 KB & 100 KB \\
+      & 1000 & 70 KB & 140 KB & 160 KB \\ \hline
+      Multi & 10 & 70 KB & 70 KB & 110 KB \\
+      & 100 & 70 KB & 70 KB & 120 KB \\
+      & 1000 & 70 KB & 120 KB & 180 KB \\
+      \hline
+    \end{tabular}
+    \caption[Algorithm space efficiency]{Algorithm space efficiency;
+      three different tests have been performed with 10, 100 and 1000
+      requests. The three algorithms considered are the Ethernet-only
+      Dijkstra, the optical-only BFS and the multi-layer one.}
+    \label{fig:test_eth}
+  \end{center}
+\end{figure}
+
+The differences that can be observed in this summary is somehow
+predictable: while the allocated data structures remains the same for
+the different algorithms, the peak of used memory changes; this is
+caused by the different implementations of the algorithms and by the
+peculiar setup of the network. It is interesting to note that
+incrementing the number of requests or the complexity of the required
+path does not cause the RCE to grow exponentially in size.
+
+Analyzing the valgrind report more accurately, we can see that almost
+every test is affected by a memory leak; this is caused by two
+factors: first of all, there isn't a ``graceful'' way to stop the
+execution of the RCE, so it is necessary to terminate it abruptly by
+sending a SIGTERM signal; this causes some allocated data structures
+to not be freed correctly (this happens with the first two
+algorithms). The other factor is represented by the internal RCE
+message handling procedures: to be able to send and receive messages
+asynchronously, a complex class of timers has been implemented; the
+internal functions of this software component contains a bug that
+creates a 40 byte memory leak for each request. This small memory leak
+becomes relevant when the RCE has to handle one thousand messages,
+creating a 40 KB total memory leak.
+
+With all the selected algorithms, the footprint of the RCE remains
+relatively small: the implemented version of the RCE never exceeds the
+200 KB memory limit when computing one thousand consecutive
+requests. In fact, the physical network devices that actually act as
+RCE in a network are provided with several hundreds of megabytes of
+RAM.
+
+\chapter{Conclusions}
 
 \end{document}
 
