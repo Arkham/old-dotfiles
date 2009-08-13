@@ -1153,11 +1153,11 @@ if (d[u] + w < d[v]) then
 \subsubsection{Bellman-Ford}
 
 The Bellman-Ford algorithm solves the single-source path computation
-problem in a very simple yet reliable way. This algorithm can also
-analyze graphs containing negative-weight arcs: furthermore, it is
-able to detect the presence of negative weight loops. Its main
-disadvantage is the poor performance compared to the other
-algorithms. Pseudo-code:
+problem in a very simple yet reliable way: this algorithm can analyze
+graphs containing negative-weight arcs and is also able to detect the
+presence of negative-weight loops. Its main disadvantage is that it
+performs poorly compared to the other algorithms of the same
+type. Pseudo-code follows:
 \begin{quote}
 \begin{lstlisting}
 for every vertex v in V do
@@ -1177,26 +1177,69 @@ return true
 \end{quote}
 
 Let's analyze the pseudo-code:
+\begin{itemize}
+\item Lines 1-4: the data structures are initialized.
+\item Lines 5-9: this is the body of the algorithm: the relaxation
+  procedure is performed on every arc; this process is repeated |V|-1
+  times, where |V| is the number of the vertices present in the
+  graph. The principle is to propagate the information regarding the
+  path distance estimates across the graph: since the ``longest''
+  shortest path could visit all the nodes in the network only once,
+  repeating the relaxation of all the arcs for the number of the other
+  vertices allows the complete propagation of the minimum
+  distances. When this section finishes, the execution of the
+  algorithm is virtually completed, because the data structures
+  already contain the final computed values.
+\item Lines 10-12: this part of the code checks for negative-weight
+  loops: if it is still possible to relax an arc after that the body
+  of the algorithm has finished, the only explanation would be the
+  presence of a loop which total weight sum is negative. If such a
+  loop is found, the algorithm returns ``false'', meaning that a
+  negative loop was found and no meaningful results can be returned.
+\item Line 13: this is the end of the algorithm: if no negative loop
+  is found, the solutions computed are accepted and returned to the
+  client; the path distance vector should contain the lowest cost
+  necessary to reach any node in the network starting from the source,
+  while the predecessor vector should contain the second-to-last hop:
+  if a node is not reachable, it's associated path distance will
+  remain ``\(\infty\)'' and its predecessor ``null''.
+\end{itemize}
 
+This algorithm mathematical performance is O(|V||A|): the
+initialization runs in O(|V|), each of the |V|-1 iterations runs in
+O(|A|) and the final negative loop check runs in O(|A|).
 
+\subsubsection{Dijkstra}
 
+The Dijkstra algorithm is perhaps the most well-known path computation
+algorithm: it solves efficiently the single-source computation problem
+in weighted graphs without negative-weight arcs. While the algorithm
+is running, two sets of vertices are maintained: one containing the
+\textit{labeled vertices}, the nodes which shortest path from the
+source node has already been determined, and another one for the
+\textit{unlabeled vertices}, i.e.\ the nodes which shortest path
+distance hasn't been found yet. This algorithm requires an additional
+data structure, a priority queue, which contains the unlabeled
+vertices, sorted by their path distance estimates: this queue must
+allow the insertion new entries and the extraction of the entry with
+the minimum path distance. The pseudo-code simulating the algorithm is
+listed below:
 
-
-
+foo
 
 
 \chapter{Testing and verification}
-
+ 
 In this chapter, the functionality of the whole network that has been
 used as testbed will be analyzed; then, we will move to the
 verification of the software implementation and an explanation of the
 performance results.
-
-\section{Testbed environment}
-
+ 
+\section{Testbed environment verification}
+ 
 The testbed environment at Acreo is composed by a variety of network
-devices: while some are virtualized through VMware, some are actual
-devices. While this allowed to easily create a multi-layer GMPLS
+devices: while some are actual devices, some are virtualized through
+VMware. Even if this allowed to easily create a multi-layer GMPLS
 network and grant a good level of flexibility, some of the results
 obtained in the testbed may differ from a scenario where all nodes are
 real devices: this is caused by the different behaviour of the virtual
@@ -1221,7 +1264,7 @@ a list of the physical devices:
   add-drop multiplexers and cross-connects. These devices were not
   operational during the testing phase.
 \end{itemize}
-
+ 
 The virtual network is hosted through two different servers, a HP
 xw8400 and a Dell Optiplex GX620. Their specifics can be seen in
 Figure~\ref{fig:testbed_vm}. All the virtual machines have Ubuntu 6.06
@@ -1230,12 +1273,13 @@ hosts three optical nodes (vROADM1, vROADM2 and vROADM3), an optical
 cross-connect (vOXC1) and three Ethernet/Optical boundary devices
 (vEC1, vEC2 and vEC3), while the Dell server hosts three Ethernet
 switches (vE1, vE2 and vE3).
-
+ 
 \begin{figure}[!htbp]
   \begin{center}
     \begin{tabular}{|l|l|l|}
       \hline
-      & \textbf{HP xw8400} & \textbf{Dell Optiplex GX62} \\ \hline
+      Servers & \textbf{HP xw8400} & \textbf{Dell Optiplex GX62} \\
+      \hline \hline
       Processor & Intel Xeon 5335 & Intel Dual Core\\ \hline
       Core speed & 2.66 GHz & 3.00 GHz \\ \hline
       RAM & 4 GB & 3 GB \\ \hline
@@ -1254,14 +1298,28 @@ switches (vE1, vE2 and vE3).
     \label{fig:testbed_vm}
   \end{center}
 \end{figure}
-
+ 
 Since some of the network devices weren't functional during the
 testing phase, the network representation graph in
-Figure~\ref{fig:testbed_model} does not include them; instead, all the
-relevant information concerning the data and the control plane are
-listed, like nodes and links
-identifiers. Figure~\ref{fig:testbed_legend} acts as a reference to
-each node in the network.
+Figure~\ref{fig:testbed_model} does not include them; instead, only
+the operative and significant nodes have been represented,
+distinguishing the virtual hosts from the physical ones and the
+Ethernet links (IP and MPLS) from the optical ones
+(Figure~\ref{fig:testbed_legend} acts as a reference to each node in
+the network).
+
+In order to ensure the correct functioning of the testbed, the
+configuration of each physical node and virtual machine have been
+inspected: where in need to, the software has been upgraded and the
+configuration files have been edited. The connectivity of each node
+has been monitored using programs like \textit{ping} and
+\textit{nmap}; later, the DRAGON environment has been deployed to a
+host and its capability to compile and execute the original software
+has been verified. Also the behaviour of the existing RCE has been
+tested to verify its speed and precision: several tests have been run
+to verify the correctness of the paths returned for each kind of
+request (i.e.\ IP-to-IP, MPLS-to-MPLS and Optical-to-Optical), while
+keeping an eye on the response time and the system load.
 
 \begin{figure}[!htbp]
   \begin{center}
@@ -1270,7 +1328,7 @@ each node in the network.
     \label{fig:testbed_model}
   \end{center}
 \end{figure}
-
+ 
 \begin{figure}[!htbp]
   \begin{center}
     \begin{tabular}{|l|l|l|l|}
@@ -1300,6 +1358,271 @@ each node in the network.
     \caption[Testbed network nodes]{Testbed network nodes reference:
       name, type, description and identifier.}
     \label{fig:testbed_legend}
+  \end{center}
+\end{figure}
+
+\section{Software implementation verification}
+
+To be able to verify the correctness of the software implementation,
+it has been deployed in the testbed environment: the modified version
+of the RCE has been installed in the previously tested DRAGON
+environment. Also the contents of the TED have been checked using the
+\textit{telnet} utility and connecting to the DRAGON daemon: the
+correct population of the database ensured that the OSPF daemon was
+working and all the nodes and links advertised by the routers in the
+testbed were shown (the output has been shortened):
+
+{\small
+\begin{verbatim}
+rce:cli>show topology intradomain 
+         .......Router ID Opaque LSA.......
+Adv_router (172.16.100.230), Router_id (172.16.100.230)
+Adv_router (172.16.100.231), Router_id (172.16.100.231)
+Adv_router (172.16.100.232), Router_id (172.16.100.232)
+Adv_router (172.16.100.233), Router_id (172.16.100.233)
+Adv_router (172.16.100.234), Router_id (172.16.100.234)
+[...]
+         .......TE Link Opaque LSA....... 
+Adv_router (172.16.100.230), Link_id (172.16.100.233), IfAddrs[0x80000001-0x80000001] 
+Adv_router (172.16.100.230), Link_id (172.16.100.233), IfAddrs[0x80000001-0x80000002] 
+Adv_router (172.16.100.230), Link_id (172.16.100.233), IfAddrs[0x80000001-0x80000003] 
+Adv_router (172.16.100.230), Link_id (172.16.100.233), IfAddrs[0x80000001-0x80000004] 
+Adv_router (172.16.100.230), Link_id (172.16.100.233), IfAddrs[0x80000002-0x80000002] 
+Adv_router (172.16.100.230), Link_id (172.16.100.233), IfAddrs[0x80000002-0x80000003] 
+Adv_router (172.16.100.231), Link_id (172.16.100.234), IfAddrs[0x80000001-0x80000001] 
+Adv_router (172.16.100.231), Link_id (172.16.100.234), IfAddrs[0x80000001-0x80000003] 
+Adv_router (172.16.100.231), Link_id (172.16.100.234), IfAddrs[0x80000001-0x80000004] 
+Adv_router (172.16.100.231), Link_id (172.16.100.234), IfAddrs[0x80000002-0x80000002] 
+[...]
+         .......The End.......
+\end{verbatim}
+}
+
+The verification of the RCE and of the path computation algorithm has
+been performed using the test utility included the DRAGON suite; this
+program has been widely extended to support new objects, new types of
+request and new constraints. A sequence of test-cases has been setup
+to check the behaviour of the algorithm in all the possible scenarios
+available in the network and these following general considerations
+have been noted:
+\begin{itemize}
+\item If the request sent to the RCE contains an invalid source or
+  destination identifier, no path is returned. Instead, an appropriate
+  error is generated and notified to the client.
+\item If a client issues a request for a path that connects two nodes
+  and these two hosts do not share interfaces with a common switching
+  and encoding capability, an error message is returned because no
+  path can be computed. This represents the correct behaviour defined
+  in RFC3471.
+\item The path computation request does not need to specify the
+  switching and the encoding capability anymore: the algorithm goes
+  through all the available interfaces of the two nodes and chooses
+  automatically the compatible matches.
+\item Since the testing program has been modified to support different
+  type of algorithms and network configurations, it is possible to
+  obtain different paths for the same pair of source-destination
+  nodes; the output of a complex algorithm will generally extend the
+  knowledge gained from the output of a simple algorithm.
+\item The algorithm successfully returns different paths when the
+  topology of the network is modified or when the defined constraints
+  are changed: for example, if the bandwidth of a link or the path's
+  required bandwidth changes, the algorithm will dynamically exclude
+  the links that do not fulfill the bandwidth requirement and compute
+  a new path. The same happens when the other constraints are changed,
+  i.e.\ the metric, the hop count and the user-defined ones.
+\item It is possible to specify which is the constraint priority list and
+  the algorithm will respect that list when searching for a solution;
+  this is implemented by the user-defined constraints system.
+\item If the algorithm is not able to fulfill all the requirements
+  received from the client, it will return a specific error message.
+\end{itemize}
+
+More specifically, when the path found by the computation algorithm
+contains a LSP tunnel (for example starting from L2SC, moving to LSC
+and then returning to L2SC), all these following behaviours have been
+observed:
+\begin{itemize}
+\item The wavelength continuity of the optical path is always assured:
+  the label to be used in the optical segment always respects the
+  wavelengths that have been previously setup in the ospfd
+  configuration file. If there is a link in the path with only one
+  wavelength available while all the other links have all the
+  wavelengths available, the tunneled path uses that specific
+  wavelength.
+\item The management of the constraints is layer-dependent: when the
+  tunnel is initiated, the set of constraints that affect the current
+  layer is ``frozen'' and a new set of constraints is introduced; when
+  the tunnel ends, the previous set of constraints is reverted. This
+  guarantees that the upper layer still satisfies its path
+  requirements, treating the tunnel as a virtual link.
+\item The algorithm is able to manage all the labels (both downstream
+  and upstream) associated to the optical segment links; from these
+  labels, the wavelengths are extracted and converted in a human
+  readable format.
+\end{itemize}
+
+These tests have proved that the developed algorithm fulfills the
+foreseen objectives, allowing to the RCE to successfully compute paths
+in a multi-layer environment.
+
+\section{Performance evaluation}
+
+In this section, the performance of the implemented algorithm will be
+evaluated considering the usage of two resources: \textit{time},
+intended as the response time of the algorithm and \textit{space},
+intended as the memory needed to run it.
+
+\subsection{Time efficiency}
+The time efficiency of the algorithm has been measured starting from
+the \textit{response time}, that is the time that passes from the
+moment when the RCE receives the path computation request to the
+moment the RCE sends the computed path back to the client. The
+response time have been later divided in multiple intervals, which
+mark important phases of the path computation process; each of these
+intervals has been measured and are listed hereafter:
+\begin{itemize}
+\item \textbf{i1} = interval of time used to verify the sanity of a
+  path computation request sent from a client;
+\item \textbf{i2} = interval of time used to build the internal logical
+  topology using the data retrieved from the TED;
+\item \textbf{i3} = interval of time used to remove from the topology
+  the links which don't respect link-based requirements:
+\item \textbf{i4} = interval of time used to calculate the viable paths and
+  sort them in a defined order;
+\item \textbf{i5} = interval of time used to create the final ERO
+  object to be returned to the client.
+\end{itemize}
+The response time is calculated by summing up all these
+intervals. Several tranches of tests have been run to verify the
+behaviour of the algorithm:
+\begin{enumerate}
+\item The path computation request includes two neighbours with L2SC
+  interfaces (vE1 and vEC1 in Figure~\ref{fig:testbed_model}); the RCE
+  doesn't need to setup LSP tunnels.
+\item The source and the destination requested belong to the optical
+  layer and are connected through an optical cross-connect (vROADM2
+  and vROADM3 in Figure~\ref{fig:testbed_model}); the RCE needs to
+  check for wavelength continuity but doesn't need to setup a tunnel.
+\item In the last case, the source and destination are at the opposite
+  sides of the testbed (LR1 and LR2 in
+  Figure~\ref{fig:testbed_model}); the path is composed by a high
+  number of hops and two nested LSP tunnels have to be setup by the
+  RCE.
+\end{enumerate}
+
+Each of these test cases has been executed in three different runs
+with 10, 100 and 1000 iterations respectively. The maximum, the
+minimum and the average value has been then calculated; also the
+standard deviation has been taken into consideration. Here are the
+results of the first test case:
+\begin{figure}[!htbp]
+  \begin{center}
+    \begin{tabular}{|l||l|l|l|l|l||l|}
+      \hline
+      \textbf{10 requests} & \textbf{i1[\(\mu s\)]} & \textbf{i2[\(\mu s\)]} & \textbf{i3[\(\mu s\)]} & \textbf{i4[\(\mu s\)]} &
+      \textbf{i5[\(\mu s\)]} & \textbf{rt[\(\mu s\)]} \\\hline
+      Maximum & 7 & 138 & 17 & 214 & 13 & 389 \\
+      Minimum & 4 & 116 & 11 & 188 & 6 & 328 \\
+      Average & 4.8 & 119.1 & 12.7 & 192.4 & 7.3 & 336.3 \\
+      Standard Deviation & 0.92 & 6.74 & 1.64 & 7.68 & 2.06 & 18.6
+      \\ \hline
+      \textbf{100 requests} & \textbf{i1[\(\mu s\)]} & \textbf{i2[\(\mu s\)]} & \textbf{i3[\(\mu s\)]} & \textbf{i4[\(\mu s\)]} &
+      \textbf{i5[\(\mu s\)]} & \textbf{rt[\(\mu s\)]} \\\hline
+      Maximum & 12 & 149 & 16 & 235 & 45 & 399 \\
+      Minimum & 3 & 114 & 10 & 185 & 6 & 320 \\
+      Average & 4.35 & 117.82 & 10.5 & 191.17 & 6.95 & 330.79 \\
+      Standard Deviation & 0.94 & 5.61 & 0.78 & 7.09 & 3.94 & 13.23
+      \\ \hline
+      \textbf{1000 requests} & \textbf{i1[\(\mu s\)]} & \textbf{i2[\(\mu s\)]} & \textbf{i3[\(\mu s\)]} & \textbf{i4[\(\mu s\)]} &
+      \textbf{i5[\(\mu s\)]} & \textbf{rt[\(\mu s\)]} \\\hline
+      Maximum & 6 & 197 & 75 & 350 & 15 & 616 \\
+      Minimum & 4 & 115 & 9 & 181 & 5 & 321 \\
+      Average & 4.76 & 119.41 & 11.03 & 190.7 & 6.52 & 332.42 \\
+      Standard Deviation & 0.46 & 6.64 & 2.26 & 12.09 & 0.64 & 18.27
+      \\ \hline
+    \end{tabular}
+    \caption[Time efficiency on Ethernet layer]{Algorithm time
+      efficiency on the Ethernet layer (rt represents the total
+      response time).}
+    \label{fig:test_eth}
+  \end{center}
+\end{figure}
+
+The test on the optical layer requested to the algorithm to compute a
+path composed by three nodes; the wavelength had to be chosen
+automatically and the received set of constraints had to be fulfilled.
+\begin{figure}[!htbp]
+  \begin{center}
+    \begin{tabular}{|l||l|l|l|l|l||l|}
+      \hline
+      \textbf{10 requests} & \textbf{i1[\(\mu s\)]} & \textbf{i2[\(\mu s\)]} & \textbf{i3[\(\mu s\)]} & \textbf{i4[\(\mu s\)]} &
+      \textbf{i5[\(\mu s\)]} & \textbf{rt[\(\mu s\)]} \\\hline
+      Maximum & 7 & 138 & 17 & 353 & 12 & 527 \\
+      Minimum & 4 & 115 & 10 & 324 & 5 & 461 \\
+      Average & 4.7 & 118.9 & 11.7 & 331.2 & 5.9 & 472.4 \\
+      Standard Deviation & 0.95 & 6.79 & 1.95 & 10.17 & 2.18 & 20.44
+      \\ \hline
+      \textbf{100 requests} & \textbf{i1[\(\mu s\)]} & \textbf{i2[\(\mu s\)]} & \textbf{i3[\(\mu s\)]} & \textbf{i4[\(\mu s\)]} &
+      \textbf{i5[\(\mu s\)]} & \textbf{rt[\(\mu s\)]} \\\hline
+      Maximum & 7 & 138 & 17 & 454 & 11 & 590 \\
+      Minimum & 3 & 114 & 10 & 318 & 4 & 455 \\
+      Average & 4.01 & 117.52 & 11.71 & 327.46 & 4.97 & 465.67 \\
+      Standard Deviation & 0.5 & 3.14 & 0.83 & 14.87 & 0.69 & 16.17
+      \\ \hline
+      \textbf{1000 requests} & \textbf{i1[\(\mu s\)]} & \textbf{i2[\(\mu s\)]} & \textbf{i3[\(\mu s\)]} & \textbf{i4[\(\mu s\)]} &
+      \textbf{i5[\(\mu s\)]} & \textbf{rt[\(\mu s\)]} \\\hline
+      Maximum & 16 & 330 & 39 & 552 & 73 & 779 \\
+      Minimum & 3 & 114 & 10 & 315 & 4 & 452 \\
+      Average & 4.56 & 119.04 & 11.78 & 325.12 & 5.03 & 465.52 \\
+      Standard Deviation & 0.64 & 9.2 & 1.34 & 16.36 & 2.23 & 22.44 \\
+      \hline
+    \end{tabular}
+    \caption[Time efficiency on optical layer]{Algorithm time
+      efficiency on the optical layer.}
+    \label{fig:test_opt}
+  \end{center}
+\end{figure}
+
+The following statistics are the result of the last test:
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \begin{tabular}{|l||l|l|l|l|l||l|}
+      \hline
+      \textbf{10 requests} & \textbf{i1[\(\mu s\)]} & \textbf{i2[\(\mu s\)]} & \textbf{i3[\(\mu s\)]} & \textbf{i4[\(\mu s\)]} &
+      \textbf{i5[\(\mu s\)]} & \textbf{rt[\(\mu s\)]} \\\hline
+      Maximum & 7 & 141 & 17 & 1217 & 20 & 1383 \\
+      Minimum & 4 & 115 & 10 & 1146 & 11 & 1289 \\
+      Average & 4.6 & 119.3 & 11 & 1163.5 & 12.2 & 1310.6 \\
+      Standard Deviation & 0.97 & 7.7 & 2.16 & 24.82 & 2.78 & 33.267
+      \\ \hline
+      \textbf{100 requests} & \textbf{i1[\(\mu s\)]} & \textbf{i2[\(\mu s\)]} & \textbf{i3[\(\mu s\)]} & \textbf{i4[\(\mu s\)]} &
+      \textbf{i5[\(\mu s\)]} & \textbf{rt[\(\mu s\)]} \\\hline
+      Maximum & 21 & 174 & 16 & 1318 & 20 & 1511 \\
+      Minimum & 3 & 115 & 9 & 1184 & 11 & 1325 \\
+      Average & 4.48 & 118.17 & 10.73 & 1238.86 & 12.25 & 1384.49 \\
+      Standard Deviation & 1.74 & 5.8 & 0.85 & 25.49 & 1.04 & 28.2 
+      \\ \hline
+      \textbf{1000 requests} & \textbf{i1[\(\mu s\)]} & \textbf{i2[\(\mu s\)]} & \textbf{i3[\(\mu s\)]} & \textbf{i4[\(\mu s\)]} &
+      \textbf{i5[\(\mu s\)]} & \textbf{rt[\(\mu s\)]} \\\hline
+      Maximum & 14 & 196 & 20 & 1861 & 26 & 2096 \\
+      Minimum & 3 & 115 & 10 & 1110 & 11 & 1255 \\
+      Average & 4.46 & 120.46 & 11.53 & 1139.52 & 11.5 & 1287.48 \\
+      Standard Deviation & 0.63 & 6.84 & 0.98 & 40.84 & 0.91 & 44.44
+      \\ \hline
+    \end{tabular}
+    \caption[Time efficiency on multi-layer]{Algorithm time
+      efficiency on a multi-layer environment.}
+    \label{fig:test_opt}
+  \end{center}
+\end{figure}
+
+Here is a short summary of the time performances of the tests:
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=1\textwidth]{img/time_graph}
+    \caption[Time efficiency graph]{Time efficiency graph.}
+    \label{fig:time_graph}
   \end{center}
 \end{figure}
 
