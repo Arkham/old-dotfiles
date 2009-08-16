@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="29cm" height="19cm" viewBox="-61 558 570 364" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke-dasharray: 4; stroke: #000000" x="-59" y="559.5" width="567.004" height="361" rx="60" ry="60"/>
+  <g>
+    <rect style="fill: #ffffff" x="0.202" y="622.7" width="160" height="58"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="0.202" y="622.7" width="160" height="58"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="34.202" y="646.7">
+    <tspan x="34.202" y="646.7">VerifyRequest()</tspan>
+    <tspan x="34.202" y="662.7"> VerifySanity()</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="0.202" y="722.7" width="160" height="58"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="0.202" y="722.7" width="160" height="58"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="0.202" y="822.7" width="160" height="58"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="0.202" y="822.7" width="160" height="58"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="268.202" y="620.7" width="181" height="77"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="268.202" y="620.7" width="181" height="77"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="34.202" y="754.7">
+    <tspan x="34.202" y="754.7">BuildTopology()</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="32.202" y="855.7">
+    <tspan x="32.202" y="855.7">PruneTopology()</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="290.202" y="661.7">
+    <tspan x="290.202" y="661.7">PerformComputation()</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="279.202" y="823.7" width="160" height="58"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="279.202" y="823.7" width="160" height="58"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="80.202" y1="680.7" x2="80.202" y2="718.228"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="75.202,710.464 80.202,720.464 85.202,710.464 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="80.202" y1="781.693" x2="80.202" y2="817.235"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="75.202,809.471 80.202,819.471 85.202,809.471 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 160.202 851.7 C 242.202,850.7 203.202,659.2 263.73,659.2"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="255.966,664.2 265.966,659.2 255.966,654.2 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="358.804" y1="698.705" x2="359.113" y2="818.224"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="354.093,810.473 359.119,820.46 364.093,810.447 "/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="288.202" y="857.7">
+    <tspan x="288.202" y="857.7">ExtractAndReplyERO()</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:16.9333;font-family:sanserif;font-style:normal;font-weight:700" x="163.502" y="592">
+    <tspan x="163.502" y="592">PCEN Module</tspan>
+  </text>
+</svg>

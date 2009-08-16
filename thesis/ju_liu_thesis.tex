@@ -4,6 +4,7 @@
 \usepackage[utf8x]{inputenc}
 \usepackage[english]{babel}
 \usepackage{amsmath}
+\usepackage{appendix}
 \usepackage{bytefield}
 \usepackage[small,bf]{caption}
 \usepackage{color}
@@ -25,6 +26,7 @@
     computation algorithm in a multi-layer GMPLS network}}
 \begin{document}
 \date{}
+\hyphenation{Figure}
 \maketitle
 
 \thispagestyle{empty}
@@ -37,7 +39,7 @@
   Switching (GMPLS) is a suite of protocols designed to provide
   Traffic Engineering in multi-layer transport networks; these systems
   are composed by devices belonging to different link-layer
-  technologies, like MPLS routers, Ethernet switches and optical
+  technologies, like MPLS routers, Ethernet switches or optical
   cross-connects.
 
   In this thesis, the different mechanisms forming GMPLS have been
@@ -60,7 +62,8 @@
   my supervisor at the Polytechnic of Milan Giuseppina Gini for their
   invaluable assistance. Last but not least, I want to thank all the
   guys at Acreo, the Kista-italian-lunch crew, my Erasmus friends, my
-  Italian friends and my family for their constant support.
+  Italian friends and my family for their constant support and
+  encouragement.
 \end{abstract}
 
 \newpage
@@ -80,8 +83,6 @@
 \printnomenclature[2.5cm] 
 \addcontentsline{toc}{chapter}{List of Abbreviations}
 \nomenclature{AS}{Autonomous System}
-\nomenclature{ASE}{Amplifier Spontaneous Emission}
-\nomenclature{BER}{Bit Error Rate}
 \nomenclature{BFS}{Breadth First Search}
 \nomenclature{CSPF}{Constrained Shortest Path First}
 \nomenclature{CR-LDP}{Constraint-based Routing-Label Distribution Protocol}
@@ -91,11 +92,8 @@
 \nomenclature{FEC}{Forwarding Equivalence Class}
 \nomenclature{FIFO}{First-In-First-Out}
 \nomenclature{FSC}{Fiber Switching Capable}
-\nomenclature{G-PID}{Generalized Payload-ID}
 \nomenclature{GLSR}{Generalized Label Switching Router}
 \nomenclature{GMPLS}{Generalized Multi-Protocol Label Switching}
-\nomenclature{GRE}{Generic Routing Encapsulation}
-\nomenclature{IANA}{Internet Assigned Numbers Authority}
 \nomenclature{IETF}{Internet Engineering Task Force}
 \nomenclature{IS-IS}{Intermediate System to Intermediate System}
 \nomenclature{IP}{Internet Protocol}
@@ -114,12 +112,10 @@
 \nomenclature{OADM}{Optical Add-Drop Multiplexer}
 \nomenclature{OEO}{Optical-Electronic-Optical}
 \nomenclature{OOO}{Optical-Optical-Optical}
-\nomenclature{OSNR}{Optical Signal-to-Noise Ratio}
 \nomenclature{OSPF}{Open Shortest Path First}
 \nomenclature{OSPF-TE}{Open Shortest Path First-Traffic Engineering}
 \nomenclature{PCC}{Path Computation Client}
 \nomenclature{PCE}{Path Computation Element}
-\nomenclature{PMD}{Polarization Mode Dispersion}
 \nomenclature{PSC}{Packet Switching Capable}
 \nomenclature{QoS}{Quality of Service}
 \nomenclature{RCE}{Resource Computation Engine}
@@ -133,7 +129,6 @@
 \nomenclature{TDM}{Time-Division Multiplexing}
 \nomenclature{TE}{Traffic Engineering}
 \nomenclature{VLSR}{Virtual Label Switching Router}
-\nomenclature{VTY}{Virtual TeletYpe}
 \nomenclature{WDM}{Wavelength Division Multiplexing}
 
 \newpage
@@ -246,7 +241,18 @@ of connection in this kind of networks.
 
 \section{Thesis Outline}
 
-\chapter{Introduction to GMPLS}
+Chapter~\ref{sec:introgmpls} will give an introduction to the GMPLS
+protocol suite, explaining the main concepts and
+mechanisms. Chapter~\ref{sec:gmplspath} will focus on the path
+computation model and the fundamental algorithms. In
+Chapter~\ref{sec:softimpl}, the DRAGON suite and the software
+implementation is treated. In Chapter~\ref{sec:test}, there is a
+description of the testbed that was used, along with the tests
+performed to verify and evaluate the behaviour of the
+system. Chapter~\ref{sec:conclusion} draws the conclusions on this
+thesis work and proposes some follow-ups.
+
+\chapter{Introduction to GMPLS}\label{sec:introgmpls}
 GMPLS is a complete suite of protocols designed to apply the concept
 of label switching to multiple network technologies. This chapter will
 cover the main features of GMPLS, including a brief introduction to
@@ -989,7 +995,7 @@ isolate them. The main features of LMP, described in RFC4204, are:
   example using SONET/SDH technology.
 \end{itemize}
 
-\chapter{GMPLS Path Computation}
+\chapter{GMPLS Path Computation}\label{sec:gmplspath}
 
 This chapter will focus on the concepts on which is based path
 computation in GMPLS, starting from the basic definitions; later, it
@@ -1580,7 +1586,7 @@ type of solution requires more resources and can become expensive in
 terms of computational power, it is the only one that can handle
 link-type and path-type constraints in an integrated fashion.
 
-\chapter{Software Implementation}
+\chapter{Software Implementation}\label{sec:softimpl}
 
 This chapter will introduce the DRAGON environment and explain in
 detail the methodology that was followed while implementing the
@@ -1622,7 +1628,7 @@ representing the interactions can be seen below:\\\\
 \begin{figure}[!htbp]
   \begin{center}
     \includegraphics[width=0.9\textwidth]{img/dragon_model}
-    \caption[The Dragon model]{The various DRAGON elements and the
+    \caption[DRAGON model]{The various DRAGON elements and the
       interactions between them.}
     \label{fig:dragon_model}
   \end{center}
@@ -1668,8 +1674,8 @@ they can be imported from other control-plane elements.\\
 
 \begin{figure}[!htbp]
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{img/rce_model}
-    \caption[The RCE model]{The various RCE elements and the
+    \includegraphics[width=0.8\textwidth]{img/rce_model}
+    \caption[RCE model]{The various RCE elements and the
       interactions between them.}
     \label{fig:rce_model}
   \end{center}
@@ -1689,7 +1695,136 @@ user specified requirements.
 
 \section{Candidate CSPF Algorithm}
 
-\chapter{Testing and Verification}
+The RCE module that performs the actual path computation is the PCEN;
+the PCEN can use as computation logic any path computation module that
+is available: below it the basic structure of the PCEN module is
+represented:
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{img/pcen_module}
+    \caption[PCEN computation module]{A PCEN path computation module}
+    \label{fig:pcen_module}
+  \end{center}
+\end{figure}
+
+\begin{itemize}
+\item \textbf{VerifyRequest()/VerifySanity()}: this block checks the validity
+  of the client request by confronting the parameters contained in the
+  request with the information retrieved from the TED.
+\item \textbf{BuildTopology()}: in this block, the network topology
+  internal representation is built upon the information received from
+  the TED.
+\item \textbf{PruneTopology()}: all the link-type constraints
+  contained in request are verified; all the links that do not fulfill
+  these requirements are pruned and the network graph is updated.
+\item \textbf{PerformComputation()}: this is where the actual
+  computation takes place and where the CSPF algorithm is implemented.
+\item \textbf{ExtractAndReplyERO()}: after the path computation has
+  terminated the Explicit Route Object is built and sent back to the
+  client.
+\end{itemize}
+
+The implemented CSPF algorithm searches for the \textit{loop-less}
+paths between a source and a destination inside a multi-layer network;
+the constraints considered include general constraints, like bandwidth
+or accumulated metric, or layer-specific constraints, like wavelength
+continuity in the optical segments of the network; also a set of
+user-defined constraints has been supported to offer a better level of
+customization and flexibility.
+
+The single-pair shortest path algorithm that was extended is the
+Breadth First Search: this algorithm has been chosen to find
+\textit{all} the paths between two nodes, since it has previously
+shown to have an excellent asymptotic performance when operating on
+network graphs.  When the computation is completed, the found paths
+are sorted based on a characteristic specified in the client request:
+thus, a client can define which is the variable it is most interested
+in, it may be the hop count, the accumulated metric or a
+custom-defined one. As a side note, this implementation allows future
+modifications to make the algorithm return more than one path, which
+could be useful for traffic engineering tasks (like enabling link
+protection).
+
+Two internal data structures which weren't part of the original BFS
+algorithm structure have been added: P is the set of the sub-paths
+which are currently being processed by the algorithm and S is the set
+of the viable paths that have been found. Here follows the pseudo-code
+of the algorithm:
+
+\begin{quote}
+\begin{lstlisting}
+P = source_path
+while P != empty do
+    path = extract_first_path(P)
+    e = extract_last_node(path)
+    for every neighbour n of e do
+        if new_path = insert_node(n,path) is loopless do
+            if new_path is viable do
+                if n is destination do
+                    S = S + new_path
+                else
+                    P = P + new_path
+                endif
+            endif
+         endif
+     done
+done
+\end{lstlisting}
+\end{quote}
+
+\begin{itemize}
+\item Line 1: the algorithm creates a first path containing only the
+  source node; from this initial path, called \textit{source\_path},
+  all the other paths will be later derived. The \textit{source\_path}
+  is then added to the set of working sub-paths P, which is
+  implemented as a First-In-First-Out queue.
+\item Lines 2-4: here starts the body of the algorithm, which will
+  iterate until the P queue is empty; first of all, the first sub-path
+  is extracted from the P queue; from this sub-path the last node
+  \textit{end} is then extracted.
+\item Lines 5-6: every neighbour of the \textit{end} node is analyzed;
+  a \textit{new\_path} path is formed by adding the considered
+  neighbour to the current sub-path. This new path is then tested to
+  verify the absence of loops.
+\item Lines 7-11: the \textit{new\_path} is analyzed by the path
+  evaluation functions: if considered unfit, it gets immediately
+  discarded. Otherwise, if it's deemed viable and it reaches the
+  destination, we have found a complete path that connects the source
+  and the destination: we can add it to the S set of the viable
+  solutions.
+\end{itemize}
+
+The importance of the path evaluation functions is fundamental: in
+fact, by choosing which sub-paths should be kept and which ones should
+be discarded, they basically decide which is the direction that the
+path computation process will follow. These are the path evaluation
+functions that have been implemented:
+
+\begin{enumerate}
+\item The accumulated metric shouldn't exceed the required value.
+\item The accumulated end-to-end delay shouldn't exceed the defined
+  limit.
+\item User defined constraints should never exceed their associated
+  limit value.
+\item In the optical segments, interface selectivity should never be
+  violated, i.e.\ unselectable interfaces should never be included.
+\item In the optical segments, the wavelength continuity should be
+  guaranteed, i.e.\ the same wavelength should be allocated for an
+  optical sub-path formed by nodes without conversion capability.
+\item When considering multi-layer paths, the correct encoding and
+  switching capabilities should be chosen during the adaption of two
+  network layer technologies: this guarantees the correct setup of the
+  LSP tunnel.
+\end{enumerate}
+
+In conclusion, an extended version of the BFS algorithm has been
+implemented to support constrained multi-layer path computation: the
+key elements are represented by the two new data structures and by the
+path-evaluation rules; in the next chapter, a sequence of tests will
+be performed to verify the algorithm and show its performance.
+
+\chapter{Testing and Verification}\label{sec:test}
  
 In this chapter, the functionality of the whole network that has been
 used as testbed will be analyzed; then, we will move to the
@@ -2203,7 +2338,7 @@ requests. In fact, the physical network devices that actually act as
 RCE in a network are provided with several hundreds of megabytes of
 RAM.
 
-\chapter{Conclusion and future work}
+\chapter{Conclusion and future work}\label{sec:conclusion}
 
 \section{Conclusion}
 
@@ -2261,6 +2396,159 @@ the needs of the Traffic Engineers.
 \renewcommand\bibname{References}
 \addcontentsline{toc}{chapter}{References} \nocite{*}
 \bibliography{bibliography} \bibliographystyle{is-alpha}
+
+\appendix
+
+\chapter{RCE behaviour}
+This appendix contains the output of the \textit{rce\_test} utility
+while testing the behaviour of the implemented RCE. The various
+examples follow.
+
+\begin{itemize}
+\item{Compute a simple path in the Ethernet layer (vE1 and vEC1 in Figure~\ref{fig:testbed_model}):
+{\small
+\begin{verbatim}
+$ ./rce_test -S 172.16.100.230 -D 172.16.100.243 -U
+Request successful: ERO returned
+HOP-TYPE [strict]: 172.16.100.230 [UnumIfId: 0x80000003]
+HOP-TYPE [strict]: 172.16.100.243 [UnumIfId: 0x80000002]
+\end{verbatim}
+}}
+\item{Compute a simple path in the optical layer (vROADM2 and vROADM3
+    in Figure~\ref{fig:testbed_model}): {\small
+\begin{verbatim}
+$ ./rce_test -S 172.16.100.234 -D 172.16.100.235 -U
+Request successful: RSVP-TE ERO returned
+HOP-TYPE [strict]: 172.16.100.234 [UnumIfId: 0x80000004]
+  LABEL: 191000.000000 (GHz)
+  UPSTREAM LABEL: 191000.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.236 [UnumIfId: 0x80000002]
+  LABEL: 191000.000000 (GHz)
+  UPSTREAM LABEL: 191000.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.236 [UnumIfId: 0x80000003]
+  LABEL: 191000.000000 (GHz)
+  UPSTREAM LABEL: 191000.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.235 [UnumIfId: 0x80000001]
+  LABEL: 191000.000000 (GHz)
+  UPSTREAM LABEL: 191000.000000 (GHz)
+\end{verbatim}
+}}
+\newpage
+\item{Compute a complex path in the optical layer (vEC2 and vEC3 in
+    Figure~\ref{fig:testbed_model}): {\small
+\begin{verbatim} 
+$ ./rce_test -S 172.16.100.231 -D 172.16.100.232 -U
+Request successful: RSVP-TE ERO returned
+HOP-TYPE [strict]: 172.16.100.231 [UnumIfId: 0x80000001]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.234 [UnumIfId: 0x80000001]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.234 [UnumIfId: 0x80000004]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.236 [UnumIfId: 0x80000002]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.236 [UnumIfId: 0x80000003]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.235 [UnumIfId: 0x80000001]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.235 [UnumIfId: 0x80000001]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.232 [UnumIfId: 0x80000001]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+\end{verbatim}
+}}
+\newpage
+\item{Compute a complex multi-layer path (LR1 and LR2 in
+    Figure~\ref{fig:testbed_model}): {\small
+\begin{verbatim}
+$ ./rce_test -H localhost -S 172.16.100.248 -D 172.16.100.249 -U
+Request successful: RSVP-TE ERO returned
+HOP-TYPE [strict]: 172.16.101.10
+HOP-TYPE [strict]: 172.16.101.9
+HOP-TYPE [strict]: 172.16.100.240 [UnumIfId: 0x80000001]
+HOP-TYPE [strict]: 172.16.100.231 [UnumIfId: 0x80000004]
+HOP-TYPE [strict]: 172.16.100.231 [UnumIfId: 0x80000001]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.234 [UnumIfId: 0x80000001]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.234 [UnumIfId: 0x80000004]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.236 [UnumIfId: 0x80000002]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.236 [UnumIfId: 0x80000003]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.235 [UnumIfId: 0x80000001]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.235 [UnumIfId: 0x80000001]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.232 [UnumIfId: 0x80000001]
+  LABEL: 191400.000000 (GHz)
+  UPSTREAM LABEL: 191400.000000 (GHz)
+HOP-TYPE [strict]: 172.16.100.232 [UnumIfId: 0x80000003]
+HOP-TYPE [strict]: 172.16.100.245 [UnumIfId: 0x80000002]
+HOP-TYPE [strict]: 172.16.100.245 [UnumIfId: 0x80000001]
+HOP-TYPE [strict]: 172.16.100.253 [UnumIfId: 0x80000001]
+HOP-TYPE [strict]: 172.16.100.153
+HOP-TYPE [strict]: 172.16.100.154
+\end{verbatim}
+}}
+\end{itemize}
+
+{\small
+\begin{verbatim}
+\end{verbatim}
+}
+
+\chapter{RCE stack and heap profile}
+This appendix contains the graphs obtained by monitoring the RCE usage
+of system resources; more specifically, they were obtained with the
+valgrind program and the massif utility. The behaviour of the RCE was
+observed during three different tests, with 10, 100 and 1000 requests
+respectively; the request was to compute a complex multi-layer path
+(LR1 and LR2 in Figure~\ref{fig:testbed_model}). The three following
+graphs represent the status of the RCE stack and heap.
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[angle=270,scale=0.70]{img/multi-10}
+    \caption[RCE memory profile (10 requests)]{The RCE memory profile
+      when processing 10 requests.}
+    \label{fig:multi-10}
+  \end{center}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[angle=270,scale=0.70]{img/multi-100}
+    \caption[RCE memory profile (100 requests)]{The RCE memory profile
+      when processing 100 requests.}
+    \label{fig:multi-100}
+  \end{center}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[angle=270,scale=0.70]{img/multi-1000}
+    \caption[RCE memory profile (1000 requests)]{The RCE memory profile
+      when processing 1000 requests.}
+    \label{fig:multi-1000}
+  \end{center}
+\end{figure}
 
 \end{document}
 
