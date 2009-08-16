@@ -12,7 +12,7 @@
 \usepackage{hyperref}
 \hypersetup{colorlinks=true}
 \usepackage{listings}
-\lstset{language=C,basicstyle=\footnotesize,numbers=left,numberstyle=\footnotesize,frame=shadowbox, rulesepcolor=\color{black}}
+\lstset{language=C,basicstyle=\footnotesize,numbers=left,numberstyle=\footnotesize,frame=shadowbox,rulesepcolor=\color{black}}
 \usepackage{multirow}
 \usepackage{nomencl}
 \makenomenclature
@@ -27,6 +27,7 @@
 \begin{document}
 \date{}
 \hyphenation{Figure}
+\selectlanguage{english}
 \maketitle
 
 \thispagestyle{empty}
@@ -275,7 +276,7 @@ network nodes. When a packet enters in a router, the label is analyzed
 to determine the next hop and a new label; the old label is then
 replaced, and the packet is forwarded. This behavior explains the
 terms of \textit{label swapping} and \textit{label switching}: in each
-step, the label is swapped and the data is forwarded depending on the
+step, the label is swapped and the data is switched depending on the
 label value.
 
 \newpage
@@ -338,10 +339,10 @@ a MPLS network can be seen in Figure~\ref{fig:mpls_net}.
 
 It is also possible to tunnel an LSP inside another LSP, by adding
 additional shim headers to the packet; the set of the shim headers
-associated to a packet is then called label stack. When the packet is
-being forwarded, only the topmost label of the stack is taken into
-consideration by the routers and the last label has a special field to
-indicate the bottom of the stack. \\
+associated to a packet is then called \textit{label stack}. When the
+packet is being forwarded, only the topmost label of the stack is
+taken into consideration by the routers and the last label has a
+special field to indicate the bottom of the stack. \\
 This technique provides great benefits to the scalability of the
 network, since it consistently reduces the number of LSPs that have to
 be setup and maintained by the routers.
@@ -401,7 +402,7 @@ optimization is particularly evident to the network users, since it
 improves dramatically the quality of some applications. On the other
 hand, MPLS-TE could also be used by network administrators to ensure
 that no network resource is over-utilized or under-utilized, thus
-guaranteeing an optimal use of the deployed network devices.
+guaranteeing an optimal usage of the deployed network devices.
 
 \section{Generalized MPLS}
 
@@ -466,7 +467,7 @@ descriptor called \textit{Interface Switching Capability Descriptor}
   \end{center}
 \end{table}
 
-\subsection{Still Label Switching}
+\subsection{Label Switching, Again}
 The essential feature of MPLS has obviously still a great importance
 in GMPLS, even though there are some differences: while in MPLS the
 label is assigned to a packet in a rather unpredictable and arbitrary
@@ -530,11 +531,11 @@ can be actually considered coincident. In transport networks though,
 the devices are not able to recognize single packets and they switch
 entire time-slots, fibers or wavelengths; therefore, the control
 information about the data cannot be transmitted using the same medium
-(in-band control).
+(\textit{in-band} control).
 
 The control plane in GMPLS is generally referred to as the Multi-Layer
 Control Plane (MLCP) and is completely separated from the data plane;
-it controls the operations of GMPLS network out-of-band. \\
+it controls the operations of GMPLS network \textit{out-of-band}. \\
 This approach means that a failure on the control plane will not
 affect the data plane and vice versa. This separation adds also a
 layer of abstraction between the control and the data plane, thus
@@ -575,7 +576,7 @@ dealing with different types of networks.
 \subsection{Tunnels and Hierarchies}
 
 The technique used by MPLS to establish tunnels within a network was
-\textit{label stacking}, i.e.\ adding more labels to a packet and
+\textit{label stacking}, i.e. adding more labels to a packet and
 letting the MPLS routers analyze only the topmost one; although this
 approach works in a network where packets, frames or cells are
 switched, it doesn't with the network model proposed by GMPLS, since
@@ -623,7 +624,7 @@ Intermediate System (IS-IS). OSPF-TE will be taken into consideration.
 The signaling consists of the process of establishing and removing
 Label Switched Paths: they are very important for service provisioning
 since they manage the reservation of the network resources and the
-guarantee of a specific Quality of Service. The protocols in use are
+warranty of a specific Quality of Service. The protocols in use are
 Resource ReserVation Protocol with TE additions (RSVP-TE) and
 Constraint-based Routing-Label Distribution Protocol (CR-LDP). There
 will be an overview of RSVP-TE in the following sections.
@@ -642,8 +643,8 @@ Open Shortest Path First (OSPF) is an Interior Gateway Protocol (IGP)
 and, more specifically, a link-state routing protocol: this means that
 it was designed to work within an Autonomous System (AS) by exchanging
 information about the link-state configuration of each router. Special
-routers called Autonomous System Boundary Routers (ASBR) distribute
-inside the network information coming from other Autonomous Systems.
+routers called Autonomous System Boundary Routers (ASBR) distribute,
+inside the network, information coming from other Autonomous Systems.
 
 To handle the traffic more efficiently and increase the scalability of
 the architecture the AS is divided into several areas: these areas are
@@ -659,7 +660,7 @@ OSPF: Hello, Database Description, Link State Request, Link State
 Update, and Link State Acknowledge. They all share the same OSPF
 header and are briefly described in Table~\ref{tab:ospf_messages}.
 
-Basically, each router at first exchange Hello messages with their
+Basically, each router at first exchanges Hello messages with their
 neighbours to establish routing adjacency; then, they synchronize
 their link databases by exchanging link database descriptors: these
 messages contain at least one database data structure, known as Link
@@ -741,7 +742,7 @@ The TE information will be then used to create a new type of Database,
 called the Traffic Engineering Database (TED); the TED has a critical
 importance in the TE routing mechanisms, since it is the main source
 of information for the Constrained Shortest Path First (CSPF)
-algorithms that are employed in this context. Using the TED a new
+algorithms that are employed in this context. Using the TED, a new
 model of the network that takes in account TE variables can be built,
 while CSPF algorithms compute network paths between nodes in the
 network. In the next chapter, this type of algorithm will be
@@ -749,29 +750,29 @@ thoroughly reviewed and explained.
 
 \subsection{RSVP-TE}
 
-RSVP-TE the signaling protocol used in GMPLS to establish, maintain,
-modify and destroy paths in the data plane. This protocol is composed
-by a wide range of messages that are exchanged among the various nodes
-involved in the network: these messages need to respect a precise set
-of rules enforced by the so-called \textit{signaling controllers},
-which are the software components responsible for the management of
-the data plane behaviour of the Label Switching Routers.
+RSVP-TE is the signaling protocol used in GMPLS to establish,
+maintain, modify and destroy paths in the data plane. This protocol is
+composed by a wide range of messages that are exchanged among the
+various nodes involved in the network: these messages need to respect
+a precise set of rules enforced by the so-called \textit{signaling
+  controllers}, which are the software components responsible for the
+management of the data plane behaviour of the Label Switching Routers.
 
 The establishment of a Label Switched Path is generally initiated by
 the ingress LSR (logically intended as the \textit{upstream} end of
 the LSP), which sends a \textit{LSP Setup} message. The
 \textit{downstream} LSR receives this message and replies with a
 \textit{LSP Accept} message; the confirmation of the establishment of
-the LSP may be signaled using the \textit{LSP Confirm} message. If any
-error should happen during the setup, they can be signaled either
-downstream or upstream using the \textit{LSP Downstream Error} or the
-\textit{LSP Upstream Error} messages. Any router that form the LSP can
-initiate the tear down by sending \textit{LSP Downstream Release} or
-\textit{LSP Upstream Release} messages. In order to distribute the
-information concerning the state of the data plane, \textit{LSP
-  Notify} messages are used. In Table~\ref{tab:rsvp_messages} we can
-see a mapping between these abstract messages and the ones utilized in
-RSVP-TE.
+the LSP may also be signaled using the \textit{LSP Confirm}
+message. If any error should happen during the setup, they can be
+signaled either downstream or upstream using the \textit{LSP
+  Downstream Error} or the \textit{LSP Upstream Error} messages. Any
+router that form the LSP can initiate the tear down by sending
+\textit{LSP Downstream Release} or \textit{LSP Upstream Release}
+messages. In order to distribute the information concerning the state
+of the data plane, \textit{LSP Notify} messages are used. In
+Table~\ref{tab:rsvp_messages} we can see a mapping between these
+abstract messages and the ones utilized in RSVP-TE.
 
 \begin{table}[!htbp]
   \begin{center}
@@ -800,7 +801,7 @@ messages the header is first extracted to identify the type of the
 objects; then, each object is separately analyzed and processed. The
 task of generalizing RSVP boiled down to the task of creating new
 signaling objects and adding some improvements to the signaling
-protocol like rapid notification and bidirectional LSPs.
+protocol, like rapid notification and bidirectional LSPs.
 
 \begin{figure}[!htbp]
   \centering
@@ -835,7 +836,7 @@ If the Path message is delivered correctly to the next hop, the
 upstream label is saved and a path state is reserved to guarantee the
 correct handling of the next messages. This router then proceeds to
 replace the upstream label with its own, create a state for the
-upstream direction and forwarding the Path message to the next
+upstream direction and forward the Path message to the next
 router. This process continues for each node in the path until the
 message reaches the egress LSR; when that happens, the LSP has been
 successfully established in the upstream direction, but not yet in the
@@ -1113,11 +1114,11 @@ explain why this model was created:
 \item Path computation is generally a computationally intensive
   operation and requires a significant amount of resources: even if
   the software is appropriately designed, the stress on the hardware
-  can't be underestimated since the PCE component must compute all the
-  primary, backup and service paths.
-\item Since it requires considerable resources to run, it is more
-  likely that the PCE won't be embedded in a regular router, but would
-  be deployed in a separate device.
+  can't be underestimated since the PCE component could be asked to
+  compute all the primary, backup and service paths.
+\item Since it requires a considerable amount of resources to run, it
+  is more likely that the PCE won't be embedded in a regular router,
+  but would be instead deployed in a separate device.
 \item Since PCE is designed to provide on-line path computation, the
   response should be quick, in the order of few seconds.
 \item The computational power required grows with the size and the
@@ -1246,7 +1247,7 @@ assumptions:
   \textit{initialization} and \textit{arc relaxation}. During the
   initialization phase, the path estimate of the source node is set to
   zero, which is by definition the distance between the source node
-  and itself; instead, the path estimates for every other node in the
+  and itself; instead, the path estimate for every other node in the
   network is initialized to a relatively large number (this assignment
   will result very important later while searching for the shortest
   path); in the end, all the predecessors will be initialized to a
@@ -1268,8 +1269,8 @@ assumptions:
   something like:
   \begin{quote}
     \begin{lstlisting}
-if (d[u] + w < d[v]) then
-    d[v] = d[u] + w
+if (d[u] + w(a) < d[v]) then
+    d[v] = d[u] + w(a)
     p[v] = u
     \end{lstlisting}
   \end{quote}
@@ -1305,13 +1306,13 @@ Let's analyze the pseudo-code:
 \begin{itemize}
 \item Lines 1-4: the data structures are initialized.
 \item Lines 5-9: this is the body of the algorithm: the relaxation
-  procedure is performed on every arc; this process is repeated |V|-1
-  times, where |V| is the number of the vertices present in the
-  graph. The principle is to propagate the information regarding the
-  path distance estimates across the graph: since the ``longest''
-  shortest path could visit all the nodes in the network only once,
-  repeating the relaxation of all the arcs for the number of the other
-  vertices allows the complete propagation of the minimum
+  procedure is performed on every arc; this process is repeated
+  \(|V|-1\) times, where \(|V|\) is the number of the vertices present
+  in the graph. The principle is to propagate the information
+  regarding the path distance estimates across the graph: since the
+  ``longest'' shortest path could visit all the nodes in the network
+  only once, repeating the relaxation of all the arcs for the number
+  of the other vertices allows the complete propagation of the minimum
   distances. When this section finishes, the execution of the
   algorithm is virtually completed, because the data structures
   already contain the final computed values.
@@ -1321,8 +1322,8 @@ Let's analyze the pseudo-code:
   presence of a loop which total weight sum is negative. If such a
   loop is found, the algorithm returns ``false'', meaning that a
   negative loop was found and no meaningful results can be returned.
-\item Line 13: this is the end of the algorithm: if no negative loop
-  is found, the solutions computed are accepted and returned to the
+\item Line 13: this is the end of the algorithm: if no negative loops
+  are found, the solutions computed are accepted and returned to the
   client; the path distance vector should contain the lowest cost
   necessary to reach any node in the network starting from the source,
   while the predecessor vector should contain the second-to-last hop:
@@ -1331,8 +1332,8 @@ Let's analyze the pseudo-code:
 \end{itemize}
 
 This algorithm mathematical performance is \(O(|V||A|)\): the
-initialization runs in O(|V|), each of the |V|-1 iterations runs in
-\(O(|A|)\) and the final negative loop check runs in \(O(|A|)\).
+initialization runs in \(O(|V|)\), each of the |V|-1 iterations runs
+in \(O(|A|)\) and the final negative loop check runs in \(O(|A|)\).
 
 \subsubsection{Dijkstra}
 
@@ -1340,8 +1341,8 @@ The Dijkstra algorithm is perhaps the most well-known path computation
 algorithm: it solves efficiently the single-source computation problem
 in weighted graphs without negative-weight arcs. While the algorithm
 is running, two sets of vertices are maintained: one containing the
-\textit{labeled vertices}, the nodes which shortest path from the
-source node has already been determined, and another one for the
+\textit{labeled vertices}, i.e.\ the nodes which shortest path from
+the source node has already been determined, and another one for the
 \textit{unlabeled vertices}, i.e.\ the nodes which shortest path
 distance hasn't been found yet. This algorithm requires an additional
 data structure, a priority queue, which contains the unlabeled
@@ -1414,16 +1415,15 @@ the labeled vertices it can't be modified anymore. This is the correct
 behaviour for graphs containing only arcs with positive weights;
 instead, when a negative-weight arc is relaxed, it could always bring
 better shortest path distances to every node, including already
-labeled ones.
-
-This is exactly what the modified version of the algorithm allows:
-even the vertices that are already in the labeled set can always get
-re-labeled. Since this modification could influence other labeled
-vertices, the re-labeled vertex is inserted back in the unlabeled
-vertices set. The modified Dijkstra algorithm cannot be used to solve
-single-pair computation problems elegantly like the original version,
-since every arc that hasn't been relaxed could improve the estimated
-path distance of the rest of the graph.
+labeled ones. This is exactly what the modified version of the
+algorithm allows: even the vertices that are already in the labeled
+set can always get re-labeled. Since this modification could influence
+other labeled vertices, the re-labeled vertex is inserted back in the
+unlabeled vertices set. The modified Dijkstra algorithm cannot be used
+to solve single-pair computation problems elegantly like the original
+version, since every arc that hasn't been relaxed could improve the
+estimated path distance of the rest of the graph: it has to wait the
+termination of the algorithm to give a meaningful answer.
 
 \subsubsection{Breadth First Search}
 
@@ -1439,7 +1439,7 @@ One interesting quality of the BFS algorithm is that if two vertices
 are connected by several paths with the same cost, it will always be
 chosen the path with the smallest number of hops: this is a desirable
 feature in GMPLS, because it simplifies the setup, the management and
-the removal of the LSP. Pseudo-code follows:
+the removal of the LSP\@. Pseudo-code follows:
 
 \begin{quote}
 \begin{lstlisting}
@@ -1480,9 +1480,8 @@ if (d[v] > d[u] + w(a) && d[u] + w(a) < d[dest]) then
 
 The BFS algorithm runs in \(O(|V|+|E|)\), which is considerably faster
 than the other algorithms previously described; this is why it is
-widely used to solve many shortest-path computation problems (only in
-the case of single-pair problems, the performance of Dijkstra is
-better).
+widely used to solve many shortest-path computation problems (the
+performance of Dijkstra is better only in some single-pair problems).
 
 \subsection{Constraint-based Algorithms}
 
@@ -1594,12 +1593,12 @@ software.
 
 \section{DRAGON Software Suite}
 
-The Dynamic Resource Allocation via GMPLS Optical Networks (DRAGON)
-\footnote{\url{http://dragon.maxgigapop.net/twiki/bin/view/DRAGON/}}
+The Dynamic Resource Allocation via GMPLS Optical Networks
+(DRAGON)\footnote{\url{http://dragon.maxgigapop.net/twiki/bin/view/DRAGON/}}
 software suite is a open source GMPLS suite which has been developed
 by three American universities, with the contribution of external
 organizations such as the Massachusetts Institute of Technology (MIT),
-the NASA and the National Science Foundation (NSF). 
+the NASA and the National Science Foundation (NSF).
 
 Its goal is to prove the power and the flexibility of network composed
 by both packet and circuit switched segments in order to enable
@@ -1649,7 +1648,7 @@ concurrently and, depending on the path request, dynamically choose
 which solution fits best. We will now analyze in closer detail the
 RCE.
 
-\subsection{Resource Computation Element}
+\section{Resource Computation Element}
 
 As we have already said, the RCE main functions are to provide the
 resource database (known also as Traffic Engineering Database or TED)
@@ -1689,11 +1688,11 @@ information from the ``neighbour'' TED, there is no need to ask
 repeatedly to other network elements. Therefore, the path computation
 process can run faster eliminating also the possibility of
 inconsistent states. Each time a sane request is received by the RCE,
-a specific LSP sent back to the client; this LSP has been computed
+a specific LSP is sent back to the client; this LSP has been computed
 taking into consideration both the Service Level Agreement (SLA) and
 user specified requirements.
 
-\section{Candidate CSPF Algorithm}
+\section{PCEN Module}
 
 The RCE module that performs the actual path computation is the PCEN;
 the PCEN can use as computation logic any path computation module that
@@ -1724,6 +1723,8 @@ represented:
   terminated the Explicit Route Object is built and sent back to the
   client.
 \end{itemize}
+
+\section{Candidate CSPF Algorithm}
 
 The implemented CSPF algorithm searches for the \textit{loop-less}
 paths between a source and a destination inside a multi-layer network;
@@ -1765,11 +1766,6 @@ while P != empty do
                     S = S + new_path
                 else
                     P = P + new_path
-                endif
-            endif
-         endif
-     done
-done
 \end{lstlisting}
 \end{quote}
 
@@ -1909,13 +1905,14 @@ configuration of each physical node and virtual machine have been
 inspected: where in need to, the software has been upgraded and the
 configuration files have been edited. The connectivity of each node
 has been monitored using programs like \textit{ping} and
-\textit{nmap}; later, the DRAGON environment has been deployed to a
-host and its capability to compile and execute the original software
-has been verified. Also the behaviour of the existing RCE has been
-tested to verify its speed and precision: several tests have been run
-to verify the correctness of the paths returned for each kind of
-request (i.e.\ IP-to-IP, MPLS-to-MPLS and Optical-to-Optical), while
-keeping an eye on the response time and the system load.
+\textit{nmap}\footnote{\url{http://nmap.org/}}; later, the DRAGON
+environment has been deployed to a host and its capability to compile
+and execute the original software has been verified. Also the
+behaviour of the existing RCE has been tested to verify its speed and
+precision: several tests have been run to verify the correctness of
+the paths returned for each kind of request (i.e.\ IP-to-IP,
+MPLS-to-MPLS and Optical-to-Optical), while keeping an eye on the
+response time and the system load.
 
 \begin{figure}[!htbp]
   \begin{center}
@@ -2000,7 +1997,7 @@ program has been widely extended to support new objects, new types of
 request and new constraints. A sequence of test-cases has been setup
 to check the behaviour of the algorithm in all the possible scenarios
 available in the network and these following general considerations
-have been noted:
+have been noted (see also Appendix A):
 \begin{itemize}
 \item If the request sent to the RCE contains an invalid source or
   destination identifier, no path is returned. Instead, an appropriate
@@ -2274,15 +2271,16 @@ analyzing the results we have to consider the different levels of
 complexity of the associated path. The DRAGON environment has been
 restarted between each test to ensure similar start conditions.
 
-The ``valgrind'' tool has been used to verify the memory usage and the
-eventual memory leaks in the software implementation; basically, the
-program was started to monitor the behaviour of the RCE and then a
-specific number of requests was sent from a client; when the RCE had
-completed to process the requests, valgrind was terminated to generate
-a memory usage report. The presence of many extensions has made this
-task considerably easier: in particular the ``massif'' extension has
+The \textit{valgrind}\footnote{\url{http://valgrind.org/}} tool has
+been used to verify the memory usage and the eventual memory leaks in
+the software implementation; basically, the program was started to
+monitor the behaviour of the RCE and then a specific number of
+requests was sent from a client; when the RCE had completed to process
+the requests, valgrind was terminated to generate a memory usage
+report. The presence of many extensions has made this task
+considerably easier: in particular the \textit{massif} extension has
 been very useful to visually trace the memory used by each single
-function. Here follows a summary of the test results:
+function. See also Appendix B for more detailed information:
 
 \begin{table}[!htbp]
   \begin{center}
@@ -2328,9 +2326,8 @@ message handling procedures: to be able to send and receive messages
 asynchronously, a complex class of timers has been implemented; the
 internal functions of this software component contains a bug that
 creates a 40 byte memory leak for each request. This small memory leak
-becomes relevant when the RCE has to handle one thousand messages,
-creating a 40 KB total memory leak.
-
+becomes relevant when the RCE has to handle 1000 messages, creating a
+40 KB total memory leak. \\
 With all the selected algorithms, the footprint of the RCE remains
 relatively small: the implemented version of the RCE never exceeds the
 200 KB memory limit when computing one thousand consecutive
@@ -2401,7 +2398,7 @@ the needs of the Traffic Engineers.
 
 \chapter{RCE behaviour}
 This appendix contains the output of the \textit{rce\_test} utility
-while testing the behaviour of the implemented RCE. The various
+while testing the behaviour of the implemented RCE\@. The various
 examples follow.
 
 \begin{itemize}
