@@ -13,18 +13,133 @@
 \usepackage{listings}
 \lstset{language=C,basicstyle=\footnotesize,numbers=left,numberstyle=\footnotesize,frame=shadowbox, rulesepcolor=\color{black}}
 \usepackage{multirow}
+\usepackage{nomencl}
+\makenomenclature
 \usepackage{ucs}
 \usepackage{url}
-\author{Author: Ju Liu \\ Email: jul@kth.se \\\\
-  Supervisor at KTH: Markus Hidell \\ Supervisors at Acreo: Jonas
-  Mårtensson, Pontus Sköldström \\\\ } 
-\title{\textbf{Master's Thesis}
-  \\Analysis and implementation of a constrained path
-    computation algorithm in a multi-layer GMPLS network}
+\author{\\\\\\\\Author: \Large{Ju Liu} \\ Email: jul@kth.se \\\\\\\\\\\\\\
+  Supervisor at KTH: Markus Hidell \\ Supervisors at Acreo: Pontus Sköldström, Jonas
+  Mårtensson } 
+\title{Master's Thesis
+  \\ \textbf{Analysis and implementation of a constrained path
+    computation algorithm in a multi-layer GMPLS network}}
 \begin{document}
-\setlength{\parskip}{4ex}
-
+\date{}
 \maketitle
+
+\thispagestyle{empty}
+\begin{abstract}
+  The growing number of Internet users and the rapid spread of
+  peer-to-peer services has put under considerable stress the Internet
+  Service Providers' network resources. In order to ensure an
+  efficient service provisioning, various techniques have been
+  developed: amongst others, Generalized Multi-Protocol Label
+  Switching (GMPLS) is a suite of protocols designed to provide
+  Traffic Engineering in multi-layer transport networks; these systems
+  are composed by devices belonging to different link-layer
+  technologies, like MPLS routers, Ethernet switches and optical
+  cross-connects.
+
+  In this thesis, the different mechanisms forming GMPLS have been
+  investigated: in particular, the creation of an automatic service
+  provisioning system has been examined thoroughly, along with the
+  various constraints involved in the process. With this knowledge, a
+  path computation algorithm has been developed and deployed in a
+  testbed environment. Various tests have been performed to prove the
+  feasibility of the chosen solution.
+\end{abstract}
+
+\newpage
+\def\abstractname{Acknowledgments}
+\begin{abstract}\thispagestyle{empty}
+  I would like to thank all the people that helped me during this
+  thesis: many thanks to my supervisors at Acreo Pontus Sköldström and
+  Jonas Mårtensson and my supervisor at KTH Markus Hidell, who have
+  shared their thoughts and suggestions many times. I would also want
+  to thank my supervisor at the Polytechnic of Turin Fulvio Risso and
+  my supervisor at the Polytechnic of Milan Giuseppina Gini for their
+  invaluable assistance. Last but not least, I want to thank all the
+  guys at Acreo, the Kista-italian-lunch crew, my Erasmus friends, my
+  Italian friends and my family for their constant support.
+\end{abstract}
+
+\newpage
+\pagenumbering{roman}
+\setcounter{page}{3}
+\large
+\tableofcontents
+\newpage
+\normalsize
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures} 
+\newpage
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables} 
+
+\newpage
+\printnomenclature[2.5cm] 
+\addcontentsline{toc}{chapter}{List of Abbreviations}
+\nomenclature{AS}{Autonomous System}
+\nomenclature{ASE}{Amplifier Spontaneous Emission}
+\nomenclature{BER}{Bit Error Rate}
+\nomenclature{BFS}{Breadth First Search}
+\nomenclature{CSPF}{Constrained Shortest Path First}
+\nomenclature{CR-LDP}{Constraint-based Routing-Label Distribution Protocol}
+\nomenclature{CWDM}{Coarse Wavelength Division Multiplexing}
+\nomenclature{DWDM}{Dense Wavelength Division Multiplexing}
+\nomenclature{ERO}{Explicit Route Object}
+\nomenclature{FEC}{Forwarding Equivalence Class}
+\nomenclature{FIFO}{First-In-First-Out}
+\nomenclature{FSC}{Fiber Switching Capable}
+\nomenclature{G-PID}{Generalized Payload-ID}
+\nomenclature{GLSR}{Generalized Label Switching Router}
+\nomenclature{GMPLS}{Generalized Multi-Protocol Label Switching}
+\nomenclature{GRE}{Generic Routing Encapsulation}
+\nomenclature{IANA}{Internet Assigned Numbers Authority}
+\nomenclature{IETF}{Internet Engineering Task Force}
+\nomenclature{IS-IS}{Intermediate System to Intermediate System}
+\nomenclature{IP}{Internet Protocol}
+\nomenclature{KSP}{K Shortest Paths}
+\nomenclature{L2SC}{Layer-2 Switching Capable}
+\nomenclature{LIFO}{Last-In-First-Out}
+\nomenclature{LMP}{Link Management Protocol}
+\nomenclature{LMP-WDM}{Link Management Protocol-Wavelength Division Multiplexing}
+\nomenclature{LSC}{Lambda Switching Capable}
+\nomenclature{LSA}{Link State Advertisement}
+\nomenclature{LSP}{Label Switched Path}
+\nomenclature{LSR}{Label Switching Router}
+\nomenclature{MLCP}{Multi-Layer Control Plane}
+\nomenclature{MPLS}{Multi-Protocol Label Switching}
+\nomenclature{NARB}{Network Aware Resource Broker}
+\nomenclature{OADM}{Optical Add-Drop Multiplexer}
+\nomenclature{OEO}{Optical-Electronic-Optical}
+\nomenclature{OOO}{Optical-Optical-Optical}
+\nomenclature{OSNR}{Optical Signal-to-Noise Ratio}
+\nomenclature{OSPF}{Open Shortest Path First}
+\nomenclature{OSPF-TE}{Open Shortest Path First-Traffic Engineering}
+\nomenclature{PCC}{Path Computation Client}
+\nomenclature{PCE}{Path Computation Element}
+\nomenclature{PMD}{Polarization Mode Dispersion}
+\nomenclature{PSC}{Packet Switching Capable}
+\nomenclature{QoS}{Quality of Service}
+\nomenclature{RCE}{Resource Computation Engine}
+\nomenclature{RFC}{Request For Comments}
+\nomenclature{ROADM}{Reconfigurable Optical Add-Drop Multiplexer}
+\nomenclature{RSVP}{Resource ReSerVation Protocol}
+\nomenclature{RSVP-TE}{Resource ReSerVation Protocol-Traffic Engineering}
+\nomenclature{SPF}{Shortest Path First}
+\nomenclature{TED}{Traffic Engineering Database}
+\nomenclature{TLV}{Type-Length-Value}
+\nomenclature{TDM}{Time-Division Multiplexing}
+\nomenclature{TE}{Traffic Engineering}
+\nomenclature{VLSR}{Virtual Label Switching Router}
+\nomenclature{VTY}{Virtual TeletYpe}
+\nomenclature{WDM}{Wavelength Division Multiplexing}
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\setlength{\parskip}{4ex}
 
 \chapter{Introduction}
 The amount of traffic carried by the Internet has experienced a near
@@ -170,7 +285,7 @@ called \textit{shim header} (Figure~\ref{fig:mpls_label}).
       \bitbox{20}{Label} & \bitbox{3}{Exp} & \bitbox{1}{S} &
       \bitbox{8}{TTL}
     \end{bytefield}
-    \caption[MPLS label]{the MPLS shim header: 20-bit Label, 3-bit
+    \caption[MPLS label]{The MPLS shim header: 20-bit Label, 3-bit
       experimental field, 1-bit bottom of stack field and 8-bit Time
       To Live field.}
     \label{fig:mpls_label}
@@ -205,8 +320,8 @@ a MPLS network can be seen in Figure~\ref{fig:mpls_net}.
 \begin{figure}[!hbp]
   \centering
   \includegraphics[width=0.9\textwidth]{img/mpls_net}
-  \caption[MPLS network]{Example of an MPLS network showing IP
-    routers, Label Edge Routers and Label Switching Routers. Traffic
+  \caption[MPLS network example]{Example of an MPLS network showing IP
+    Routers, Label Edge Routers and Label Switching Routers. Traffic
     between the IP and Edge routers is forwarded based on the IP
     header, while within the MPLS network packets are switched on
     labels.}
@@ -257,8 +372,9 @@ path, even if there are clearly two unused paths available.
 \begin{figure}[!hbp]
   \centering
   \includegraphics[width=0.9\textwidth]{img/mpls_te}
-  \caption[Traffic Engineering]{The more the traffic between LAN A and
-    LAN B increases, the more the dotted line becomes congested.}
+  \caption[Traffic Engineering example]{The more the traffic between
+    LAN A and LAN B increases, the more the dotted line becomes
+    congested.}
   \label{fig:mpls_te}
 \end{figure}
 
@@ -322,7 +438,7 @@ is capable of switching a certain quantity: this is done by a special
 descriptor called \textit{Interface Switching Capability Descriptor}
 (ISCD).
 
-\begin{figure}[!hbp]
+\begin{table}[!hbp]
   \begin{center}
     \begin{tabular}{|l|l|l|}
       \hline
@@ -337,12 +453,12 @@ descriptor called \textit{Interface Switching Capability Descriptor}
       Fiber-Switch Capable & FSC & 200 \\
       \hline
     \end{tabular}
-    \caption[Interface Switching Capability Descriptor]{The possible
+    \caption[Interface Switching Capability Descriptors]{The possible
       values of the Switching Capability field in the Interface
       Switching Capability Descriptor as defined by RFC4205.}
-    \label{fig:gmpls_iscd}
+    \label{tab:gmpls_iscd}
   \end{center}
-\end{figure}
+\end{table}
 
 \subsection{Still Label Switching}
 The essential feature of MPLS has obviously still a great importance
@@ -432,8 +548,9 @@ traditional IP addressing.
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.75\textwidth]{img/gmpls_mlcp}
-  \caption[MPLS network]{The dotted lines represent the control plane
-    links, while the normal lines represent the data plane links.}
+  \caption[Control and data links]{The dotted lines represent the
+    control plane links, while the normal lines represent the data
+    plane links.}
   \label{fig:gmpls_mlcp}
 \end{figure}
 
@@ -461,14 +578,13 @@ example, it is not possible to encapsulate a wavelength inside another
 wavelength and extract it back at the end of the tunnel. This is also
 related to the fact that in GMPLS the label is logically associated
 with the physical resource and to change the label would mean to
-modify in some way the physical resource.
-
-Therefore, the meaning of LSP tunnel changes completely in GMPLS: the
-hierarchy of the tunnels is now based on the natural difference in
-granularity of the different network technologies. This means that the
-LSP tunnels follow the same hierarchy of the physical architecture:
-packet may be nested in a time-slot, time-slots may be grouped in a
-wavelength and wavelengths may be nested in a fiber (as shown in
+modify in some way the physical resource. Therefore, the meaning of
+LSP tunnel changes completely in GMPLS: the hierarchy of the tunnels
+is now based on the natural difference in granularity of the different
+network technologies. This means that the LSP tunnels follow the same
+hierarchy of the physical architecture: packet may be nested in a
+time-slot, time-slots may be grouped in a wavelength and wavelengths
+may be nested in a fiber (as shown in
 Figure~\ref{fig:gmpls_hierarchy}).
 
 This solution offers a better scalability to the system, allowing the
@@ -478,7 +594,7 @@ more efficient traffic engineering.
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.9\textwidth]{img/gmpls_hierarchy}
-  \caption[GMPLS LSP Hierarchy]{The GMPLS LSP Hierarchy: packets are
+  \caption[GMPLS LSP hierarchy]{The GMPLS LSP Hierarchy: packets are
     nested in time-slots, which are nested in wavelengths, which are
     nested in fibers.}
   \label{fig:gmpls_hierarchy}
@@ -505,6 +621,8 @@ guarantee of a specific Quality of Service. The protocols in use are
 Resource ReserVation Protocol with TE additions (RSVP-TE) and
 Constraint-based Routing-Label Distribution Protocol (CR-LDP). There
 will be an overview of RSVP-TE in the following sections.
+
+\newpage
 
 Regarding link management, these protocols are used by in a GMPLS
 network to discover and verify the connectivity of the links; a new
@@ -533,19 +651,19 @@ area are called backbone routers.
 There are five types of messages that the routers can exchange in
 OSPF: Hello, Database Description, Link State Request, Link State
 Update, and Link State Acknowledge. They all share the same OSPF
-header and are briefly described in Figure~\ref{fig:ospf_messages}.
+header and are briefly described in Table~\ref{tab:ospf_messages}.
 
 Basically, each router at first exchange Hello messages with their
 neighbours to establish routing adjacency; then, they synchronize
 their link databases by exchanging link database descriptors: these
 messages contain at least one database data structure, known as Link
 State Advertisement (LSA). There are also several types of LSA which
-are explained in Figure~\ref{fig:ospf_lsa}. When the database
+are explained in Table~\ref{tab:ospf_lsa}. When the database
 descriptors of all the routers have been distributed across the
 network, the Link State Database can be built and used to calculate
 the Shortest Path First routing tables.
 
-\begin{figure}[!tbp]
+\begin{table}[!tbp]
   \begin{center}
     \begin{tabular}{|l|l|p{0.45\textwidth}|}
       \hline
@@ -562,10 +680,10 @@ the Shortest Path First routing tables.
       link state messages. \\
       \hline
     \end{tabular}
-    \caption[OSPF Messages]{The various types of message in OSPF}
-    \label{fig:ospf_messages}
+    \caption[OSPF messages]{The various types of message in OSPF.}
+    \label{tab:ospf_messages}
   \end{center}
-\end{figure}
+\end{table}
 
 One of the most important elements for GMPLS routing is the ``Link
 State Update'' message, because it carries along one or more LSAs and
@@ -583,7 +701,7 @@ which contains the actual Traffic Engineering information, such as the
 router ID, the local and the remote IP addresses, the reserved
 bandwidth, the reservable bandwidth etc.
 
-\begin{figure}[!tbp]
+\begin{table}[!tbp]
   \begin{center}
     \begin{tabular}{|l|l|p{0.60\textwidth}|}
       \hline
@@ -607,11 +725,11 @@ bandwidth, the reservable bandwidth etc.
       carries opaque information within an AS. \\
       \hline
     \end{tabular}
-    \caption[OSPF-TE LSA Types]{OSPF-TE LSA types, names and
-      descriptions}
-    \label{fig:ospf_lsa}
+    \caption[OSPF-TE LSA types]{OSPF-TE LSA types, names and
+      descriptions.}
+    \label{tab:ospf_lsa}
   \end{center}
-\end{figure}
+\end{table}
 
 The TE information will be then used to create a new type of Database,
 called the Traffic Engineering Database (TED); the TED has a critical
@@ -645,11 +763,11 @@ downstream or upstream using the \textit{LSP Downstream Error} or the
 initiate the tear down by sending \textit{LSP Downstream Release} or
 \textit{LSP Upstream Release} messages. In order to distribute the
 information concerning the state of the data plane, \textit{LSP
-  Notify} messages are used. In Figure~\ref{fig:rsvp_messages} we can
+  Notify} messages are used. In Table~\ref{tab:rsvp_messages} we can
 see a mapping between these abstract messages and the ones utilized in
 RSVP-TE.
 
-\begin{figure}[!htbp]
+\begin{table}[!htbp]
   \begin{center}
     \begin{tabular}{|l|l|}
       \hline
@@ -664,11 +782,11 @@ RSVP-TE.
       LSP Notify & Notify \\
       \hline
     \end{tabular}
-    \caption[RSVP-TE Messages]{The various types of message in
-      RSVP-TE}
-    \label{fig:rsvp_messages}
+    \caption[RSVP-TE messages]{The various types of message in
+      RSVP-TE.}
+    \label{tab:rsvp_messages}
   \end{center}
-\end{figure}
+\end{table}
 
 The signaling message is generally composed by multiple signaling
 objects that share a common header: when a LSP receives one of these
@@ -681,7 +799,7 @@ protocol like rapid notification and bidirectional LSPs.
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.9\textwidth]{img/rsvp_message}
-  \caption[RSVP Message]{A RSVP Message, included in a IP data-gram
+  \caption[RSVP message]{A RSVP Message, included in a IP data-gram
     and composed by multiple objects; each of the objects may be
     composed by multiple sub-objects.}
   \label{fig:rsvp_message}
@@ -735,7 +853,7 @@ an example of this process.
   \label{fig:rsvp_path}
 \end{figure}
 
-\subsubsection{LSP removal}
+\subsubsection{LSP Removal}
 
 There are two types of message used in RSVP-TE to remove LSPs,
 \textit{PathTear} and \textit{PathErr}; when a LSR decides to remove a
@@ -761,7 +879,7 @@ efficiency.
   \label{fig:rsvp_tear}
 \end{figure}
 
-\subsubsection{Error handling}
+\subsubsection{Error Handling}
 
 During the whole process of establishing and removing LSPs across our
 network, we can easily guess that sooner or later errors are going to
@@ -879,7 +997,7 @@ will proceed to describe the specific architecture and algorithms
 involved. Then, it will treat the various constraints that need to be
 analyzed.
 
-\section{Basic definitions}
+\section{Basic Definitions}
 
 A \textit{transport service} is a system designed to provide a range
 of services to the end user by delivering traffic from the information
@@ -931,7 +1049,7 @@ represents this interaction.
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.5\textwidth]{img/pce_pcc}
-  \caption[PCE/PCC Model]{The PCE/PCC interaction model; in this case,
+  \caption[PCE/PCC model]{The PCE/PCC interaction model; in this case,
     the PCC is represented by a LSR.}
   \label{fig:pce_pcc}
 \end{figure}
@@ -977,7 +1095,8 @@ reply. This model is shown in Figure~\ref{fig:pce_external}.
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.65\textwidth]{img/pce_external}
-  \caption[External PCE model]{An external PCE node.}
+  \caption[External PCE model]{An external PCE node; note the
+    separation of the TED/PCE.}
   \label{fig:pce_external}
 \end{figure}
 
@@ -1035,7 +1154,7 @@ computation problems. Later it will explain the fundamental algorithms
 that have been discovered. The last part will then focus on how to
 extend these algorithms to support constrained path computation.
 
-\subsection{Basic definitions}
+\subsection{Basic Definitions}
 
 The most common way to represent a network is to use a \textit{graph}
 (an example can be seen in Figure~\ref{fig:graph_example}): the
@@ -1062,7 +1181,7 @@ path is just the hop count.
 \begin{figure}[!hbp]
   \begin{center}
     \includegraphics[width=0.8\textwidth]{img/graph_example}
-    \caption[Graph example]{A network graph representation with vertices
+    \caption[Network graph example]{A network graph representation with vertices
       as nodes and arcs as links; each arc has a weight, which
       represents the cost of the link.}
     \label{fig:graph_example}
@@ -1090,7 +1209,7 @@ all-pairs problem can be obtained by applying the single-source to
 every node in the network. Therefore, we will analyze the most
 important single-source algorithms.
 
-\subsection{Basic single-source algorithms}
+\subsection{Basic Single Source Algorithms}
 
 The most important single-source algorithms that will be discussed are
 the Bellman-Ford, the Dijkstra, the Modified Dijkstra and the Breadth
@@ -1325,28 +1444,259 @@ d[s] = 0
 F = s
 while F != 0 do
     for every u in F do
+        F = F - u
         for every arc a(u,v) in A
-            F = F - u
             if (d[v] > d[u] + w(a)) then
                 d[v] = d[u] + w(a)
                 p[v] = u
-                F = F + u
+                F = F + v
 \end{lstlisting}
 \end{quote}
 
 \begin{itemize}
-\item
+\item Lines 1-5: initialization of the basic data structures; the F
+  set contains the source vertex.
+\item Lines 6-13: this is the body of the algorithm; for every node u
+  contained in F this procedure is repeated: u is removed from F and a
+  relaxation is attempted for all the arcs originating from u; if this
+  succeeds, the vertices where the arcs end are added to the F
+  set. When this set is empty, the algorithm terminates.
 \end{itemize}
 
+Like for Dijkstra's algorithm, also BFS can be optimized for
+single-pair shortest path problems by editing line 8 in (d[dest] is the
+path distance estimate for the destination node):
+\begin{quote}
+\begin{verbatim}
+if (d[v] > d[u] + w(a) && d[u] + w(a) < d[dest]) then
+\end{verbatim}
+\end{quote}
 
-\chapter{Testing and verification}
+The BFS algorithm runs in \(O(|V|+|E|)\), which is considerably faster
+than the other algorithms previously described; this is why it is
+widely used to solve many shortest-path computation problems (only in
+the case of single-pair problems, the performance of Dijkstra is
+better).
+
+\subsection{Constraint-based Algorithms}
+
+All the algorithms that have been described return a group of shortest
+paths or a single shortest path, taking into consideration a single
+constraint, which is represented by the weight of the arc. Although,
+in a multi-layer network, there are many different constraints to
+consider, which have to be analyzed at the same time in order to
+compute a meaningful answer: \textit{constraint-based algorithms} are
+able to compute network paths while respecting a predefined set of
+constraints.
+
+First of all, we need to make a distinction between \textit{link-type}
+constraints and \textit{path-type} constraints: while link-type
+constraints describe intrinsic characteristics of the link like the
+available bandwidth or the supported switching capabilities, path-type
+constraints define requirements to be applied to the final path, such
+as the end-to-end delay or the total weight sum. Since these two types
+of constraints impact differently on the behaviour of the algorithm,
+they need to be considered in two separate phases.
+
+Link-type requirements are easily fulfilled by analyzing the network
+representation before actually running the path computation algorithm:
+if a link does not respect one of the link-type constraints, it is
+immediately removed from the graph; for example, if the client
+requests a certain minimum bandwidth to be respected  on the path, the
+algorithm can check the available bandwidths of all the links and
+prune the unfit ones. An example can be seen in
+Figure~\ref{fig:graph_pruning}.
+
+\begin{figure}[!tbp]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{img/graph_pruning}
+    \caption[Graph pruning]{Graph pruning: all the links in
+      Figure~\ref{fig:graph_example} with a weight greater than 5 have
+      been removed.}
+    \label{fig:graph_pruning}
+  \end{center}
+\end{figure}
+
+On the contrary, path-type constraints cannot be evaluated before
+running the path computation algorithm: in fact, they can be
+considered only when a path is being computed; for example, if the
+client request contains a end-to-end delay requirement, the algorithm
+should check at each iteration the current end-to-end delay sum and
+continue the computation only if such a value still respects the
+constraint. Path-type requirements must therefore be checked
+continuously during the algorithm execution; while these constraints
+add a considerable overhead to the overall time performance of the
+algorithm, they could also improve its space efficiency (for example
+by removing paths whenever deemed useless or unfit).
+
+Actually, there is another group of path-type constraints that can be
+evaluated only when the path computation is terminated: this happens
+when the path-type constraint can be \textit{compensated}, which means
+that even if during the computation the value of a variable can exceed
+its limit, it can still recover before the termination of the
+algorithm.
+
+In order to implement the algorithm for evaluating the path-type
+constraints, a Constrained Shortest Path First (CSPF) algorithm must
+be designed; there are different approaches that can be followed:
+\begin{enumerate}
+\item Compute the paths using a conventional SPF algorithm; when the
+  SPF algorithm terminates, evaluate them.
+\item Configure a SPF algorithm to compute several shortest paths and then
+  sequentially request and evaluate them.
+\item Compute concurrently all the possible paths while evaluating the
+  requested constraints and immediately discarding the unfit paths.
+\end{enumerate}
+
+One of the solutions developed to solve the CSPF problem is to choose
+one of the basic single-source algorithms; then, that algorithm is
+modified to be able to process a set of constraints during the path
+computation: a good moment for analyzing path constraints is during
+arc relaxation, since it is basically the moment when the nodes are
+added (or re-added) to the working sub-paths. If any sub-path doesn't
+fulfill one of the path constraints (and this specific constraint
+can't be compensated later), it is useless to keep it further: the
+sub-path is therefore discarded and immediately removed from the
+algorithm data structures. Note that when constraints can be
+compensated, this optimization cannot be performed, since a future
+link could always recover the unfit constraint.
+
+Another viable solution is represented by the K Shortest Path (KSP)
+algorithm, which computes the k shortest paths between two network
+nodes (k is specified in the path computation request). This solution
+boils down to calling consecutively a SPF algorithm while changing the
+network; after the KSP algorithm is initialized, paths can be
+consecutively requested and evaluated. When a path fulfills the
+requirements, it can be returned to the Path Computation Element.
+
+The last considered solution can be implemented by concurrently
+computing all the paths: algorithms based on the Optimal Algorithm for
+Maximal Disjointness are able to compute all the possible paths at the
+same time, discarding the ones which do not respect the set of
+path-type constraints. This is done by initializing path candidates in
+an iterative way, analyzing the path constraints and detecting the
+eventual loops in each hop until a valid path is found. Although this
+type of solution requires more resources and can become expensive in
+terms of computational power, it is the only one that can handle
+link-type and path-type constraints in an integrated fashion.
+
+\chapter{Software Implementation}
+
+This chapter will introduce the DRAGON environment and explain in
+detail the methodology that was followed while implementing the
+software.
+
+\section{DRAGON Software Suite}
+
+The Dynamic Resource Allocation via GMPLS Optical Networks (DRAGON)
+\footnote{\url{http://dragon.maxgigapop.net/twiki/bin/view/DRAGON/}}
+software suite is a open source GMPLS suite which has been developed
+by three American universities, with the contribution of external
+organizations such as the Massachusetts Institute of Technology (MIT),
+the NASA and the National Science Foundation (NSF). 
+
+Its goal is to prove the power and the flexibility of network composed
+by both packet and circuit switched segments in order to enable
+dynamic end-to-end service provisioning. It is composed by a variety
+of UNIX daemons and some other elements:
+
+\begin{itemize}
+\item \textbf{OSPF-TE}: the OSPF daemon is an enhanced version of the
+  GNU Zebra OSPF daemon; it has been added the traffic engineering
+  support for opaque LSAs and parts of the LMP protocol have been
+  incorporated. It is written in C.
+\item \textbf{RSVP-TE}: the RSVP daemon is based on the KOM-RSVP open
+  source daemon. It is written in C++.
+\item \textbf{PCE}: the PCE component is provided by the NARB/RCE
+  daemons implemented by the DRAGON project. It can perform complex
+  path calculations and manage intra-domain/inter-domain
+  communication. These components are written in C++.
+\item \textbf{Dragon}: the dragon daemon helps to initiate RSVP
+  signaling and is written in C.
+\end{itemize}
+
+All these different components communicate with each through Inter
+Process Communication (IPC) or IP based protocols. A graph
+representing the interactions can be seen below:\\\\
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{img/dragon_model}
+    \caption[The Dragon model]{The various DRAGON elements and the
+      interactions between them.}
+    \label{fig:dragon_model}
+  \end{center}
+\end{figure}
+
+Our main point of interest is represented by the NARB/RCE couple,
+which is responsible for the provisioning and the management of
+network resources; while the NARB (\textit{Network Aware Resource
+  Broker}) performs higher-level functions like domain level topology
+abstraction, inter-domain path computation, inter-domain routing and
+end-to-end LSP management, the RCE (\textit{Resource Computation
+  Element}) provides the raw resource database and the path
+computations capabilities.
+
+Therefore, the path computation algorithm is a module which is
+inserted inside the RCE; the RCE can load many different algorithms
+concurrently and, depending on the path request, dynamically choose
+which solution fits best. We will now analyze in closer detail the
+RCE.
+
+\subsection{Resource Computation Element}
+
+As we have already said, the RCE main functions are to provide the
+resource database (known also as Traffic Engineering Database or TED)
+and the path computation services to the NARB; for this reason, it is
+usual to incorporate the RCE inside the NARB and refer to this
+combination as the NARB/RCE element (see also
+Figure~\ref{fig:dragon_model}). Although, the RCE is not hard-linked
+to the NARB and can also provide these functions to any control-plane
+module that implements an RCE API client.
+
+The RCE is a standalone software that is composed by two elements: the
+self-contained TED which is synchronized to an external routing
+protocol (in our case OSPF-TE) and the \textit{Path Computation
+  Engine} (PCEN) which utilizes the information stored in the TED to
+perform constraint-based path computation. The so-called 3D Resource
+Computation Module (RCM) is used to aggregate in the path computation
+algorithm three logical dimensions of constraints: the Traffic
+Engineering constraints, the time schedule constraints and the AAA
+(\textit{Authentication, Authorization and Accounting}) policy
+constraints. Whenever these constraints aren't available in the TED,
+they can be imported from other control-plane elements.\\
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{img/rce_model}
+    \caption[The RCE model]{The various RCE elements and the
+      interactions between them.}
+    \label{fig:rce_model}
+  \end{center}
+\end{figure}
+
+\newpage
+
+The PCEN functions correspond to those previously described for the
+PCE: but since now it is sufficient to retrieve the network
+information from the ``neighbour'' TED, there is no need to ask
+repeatedly to other network elements. Therefore, the path computation
+process can run faster eliminating also the possibility of
+inconsistent states. Each time a sane request is received by the RCE,
+a specific LSP sent back to the client; this LSP has been computed
+taking into consideration both the Service Level Agreement (SLA) and
+user specified requirements.
+
+\section{Candidate CSPF Algorithm}
+
+\chapter{Testing and Verification}
  
 In this chapter, the functionality of the whole network that has been
 used as testbed will be analyzed; then, we will move to the
 verification of the software implementation and an explanation of the
 performance results.
  
-\section{Testbed environment verification}
+\section{Testbed Environment}
  
 The testbed environment at Acreo is composed by a variety of network
 devices: while some are actual devices, some are virtualized through
@@ -1378,14 +1728,14 @@ a list of the physical devices:
  
 The virtual network is hosted through two different servers, a HP
 xw8400 and a Dell Optiplex GX620. Their specifics can be seen in
-Figure~\ref{fig:testbed_vm}. All the virtual machines have Ubuntu 6.06
+Table~\ref{tab:testbed_vm}. All the virtual machines have Ubuntu 6.06
 as operative system using the 2.6.15-16 Linux kernel: the HP server
 hosts three optical nodes (vROADM1, vROADM2 and vROADM3), an optical
 cross-connect (vOXC1) and three Ethernet/Optical boundary devices
 (vEC1, vEC2 and vEC3), while the Dell server hosts three Ethernet
 switches (vE1, vE2 and vE3).
  
-\begin{figure}[!htbp]
+\begin{table}[!htbp]
   \begin{center}
     \begin{tabular}{|l|l|l|}
       \hline
@@ -1404,11 +1754,11 @@ switches (vE1, vE2 and vE3).
       & vROADM3, vOXC1 & \\
       & vEC1, vEC2, vEC3 & \\ \hline
     \end{tabular}
-    \caption[Virtual machines sever specifics]{Hardware and software
+    \caption[VM servers specifics]{Hardware and software
       specifics of the servers deploying the virtual machines.}
-    \label{fig:testbed_vm}
+    \label{tab:testbed_vm}
   \end{center}
-\end{figure}
+\end{table}
  
 Since some of the network devices weren't functional during the
 testing phase, the network representation graph in
@@ -1416,7 +1766,7 @@ Figure~\ref{fig:testbed_model} does not include them; instead, only
 the operative and significant nodes have been represented,
 distinguishing the virtual hosts from the physical ones and the
 Ethernet links (IP and MPLS) from the optical ones
-(Figure~\ref{fig:testbed_legend} acts as a reference to each node in
+(Table~\ref{tab:testbed_legend} acts as a reference to each node in
 the network).
 
 In order to ensure the correct functioning of the testbed, the
@@ -1435,12 +1785,12 @@ keeping an eye on the response time and the system load.
 \begin{figure}[!htbp]
   \begin{center}
     \includegraphics[width=1\textwidth]{img/testbed_model}
-    \caption[Testbed representation]{The testbed network.}
+    \caption[Testbed model]{The testbed network.}
     \label{fig:testbed_model}
   \end{center}
 \end{figure}
  
-\begin{figure}[!htbp]
+\begin{table}[!htbp]
   \begin{center}
     \begin{tabular}{|l|l|l|l|}
       \hline
@@ -1468,11 +1818,11 @@ keeping an eye on the response time and the system load.
     \end{tabular}
     \caption[Testbed network nodes]{Testbed network nodes reference:
       name, type, description and identifier.}
-    \label{fig:testbed_legend}
+    \label{tab:testbed_legend}
   \end{center}
-\end{figure}
+\end{table}
 
-\section{Software implementation verification}
+\section{Software Implementation}
 
 To be able to verify the correctness of the software implementation,
 it has been deployed in the testbed environment: the modified version
@@ -1576,14 +1926,14 @@ These tests have proved that the developed algorithm fulfills the
 foreseen objectives, allowing to the RCE to successfully compute paths
 in a multi-layer environment.
 
-\section{Performance evaluation}
+\section{Performance Evaluation}
 
 In this section, the performance of the implemented algorithm will be
 evaluated considering the usage of two resources: \textit{time},
 intended as the response time of the algorithm and \textit{space},
 intended as the memory needed to run it.
 
-\subsection{Time efficiency}
+\subsection{Time Efficiency}
 The time efficiency of the algorithm has been measured starting from
 the \textit{response time}, that is the time that passes from the
 moment when the RCE receives the path computation request to the
@@ -1626,7 +1976,7 @@ with 10, 100 and 1000 iterations respectively. The maximum, the
 minimum and the average value has been then calculated; also the
 standard deviation has been taken into consideration. Here are the
 results of the first test case, a simple path on the Ethernet layer:
-\begin{figure}[!htbp]
+\begin{table}[!htbp]
   \begin{center}
     \begin{tabular}{|l||l|l|l|l|l||l|}
       \hline
@@ -1652,17 +2002,17 @@ results of the first test case, a simple path on the Ethernet layer:
       Standard Deviation & 0.46 & 6.64 & 2.26 & 12.09 & 0.64 & 18.27
       \\ \hline
     \end{tabular}
-    \caption[Time efficiency on Ethernet layer]{Algorithm time
+    \caption[Algorithm time efficiency on Ethernet]{Algorithm time
       efficiency on the Ethernet layer (rt represents the total
       response time).}
-    \label{fig:test_eth}
+    \label{tab:test_eth}
   \end{center}
-\end{figure}
+\end{table}
 
 The test on the optical layer requested to the algorithm to compute a
 path composed by three nodes; the wavelength had to be chosen
 automatically and the received set of constraints had to be fulfilled.
-\begin{figure}[!htbp]
+\begin{table}[!htbp]
   \begin{center}
     \begin{tabular}{|l||l|l|l|l|l||l|}
       \hline
@@ -1688,16 +2038,16 @@ automatically and the received set of constraints had to be fulfilled.
       Standard Deviation & 0.64 & 9.2 & 1.34 & 16.36 & 2.23 & 22.44 \\
       \hline
     \end{tabular}
-    \caption[Time efficiency on optical layer]{Algorithm time
-      efficiency on the optical layer.}
-    \label{fig:test_opt}
+    \caption[Algorithm time efficiency in the optical layer]{Algorithm time
+      efficiency in the optical layer.}
+    \label{tab:test_opt}
   \end{center}
-\end{figure}
+\end{table}
 
 The following statistics are the result of the last test, where the
 algorithm had to compute a long and complex multi-layer path:
 
-\begin{figure}[!htbp]
+\begin{table}[!htbp]
   \begin{center}
     \begin{tabular}{|l||l|l|l|l|l||l|}
       \hline
@@ -1723,17 +2073,17 @@ algorithm had to compute a long and complex multi-layer path:
       Standard Deviation & 0.63 & 6.84 & 0.98 & 40.84 & 0.91 & 44.44
       \\ \hline
     \end{tabular}
-    \caption[Time efficiency on multi-layer]{Algorithm time
-      efficiency on a multi-layer environment.}
-    \label{fig:test_opt}
+    \caption[Algorithm time efficiency in a multi-layer environment]{Algorithm time
+      efficiency in a multi-layer environment.}
+    \label{tab:test_opt}
   \end{center}
-\end{figure}
+\end{table}
 
 Here is a short summary of the time performances of the tests:
 \begin{figure}[!htbp]
   \begin{center}
     \includegraphics[width=1\textwidth]{img/time_graph}
-    \caption[Time efficiency graph]{Time efficiency graph.}
+    \caption[Algorithm time efficiency graph]{Time efficiency graph.}
     \label{fig:time_graph}
   \end{center}
 \end{figure}
@@ -1799,7 +2149,7 @@ task considerably easier: in particular the ``massif'' extension has
 been very useful to visually trace the memory used by each single
 function. Here follows a summary of the test results:
 
-\begin{figure}[!htbp]
+\begin{table}[!htbp]
   \begin{center}
     \begin{tabular}{|l|c|c|c|c|}
       \hline
@@ -1820,9 +2170,9 @@ function. Here follows a summary of the test results:
       three different tests have been performed with 10, 100 and 1000
       requests. The three algorithms considered are the Ethernet-only
       Dijkstra, the optical-only BFS and the multi-layer one.}
-    \label{fig:test_eth}
+    \label{tab:test_eth}
   \end{center}
-\end{figure}
+\end{table}
 
 The differences that can be observed in this summary is somehow
 predictable: while the allocated data structures remains the same for
@@ -1853,7 +2203,64 @@ requests. In fact, the physical network devices that actually act as
 RCE in a network are provided with several hundreds of megabytes of
 RAM.
 
-\chapter{Conclusions}
+\chapter{Conclusion and future work}
+
+\section{Conclusion}
+
+This thesis work have been focused on the improvement of the automatic
+path-setup process in a complex multi-layered network: a path
+computation algorithm has been developed and thoroughly tested,
+proving that it is feasible to simplify the current manual process
+with a faster and more dynamic one. The implemented solution can
+handle successfully a wide range of path constraints, showing also the
+capability of adapting itself in case of network topology changes; in
+addition, the support of user-defined constraints makes the system
+more flexible, allowing a finer degree of configuration.
+
+This multi-layer algorithm permitted to deploy the RCE in a
+multi-layer environment: the multiple tests that were executed have
+shown that the chosen solution maintains an overall good performance;
+furthermore, since the RCE returns proper RSVP-TE ERO messages, there
+is no need to further process the results of the path computation and
+it is immediately possible to signal the LSPs. The path computation
+element has been tested in an environment composed by several virtual
+nodes running on the same physical server; considering this special
+network setup, the response times of the algorithm have been fairly
+good. We have also seen that increasing the number of nodes involved
+in the path computation does not lead to an exponential increase of
+time and memory usage. Therefore, this solution appears to be a very
+good candidate for the problem of end-to-end service provisioning in
+complex multi-layer networks.
+
+\section{Future Work}
+
+The testbed environment could be improved by adding more physical and
+virtual devices: this could give a better view of the algorithm
+performance, especially when the number of the nodes involved in the
+computation grows significantly.
+
+The algorithm developed in this thesis can be extended to support more
+link layer technologies and related constraints: for example, VLAN tag
+continuity can be easily implemented and inserted inside the current
+code structure; another interesting addition to the algorithm would be
+the creation of a new system for handling wavelength conversion. Also
+the support of graphs containing arcs with negative-weights could be
+added to represent with more flexibility the network topology. 
+
+An interesting follow-up work consists in modifying the current
+implementation to include a built-in support for backup routes: when
+the client send the path computation request to the RCE, it could
+specify a desired number of backup routes and associated
+configurations. Although this could be done with the current software
+by sending a sequence of different requests with certain constraints,
+a new system specifically designed for this task can better fulfill
+the needs of the Traffic Engineers.
+
+\cleardoublepage
+\phantomsection
+\renewcommand\bibname{References}
+\addcontentsline{toc}{chapter}{References} \nocite{*}
+\bibliography{bibliography} \bibliographystyle{is-alpha}
 
 \end{document}
 

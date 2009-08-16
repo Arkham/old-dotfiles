@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="29cm" height="25cm" viewBox="76 58 580 487" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke-dasharray: 4; stroke: #000000" x="78" y="118" width="577" height="426.5" rx="60" ry="60"/>
+  <g>
+    <rect style="fill: #ffffff" x="122" y="161" width="122" height="61"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="122" y="161" width="122" height="61"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="305.1" y="160.2" width="122" height="61"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="305.1" y="160.2" width="122" height="61"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="487.2" y="160.4" width="122" height="61"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="487.2" y="160.4" width="122" height="61"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="123.3" y="281" width="122" height="82.6"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="123.3" y="281" width="122" height="82.6"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="305.1" y="281.7" width="122" height="82.6"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="305.1" y="281.7" width="122" height="82.6"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="487.2" y="281.9" width="122" height="82.6"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="487.2" y="281.9" width="122" height="82.6"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="123" y="420.5" width="305" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="123" y="420.5" width="305" height="52"/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="150" y="193.5">
+    <tspan x="150" y="193.5">RCE Server</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="340.1" y="195.7">
+    <tspan x="340.1" y="195.7">OSPF API</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="518.2" y="193.9">
+    <tspan x="518.2" y="193.9">Other APIs</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="142.3" y="319.3">
+    <tspan x="142.3" y="319.3">LSP Schedule </tspan>
+    <tspan x="142.3" y="335.3">      Table</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="337.1" y="319">
+    <tspan x="337.1" y="319">AAA Rules </tspan>
+    <tspan x="337.1" y="335">   Table</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="534.2" y="326.2">
+    <tspan x="534.2" y="326.2">TED</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="247" y="449.5">
+    <tspan x="247" y="449.5">CSPF PCEN</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="427.1" y1="190.7" x2="484.739" y2="278.166"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="476.292,274.434 485.97,280.033 484.642,268.932 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="548.2" y1="221.4" x2="548.2" y2="277.428"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="543.2,269.664 548.2,279.664 553.2,269.664 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="184.201" y1="276.529" x2="183.099" y2="226.471"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="179.032,268.877 184.251,278.764 189.029,268.657 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="188.268,234.123 183.049,224.236 178.271,234.343 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="366.1" y1="225.672" x2="366.1" y2="277.228"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="371.1,233.436 366.1,223.436 361.1,233.436 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="361.1,269.464 366.1,279.464 371.1,269.464 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 432.453,446.882 A 112.391,112.391 0 0 0 546.931,368.785"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="549.781,377.623 547.608,366.656 540.138,374.975 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440.694,442.815 430.224,446.735 439.642,452.759 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 290.049,414.029 A 292.584,292.584 0 0 0 224.841,228.954"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="233.682,231.684 223.434,227.216 226.008,238.096 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="285.227,406.174 290.041,416.264 295.225,406.358 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="244" y1="191.5" x2="302.592" y2="277.997"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="294.098,274.374 303.846,279.849 302.377,268.765 "/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:16.9333;font-family:sanserif;font-style:normal;font-weight:700" x="348.5" y="517.5">
+    <tspan x="348.5" y="517.5">RCE</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="185" y1="151.028" x2="185" y2="84.9721"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="180,143.264 185,153.264 190,143.264 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="190,92.7361 185,82.7361 180,92.7361 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="366.149" y1="155.728" x2="366.951" y2="81.9719"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="361.233,147.91 366.124,157.964 371.233,148.019 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="371.867,89.7898 366.976,79.7359 361.867,89.6809 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="547.342" y1="154.955" x2="545.58" y2="81.1817"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="542.158,147.312 547.395,157.19 552.155,147.074 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="550.764,88.8241 545.527,78.9463 540.767,89.0628 "/>
+  </g>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="144" y="70.5">
+    <tspan x="144" y="70.5">API Interface</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="340" y="72.5">
+    <tspan x="340" y="72.5">Protocols</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:12.7998;font-family:sanserif;font-style:normal;font-weight:normal" x="516" y="70.5">
+    <tspan x="516" y="70.5">Interfaces</tspan>
+  </text>
+</svg>
