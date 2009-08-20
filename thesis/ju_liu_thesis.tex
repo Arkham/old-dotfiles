@@ -1820,6 +1820,88 @@ key elements are represented by the two new data structures and by the
 path-evaluation rules; in the next chapter, a sequence of tests will
 be performed to verify the algorithm and show its performance.
 
+\newpage
+
+\section{Multi-layer support}
+
+We can analyze Figure~\ref{fig:multi_path} to fully understand the
+mechanism that supports multi-layer path computation:
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=1\textwidth]{img/multi_path}
+    \caption[Multi-layer path]{An example of multi-layer path.}
+    \label{fig:multi_path}
+  \end{center}
+\end{figure}
+
+As we can see, in this multi-layer path three types of switching
+capabilities are being considered: PSC, where MPLS packets are
+switched, L2SC, where Ethernet frames are switched, and LSC, where
+optical wavelengths are switched. Each of these levels is separated by
+a logical layer, called \textit{adaptation layer}: basically, when the
+signaling of the path will take place, LSP tunnels will be initiated
+and terminated in correspondence of the adaptation layers. 
+
+The path that is returned by the algorithm is composed by a sequence
+of network links; therefore, the data structure that has been created
+is a \textit{Path} object which is formed of \textit{Link} objects;
+each of these links contains:
+\begin{itemize}
+\item Remote and local address.
+\item Remote and local interface.
+\item Switching capability.
+\item Metric.
+\item Maximum and minimum reservable bandwidth.
+\item Unreserved bandwidth.
+\end{itemize}
+
+Due to the complexity of the network model, the information contained
+in the Link object wasn't sufficient in some occasions; thus, a new
+type of \textit{Grid} object has been created and associated to each
+\textit{Link}.
+
+This \textit{Grid} object contains all the constraints which are
+specific to a single network technology; in fact, the \textit{Grid}
+class is an abstract class and each particular type of \textit{Grid}
+is defined as a derived class (see Figure~\ref{fig:grid_uml}). In this
+way, all the constraints related to the optical layer are contained in
+a \textit{WaveGrid} object, like the wavelength availability, the
+wavelength continuity, the conversion capabilities and the
+unselectable interfaces. If a specific network technology doesn't need
+more constraints, a dummy \textit{GenericGrid} object can be
+used. This approach allows to easily create new type of derived
+\textit{Grid} classes and support new network technologies (for
+example, the \textit{VLANGrid} object could support vlan tag
+continuity).
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=0.7\textwidth]{img/grid_uml}
+    \caption[Grid UML Diagram]{UML representation of the Grid class
+      and derived.}
+    \label{fig:grid_uml}
+  \end{center}
+\end{figure}
+
+In the end, the data structure that represent a path in the software
+internal implementation is a \textit{Path} object, which is composed
+by a sequence of \textit{Link} objects, each of which is linked to a
+\textit{Grid} object: this is possible due to the \textit{class
+  polymorphism} of the \textit{Grid} class, i.e.\ the possibility to
+use the \textit{Grid} abstract class as a placeholder for any kind of
+derived \textit{Grid} class. In this way the path that is being
+computed by the algorithm can be composed by some nodes in the GMPLS
+layer, some nodes in the Ethernet layer and some nodes in the optical
+layer: the software can use an abstract function to verify the
+specific constraints of each layer by implementing a different
+function for each different layer (with the so-called \textit{function
+  polymorphism} it is even possible for this function to keep the same
+name: the compiler will automatically choose the right function for
+the right class). This special software configuration allows a
+scalable and flexible management of the various constraints involved
+in the multi-layer path computation problem.
+
 \chapter{Testing and Verification}\label{sec:test}
  
 In this chapter, the functionality of the whole network that has been
