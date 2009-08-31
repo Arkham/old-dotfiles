@@ -87,30 +87,14 @@
   \end{figure}
 }
 
-\section{MPLS and GMPLS}
-\subsection{MPLS concepts}
-\frame
-{
-  \frametitle{MPLS}
-  
-  \begin{itemize}
-  \item<1-> \textbf{MPLS} stands for Multi-Protocol Label Switching.
-  \item<2-> Introduced by the IETF to solve the problem of IP routing,
-    which is based on addresses and longest prefix match.
-  \item<3-> MPLS routing process is instead based on a \textit{small,
-      fixed format label that identifies the packet to the network
-      nodes}.
-  \item<4-> An MPLS router is called Label Switching Router (LSR),
-    while the path within the MPLS network is called Label Switched
-    Path (LSP).
-  \end{itemize}
-}
+\section{What is GMPLS}
+\subsection{GMPLS concepts}
 \frame
 {
   \frametitle{Label switching}
 
   \begin{itemize}
-  \item<1-> A labeled packet enters in the LSR from one interface.
+  \item<1-> A labeled packet enters in router from one interface.
   \item<2-> Depending from the label and from the incoming interface, a new
     label and an outgoing interface are chosen.
   \item<3-> The label is swapped and the packet forwarded.
@@ -123,32 +107,27 @@
 }
 \frame
 {
-  \frametitle{MPLS network}
-
-  \begin{itemize}
-  \item<1-> When the packet enters in the MPLS network, the IP
-    destination address is analyzed and a label is assigned.
-  \item<2-> From that moment, the packet is forwarded following the
-    labels logic.
-  \item<3-> When the packet exits from the MPLS network, the last
-    label is analyzed and the packet is forwarded to the IP
-    destination.
-  \end{itemize}
-  
-  \begin{figure}[!hbp]
-    \centering
-    \includegraphics[width=0.8\textwidth]{img/mpls_net}
-  \end{figure}
-}
-
-\subsection{GMPLS concepts}
-\frame
-{
   \frametitle{GMPLS definition}
 
   Generalized Multi-Protocol Label Switching (\textbf{GMPLS}) is suite
   of protocols designed to extend the concept of label switching to
   various transport network technologies.
+
+}
+\frame
+{
+  \frametitle{GMPLS protocols}
+  
+  The most important protocols extended in GMPLS are:
+  \begin{itemize}
+  \item \textbf{routing protocols}, which manage information about the
+    network topology, i.e.\ IS-IS and OSPF-TE.
+  \item \textbf{signaling protocols}, which manage the reservation of
+    network resources and guarantee a certain QoS, i.e.\ CR-LDP and
+    RSVP-TE.
+  \item \textbf{link management protocols}, like LMP, which task is to
+    discover and verify the connectivity of the links. 
+  \end{itemize}
 }
 \frame
 {
@@ -172,53 +151,14 @@
 
   Therefore, a GMPLS network device can be:
   \begin{itemize}
-    \item \textit{Packet Switch Capable} (PSC):\\
+    \item \textbf{Packet Switch Capable} (PSC):\\
       Router/ATM Switch/Frame Reply Switch
-    \item \textit{Time Division Multiplexing Capable} (TDMC):\\
+    \item \textbf{Time Division Multiplexing Capable} (TDMC):\\
       SONET/SDH ADM/Digital Cross-Connect
-    \item \textit{Lambda Switch Capable} (LSC):\\
+    \item \textbf{Lambda Switch Capable} (LSC):\\
       Optical ADM/Optical Cross-Connect
-    \item \textit{Fiber Switch Capable} (FSC)
+    \item \textbf{Fiber Switch Capable} (FSC)
   \end{itemize}
-}
-\frame
-{
-  \frametitle{A different label}
-
-  \begin{itemize}
-  \item<1-> In MPLS, there is no relation between the label and the packet to
-    which it is associated.
-  \item<2-> Instead, in GMPLS the label indicates a precise physical
-    resource.
-  \item<3-> The label in GMPLS must be therefore analyzed carefully.
-\end{itemize}
-}
-\frame
-{
-  \frametitle{GMPLS tunneling}
-  
-  \begin{itemize}
-  \item<1-> In MPLS, it is possible to tunnel an LSP inside another
-    LSP by adding an additional label to the packet; the set of labels
-    associated to a packet is called \textit{label stack}. Only the
-    topmost label is considered during the routing process.
-  \item<2-> In GMPLS, some technologies involved do not support
-    stacking: for example, you can't encapsulate a wavelength inside
-    another one and extract it at the end of the tunnel.
-  \item<3-> The hierarchy of the tunnels has to be based on the
-    natural difference in granularity of the different network
-    technologies: packets are nested in a time-slot, time-slots are
-    grouped in a wavelength and wavelengths are gathered in a fiber.
-  \end{itemize}
-}
-\frame
-{
-  \frametitle{The tunnels hierarchy}
-
-  \begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.9\textwidth]{img/gmpls_hierarchy}
-  \end{figure}
 }
 \frame
 {
@@ -232,18 +172,22 @@
 }
 \frame
 {
-  \frametitle{GMPLS protocols}
+  \frametitle{GMPLS tunneling}
   
-  The most important protocols extended in GMPLS are:
-  \begin{itemize}
-  \item \textit{routing protocols}, which manage information about the
-    network topology, i.e.\ IS-IS and OSPF-TE.
-  \item \textit{signaling protocols}, which manage the reservation of
-    network resources and guarantee a certain QoS, i.e.\ CR-LDP and
-    RSVP-TE.
-  \item \textit{link management protocols}, like LMP, which task is to
-    discover and verify the connectivity of the links. 
-  \end{itemize}
+  The hierarchy of the tunnels has to be based on the natural
+  difference in granularity of the different network technologies:
+  packets are nested in a time-slot, time-slots are grouped in a
+  wavelength and wavelengths are gathered in a fiber.
+
+}
+\frame
+{
+  \frametitle{The tunnels hierarchy}
+
+  \begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/gmpls_hierarchy}
+  \end{figure}
 }
 
 \section{Software Implementation}
@@ -293,29 +237,142 @@
 {
   \frametitle{Candidate CSPF Algorithm}
 
+  The implemented CSPF algorithm is derived from the BFS algorithm and
+  searches for the loop-less paths between a source and a destination
+  inside a multi-layer network.
+
+  \begin{figure}[!htbp]
+    \begin{center}
+      \includegraphics[width=0.5\textwidth]{img/bfs_graph}
+    \end{center}
+  \end{figure}
+}
+\frame
+{
+  \frametitle{Considered constraints}
+
   \begin{itemize}
-  \item<1-> The implemented CSPF algorithm is derived from the BFS
-    algorithm and searches for the loop-less paths between a source
-    and a destination inside a multi-layer network.
-  \item<2-> The constraints considered include general constraints,
-    like bandwidth or accumulated metric, or layer-specific
-    constraints, like wavelength continuity in the optical layer.
-  \item<3-> A set of user-defined constraints has been supported to
-    offer a better level of customization and flexibility.
+  \item The constraints considered include general constraints, like
+    bandwidth or accumulated metric, or layer-specific constraints,
+    like wavelength continuity in the optical layer.
+  \item A set of user-defined constraints has been supported to offer
+    a better level of customization and flexibility.
   \end{itemize}
+}
+\frame
+{
+  \begin{figure}[!htbp]
+    \begin{center}
+      \includegraphics[width=0.8\textwidth]{img/testbed_model}
+    \end{center}
+  \end{figure}
+}
+\frame
+{
+  \frametitle{Example of multi-layer path}
+
+  \begin{figure}[!htbp]
+    \begin{center}
+      \includegraphics[width=1\textwidth]{img/multi_path2}
+    \end{center}
+  \end{figure}
+}
+\frame
+{
+  \frametitle{Constraints checking}
+
+  \begin{itemize}
+  \item The multiple network technologies require layer-specific
+    constraints to be respected.
+  \item The algorithm maintains a working set of constraints
+    associated to the current layer.
+  \item When starting a tunnel, the working set is ``frozen'' and a
+    new set of constraints is taken into consideration.
+  \item When the tunnel ends, the previous set of constraints is
+    reverted and used as working set.
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{Test cases}
+
+  The following tests have been setup:
+
+  \begin{enumerate}
+  \item<1-> The path computation request includes two neighbours with L2SC
+    interfaces (vE1 and vEC1); the RCE doesn't need to setup LSP
+    tunnels.
+  \item<2-> The source and the destination requested belong to the optical
+    layer and are connected through an optical cross-connect (vROADM2
+    and vROADM3); the RCE needs to check for wavelength continuity but
+    doesn't need to setup a tunnel.
+  \item<3-> In the last case, the source and destination are at the
+    opposite sides of the testbed (LR1 and LR2); the path is composed
+    by a high number of hops and two nested LSP tunnels have to be
+    setup by the RCE.
+  \end{enumerate}
 }
 \frame
 {
   \frametitle{Performance evaluation}
 
-  Different test-cases have been considered: 
+  The performance of the algorithm has been evaluated considering the
+  usage of two different resources:
 
+  \begin{itemize}
+  \item \textbf{time}, intended as the response time of
+    the algorithm.
+  \item \textbf{space}, intended as the memory needed to run it.
+  \end{itemize}
+
+  Each of the test cases has been executed in three different runs
+  with 10, 100 and 1000 iterations respectively.
+
+}
+\frame
+{
+  \frametitle{Time efficiency}
+
+  The time efficiency of the algorithm has been measured starting from
+  the \textbf{response time}, that is the time that passes from when
+  the RCE receives the path computation request to when the RCE sends
+  the computed path back to the client. The response time have been
+  later divided in multiple intervals.
+
+}
+\frame
+{
+  \frametitle{Time efficiency summary}
+  
   \begin{figure}[!htbp]
     \begin{center}
-      \includegraphics[width=0.72\textwidth]{img/time_graph}
+      \includegraphics[width=0.75\textwidth]{img/time_graph}
     \end{center}
   \end{figure}
+}
+\frame
+{
+  \frametitle{Space Efficiency}
 
+  The space efficiency of the algorithm has been analyzed considering
+  the usage of RAM on the server; the \textit{valgrind} program has
+  been used to verify the presence of memory leaks in the software
+  implementation.
+
+  \begin{itemize}
+  \item The program was started to monitor the behaviour of the RCE
+    and then a specific number of requests was sent from a client.
+  \item When the RCE had completed to process the requests, valgrind
+    was terminated to generate a memory usage report.
+  \end{itemize}
+}
+\frame
+{
+  \begin{figure}[!htbp]
+    \begin{center}
+      \includegraphics[width=1\textwidth]{img/multi-100}
+    \end{center}
+  \end{figure}
 }
 
 \section{Conclusions}
