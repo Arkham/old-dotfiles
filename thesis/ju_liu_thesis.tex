@@ -9,7 +9,7 @@
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{hyperref}
-\hypersetup{colorlinks=true}
+%\hypersetup{colorlinks=true}
 \usepackage{listings}
 \lstset{language=C,basicstyle=\footnotesize,numbers=left,numberstyle=\footnotesize,frame=shadowbox,rulesepcolor=\color{black}}
 \usepackage{multirow}
@@ -1605,165 +1605,82 @@ link-type and path-type constraints in an integrated fashion.
 
 \chapter{Software Implementation}\label{sec:softimpl}
 
-This chapter will introduce the DRAGON environment and explain in
-detail the methodology that was followed while implementing the
-software.
-
-\section{DRAGON Software Suite}
-
-The Dynamic Resource Allocation via GMPLS Optical Networks
-(DRAGON)\footnote{\url{http://dragon.maxgigapop.net/twiki/bin/view/DRAGON/}}
-software suite is a open source GMPLS suite which has been developed
-by three American universities, with the contribution of external
-organizations such as the Massachusetts Institute of Technology (MIT),
-the NASA and the National Science Foundation (NSF).
-
-The goal of the DRAGON project is to prove the power and the
-flexibility of network composed by both packet and circuit switched
-segments in order to enable dynamic end-to-end service
-provisioning. It is composed by the following UNIX daemons:
-
-\begin{itemize}
-\item \textbf{OSPF-TE}: the OSPF daemon is an enhanced version of the
-  GNU Zebra OSPF daemon; it has been extended with the traffic
-  engineering support for opaque LSAs and parts of the LMP protocol
-  have been incorporated. It is written in C.
-\item \textbf{RSVP-TE}: the RSVP daemon is based on the KOM-RSVP open
-  source daemon. It is written in C++.
-\item \textbf{PCE}: the PCE component is provided by the NARB/RCE
-  daemons implemented by the DRAGON project. It can perform complex
-  path calculations and manage intra-domain/inter-domain
-  communication. These components are written in C++.
-\item \textbf{Dragon}: the dragon daemon helps to initiate RSVP
-  signaling and is written in C.
-\end{itemize}
-
-All these different components communicate with each through Inter
-Process Communication (IPC) or IP based protocols. A graph
-representing the interactions can be seen below:\\\\
-
-\begin{figure}[!htbp]
-  \begin{center}
-    \includegraphics[width=0.9\textwidth]{img/dragon_model}
-    \caption[DRAGON model]{The various DRAGON elements and the
-      interactions between them.}
-    \label{fig:dragon_model}
-  \end{center}
-\end{figure}
-
-Our main point of interest is represented by the NARB/RCE couple,
-which is responsible for the management of network resources; while
-the NARB (\textit{Network Aware Resource Broker}) performs
-higher-level functions like domain level topology abstraction,
-inter-domain path computation, inter-domain routing and end-to-end LSP
-management, the RCE (\textit{Resource Computation Element}) provides
-the raw resource database and the path computations capabilities.
-
-Therefore, the path computation algorithm is a module which is
-located inside the RCE; the RCE can load many different algorithms
-concurrently and, depending on the path request, dynamically choose
-which solution fits best. We will now analyze in closer detail the
-RCE.
-
-\section{Resource Computation Element}
-
-As we have already said, the RCE main functions are to provide the
-resource database (known also as Traffic Engineering Database or TED)
-and the path computation services to the NARB; for this reason, it is
-usual to incorporate the RCE inside the NARB and refer to this
-combination as the NARB/RCE element (see also
-Figure~\ref{fig:dragon_model}). Although, the RCE is not hard-linked
-to the NARB and can also provide these functions to any control-plane
-module that implements an RCE API client.
-
-The RCE is a standalone software that is composed by two elements: the
-self-contained TED which is synchronized to an external routing
-protocol (in our case OSPF-TE) and the \textit{Path Computation
-  Engine} (PCEN) which utilizes the information stored in the TED to
-perform constraint-based path computation. The so-called 3D Resource
-Computation Module (RCM) is used to aggregate in the path computation
-algorithm three logical dimensions of constraints: the Traffic
-Engineering constraints, the time schedule constraints and the AAA
-(\textit{Authentication, Authorization and Accounting}) policy
-constraints. Whenever these constraints aren't available in the TED,
-they can be imported from other control-plane elements.\\
-
-\begin{figure}[!htbp]
-  \begin{center}
-    \includegraphics[width=0.8\textwidth]{img/rce_model}
-    \caption[RCE model]{The various RCE elements and the
-      interactions between them.}
-    \label{fig:rce_model}
-  \end{center}
-\end{figure}
-
-\newpage
-
-The PCEN functions correspond to those previously described for the
-PCE: but since now it is sufficient to retrieve the network
-information from the ``neighbour'' TED, there is no need to ask
-repeatedly to other network elements. Therefore, the path computation
-process can run faster eliminating also the possibility of
-inconsistent states. Each time a sane request is received by the RCE,
-a specific LSP is sent back to the client; this LSP has been computed
-taking into consideration the predefined Service Level Agreement and
-user specified constraints.
-
-\section{PCEN Module}
-
-The PCEN can use as computation logic any path computation module that
-is available: each of these computation models are implemented in C++
-class. Below, the basic structure of the PCEN C++ class is
-represented:
-
-\begin{figure}[!htbp]
-  \begin{center}
-    \includegraphics[width=0.8\textwidth]{img/pcen_module}
-    \caption[PCEN computation module]{A PCEN path computation module}
-    \label{fig:pcen_module}
-  \end{center}
-\end{figure}
-
-\begin{itemize}
-\item \textbf{VerifyRequest()/VerifySanity()}: this block checks the validity
-  of the client request by confronting the parameters contained in the
-  request with the information retrieved from the TED.
-\item \textbf{BuildTopology()}: in this block, the network topology
-  internal representation is built upon the information received from
-  the TED. This action is repeated at every request to provide the
-  most up-to-date representation of the network.
-\item \textbf{PruneTopology()}: all the link-type constraints
-  contained in request are verified; all the links that do not fulfill
-  these requirements are pruned and the network graph is updated.
-\item \textbf{PerformComputation()}: this is where the actual
-  computation takes place and where the CSPF algorithm is implemented.
-\item \textbf{ExtractAndReplyERO()}: after the path computation has
-  terminated the Explicit Route Object is built and sent back to the
-  client.
-\end{itemize}
+This chapter will describe the candidate CSPF algorithm that has been
+designed; then it will treat briefly the DRAGON environment.
 
 \section{Candidate CSPF Algorithm}
 
-The implemented CSPF algorithm searches for the \textit{loop-less}
-paths between a source and a destination inside a multi-layer network;
-the constraints considered include general constraints, like bandwidth
-or accumulated metric, or layer-specific constraints, like wavelength
-continuity in the optical segments of the network; also a set of
-user-defined constraints has been supported to offer a better level of
-customization and flexibility.
+The CSPF algorithm that has been implemented during this thesis
+searches for the \textit{loop-less} paths between a source and a
+destination inside a multi-layer network; the constraints considered
+include general constraints, like bandwidth or accumulated metric, or
+layer-specific constraints, like wavelength continuity in the optical
+segments of the network; also a set of user-defined constraints has
+been supported to offer a better level of customization and
+flexibility.
 
-The single-pair shortest path algorithm that was extended is the
+\subsection{Choosing the Algorithm}
+
+The single-pair shortest path algorithm that was chosen is the
 Breadth First Search: this algorithm has been chosen to find
 \textit{all} the paths between two nodes, since it has previously
 shown to have an excellent asymptotic performance when operating on
-network graphs.  When the computation is completed, the found paths
-are sorted based on a characteristic specified in the client request:
-thus, a client can define which is the variable it is most interested
-in, it may be the hop count, the accumulated metric or a
-custom-defined one. As a side note, this implementation allows future
-modifications to make the algorithm return more than one path, which
-could be useful for traffic engineering tasks (like enabling link
-protection).
+network graphs. The BFS algorithm has been chosen over the other
+available solutions because of these following reasons:
+
+\begin{itemize}
+\item The algorithm should be able to compute \textit{all} the paths
+  between the source and the destination (this allows the algorithm to
+  adapt itself to many different requests): the BFS has a better
+  performance for solving this kind of problems.
+\item The BFS algorithm has shown to be the fastest algorithm,
+  requiring an exponential memory space; on the other hand, Depth
+  Search First algorithms like Dijkstra's algorithm have shown to have
+  a worse time performance, requiring although a polynomial memory
+  space. Therefore, while Dijkstra's algorithm is to be preferred when
+  dealing with networks composed by a high number of nodes, the BFS
+  algorithm is ideal when the size of the network varies from small to
+  medium.
+\item Dijkstra's algorithm is designed to find all the optimal paths
+  considering a \textit{single} variable, which is the path cost
+  defined as sum of all the weights. Since traffic engineering require
+  many different constraints to be considered at the same time, the
+  Dijkstra's algorithm would have required heavy modifications to be
+  inserted in the code infrastructure. Instead, the structure of the
+  BFS algorithm can be modified easily to consider a range of
+  different constraints.
+\item Even though the core of the algorithm remains the BFS algorithm,
+  the implemented algorithm has been modified to become a \textit{de
+    facto} K Shortest Paths algorithm: in fact, it is designed to
+  compute a K number of shortest paths between the source and the
+  destination, where K is assumed as ``all the possible
+  paths''. Although, for sake of simplicity, other characteristics of
+  KSP algorithms have not been taken into consideration, i.e.\ partial
+  and total path disjointness.
+\end{itemize}
+
+When the computation is completed, the found paths are sorted based on
+a characteristic specified in the client request: thus, a client can
+define which is the variable it is most interested in, it may be the
+hop count, the accumulated metric or a custom-defined one. As a side
+note, this implementation allows future modifications to make the
+algorithm return more than one path, which could be useful for traffic
+engineering tasks (like enabling link protection, i.e.\ creating
+backup paths to be used in case of network failure).
+
+The algorithm computes all the paths to give a broader view of the
+existing solutions: although, if the size of the network grows this
+decision will probably affect heavily the performance of the
+algorithm. Therefore, a possible solution would be of considering the
+number of paths to be computed as a user requirement: in this way, the
+user itself can decide how many solutions will be found by the
+algorithm. As we have already said, the user can also specify if he is
+interested in all the computed paths or only the \textit{best} path
+considering a specific constraint.
+
+\newpage
+
+\subsection{Implementation Details}
 
 Two internal data structures which weren't part of the original BFS
 algorithm structure have been added: P is the set of the sub-paths
@@ -1788,19 +1705,22 @@ while P != empty do
 \end{quote}
 
 \begin{itemize}
-\item Line 1: the algorithm creates a first path containing only the
-  source node; from this initial path, called \textit{source\_path},
-  all the other paths will be later derived. The \textit{source\_path}
-  is then added to the set of working sub-paths P, which is
-  implemented as a First-In-First-Out queue.
+\item Line 1: the algorithm initializes the data structures by
+  creating a first path containing only the source node; from this
+  initial path, called \textit{source\_path}, all the other paths will
+  be later derived. The \textit{source\_path} is then added to the set
+  of working sub-paths P, which in our case is implemented as a
+  First-In-First-Out queue.
 \item Lines 2-4: here starts the body of the algorithm, which will
   iterate until the P queue is empty; first of all, the first sub-path
   is extracted from the P queue; from this sub-path the last node
-  \textit{end} is then extracted.
+  \textit{end} is then extracted (the \textit{end} node is indicated
+  as \textit{e} node in the pseudo-code).
 \item Lines 5-6: every neighbour of the \textit{end} node is analyzed;
   a \textit{new\_path} path is formed by adding the considered
   neighbour to the current sub-path. This new path is then tested to
-  verify the absence of loops.
+  verify the absence of loops: if a loop is found, the path is
+  immediately discarded.
 \item Lines 7-11: the \textit{new\_path} is analyzed by the path
   evaluation functions: if considered unfit, it gets immediately
   discarded. Otherwise, if it's deemed viable and it reaches the
@@ -1813,7 +1733,7 @@ The importance of the path evaluation functions is fundamental: in
 fact, by choosing which sub-paths should be kept and which ones should
 be discarded, they basically decide which is the direction that the
 path computation process will follow. These are the path evaluation
-functions that have been implemented:
+functions that have been suggested and implemented:
 
 \begin{enumerate}
 \item The accumulated metric shouldn't exceed the required value.
@@ -1838,12 +1758,11 @@ key elements are represented by the two new data structures and by the
 path-evaluation rules; in the next chapter, a sequence of tests will
 be performed to verify the algorithm and show its performance.
 
-\newpage
-
 \section{Multi-layer support}
 
-We can analyze Figure~\ref{fig:multi_path} to fully understand the
-mechanism that supports multi-layer path computation:
+We can analyze Figure~\ref{fig:multi_path} to understand the mechanism
+that supports multi-layer path computation (note that this path has
+been actually computed during the algorithm verification):
 
 \begin{figure}[!htbp]
   \begin{center}
@@ -1919,6 +1838,137 @@ name: the program will automatically choose the right function for the
 right class). This software configuration allows a scalable and
 flexible management of the various constraints involved in the
 multi-layer path computation problem.
+
+\section{DRAGON Software Suite}
+
+The Dynamic Resource Allocation via GMPLS Optical Networks
+(DRAGON)\footnote{\url{http://dragon.maxgigapop.net/twiki/bin/view/DRAGON/}}
+software suite is a open source GMPLS suite which has been developed
+by three American universities, with the contribution of external
+organizations such as the Massachusetts Institute of Technology (MIT),
+the NASA and the National Science Foundation (NSF).
+
+The goal of the DRAGON project is to prove the power and the
+flexibility of network composed by both packet and circuit switched
+segments in order to enable dynamic end-to-end service
+provisioning. It is composed by the following UNIX daemons:
+
+\begin{itemize}
+\item \textbf{OSPF-TE}: the OSPF daemon is an enhanced version of the
+  GNU Zebra OSPF daemon; it has been extended with the traffic
+  engineering support for opaque LSAs and parts of the LMP protocol
+  have been incorporated. It is written in C.
+\item \textbf{RSVP-TE}: the RSVP daemon is based on the KOM-RSVP open
+  source daemon. It is written in C++.
+\item \textbf{PCE}: the PCE component is provided by the NARB/RCE
+  daemons implemented by the DRAGON project. It can perform complex
+  path calculations and manage intra-domain/inter-domain
+  communication. These components are written in C++.
+\item \textbf{Dragon}: the dragon daemon helps to initiate RSVP
+  signaling and is written in C.
+\end{itemize}
+
+All these different components communicate with each through Inter
+Process Communication (IPC) or IP based protocols. A graph
+representing the interactions can be seen below:
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{img/dragon_model}
+    \caption[DRAGON model]{The various DRAGON elements and the
+      interactions between them.}
+    \label{fig:dragon_model}
+  \end{center}
+\end{figure}
+
+Our main point of interest is represented by the NARB/RCE couple,
+which is responsible for the management of network resources; while
+the NARB (\textit{Network Aware Resource Broker}) performs
+higher-level functions like domain level topology abstraction,
+inter-domain path computation, inter-domain routing and end-to-end LSP
+management, the RCE (\textit{Resource Computation Element}) provides
+the raw resource database and the path computations capabilities.
+
+Therefore, the path computation algorithm is a module which is
+located inside the RCE; the RCE can load many different algorithms
+concurrently and, depending on the path request, dynamically choose
+which solution fits best. We will now analyze in closer detail the
+RCE.
+
+\section{Resource Computation Element}
+
+As we have already said, the RCE main functions are to provide the
+resource database (known also as Traffic Engineering Database or TED)
+and the path computation services to the NARB; for this reason, it is
+usual to incorporate the RCE inside the NARB and refer to this
+combination as the NARB/RCE element (see also
+Figure~\ref{fig:dragon_model}). Although, the RCE is not hard-linked
+to the NARB and can also provide these functions to any control-plane
+module that implements an RCE API client.
+
+The RCE is a standalone software that is composed by two elements: the
+self-contained TED which is synchronized to an external routing
+protocol (in our case OSPF-TE) and the \textit{Path Computation
+  Engine} (PCEN) which utilizes the information stored in the TED to
+perform constraint-based path computation. The so-called 3D Resource
+Computation Module (RCM) is used to aggregate in the path computation
+algorithm three logical dimensions of constraints: the Traffic
+Engineering constraints, the time schedule constraints and the AAA
+(\textit{Authentication, Authorization and Accounting}) policy
+constraints. Whenever these constraints aren't available in the TED,
+they can be imported from other control-plane elements.\\
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{img/rce_model}
+    \caption[RCE model]{The various RCE elements and the
+      interactions between them.}
+    \label{fig:rce_model}
+  \end{center}
+\end{figure}
+
+The PCEN functions correspond to those previously described for the
+PCE: but since now it is sufficient to retrieve the network
+information from the ``neighbour'' TED, there is no need to ask
+repeatedly to other network elements. Therefore, the path computation
+process can run faster eliminating also the possibility of
+inconsistent states. Each time a sane request is received by the RCE,
+a specific LSP is sent back to the client; this LSP has been computed
+taking into consideration the predefined Service Level Agreement and
+user specified constraints.
+
+\section{PCEN Module}
+
+The PCEN can use as computation logic any path computation module that
+is available: each of these computation models are implemented in C++
+class. Below, the basic structure of the PCEN C++ class is
+represented:
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{img/pcen_module}
+    \caption[PCEN computation module]{A PCEN path computation module}
+    \label{fig:pcen_module}
+  \end{center}
+\end{figure}
+
+\begin{itemize}
+\item \textbf{VerifyRequest()/VerifySanity()}: this block checks the validity
+  of the client request by confronting the parameters contained in the
+  request with the information retrieved from the TED.
+\item \textbf{BuildTopology()}: in this block, the network topology
+  internal representation is built upon the information received from
+  the TED. This action is repeated at every request to provide the
+  most up-to-date representation of the network.
+\item \textbf{PruneTopology()}: all the link-type constraints
+  contained in request are verified; all the links that do not fulfill
+  these requirements are pruned and the network graph is updated.
+\item \textbf{PerformComputation()}: this is where the actual
+  computation takes place and where the CSPF algorithm is implemented.
+\item \textbf{ExtractAndReplyERO()}: after the path computation has
+  terminated the Explicit Route Object is built and sent back to the
+  client.
+\end{itemize}
 
 \chapter{Testing and Verification}\label{sec:test}
  
