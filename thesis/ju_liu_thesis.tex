@@ -1,6 +1,5 @@
 \documentclass[10pt,a4paper]{report}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
 \usepackage[utf8x]{inputenc}
 \usepackage[english]{babel}
 \usepackage{amsmath}
@@ -33,22 +32,22 @@
 \thispagestyle{empty}
 \begin{abstract}
   The growing number of Internet users and the rapid spread of
-  peer-to-peer services has put under considerable stress the Internet
-  Service Providers' network resources. In order to ensure an
+  peer-to-peer services has put the Internet Service Providers'
+  network resources under considerable stress. In order to ensure an
   efficient service provisioning, various techniques have been
-  developed: amongst others, Generalized Multi-Protocol Label
-  Switching (GMPLS) is a suite of protocols designed to provide
+  developed: Generalized Multi-Protocol Label Switching (GMPLS)
+  amongst others, which is a suite of protocols designed to provide
   Traffic Engineering in multi-layer transport networks; these systems
   are composed by devices belonging to different link-layer
-  technologies, like MPLS routers, Ethernet switches or optical
+  technologies, like MPLS routers, TDM switches or optical
   cross-connects.
 
   In this thesis, the different mechanisms forming GMPLS have been
-  investigated: in particular, the creation of an automatic service
-  provisioning system has been examined thoroughly, along with the
-  various constraints involved in the process. With this knowledge, a
-  path computation algorithm has been developed and deployed in a
-  testbed environment. Various tests have been performed to prove the
+  investigated: in particular, the creation of a path computation
+  system has been examined thoroughly, along with the various
+  constraints involved in the process. With this knowledge, a path
+  computation algorithm has been developed and deployed in a testbed
+  environment. Various tests have been performed to prove the
   feasibility of the chosen solution.
 \end{abstract}
 
@@ -145,9 +144,12 @@ number is still going to increase heavily due to the technological
 progress of the developing countries. Therefore, the companies that
 provide Internet access to the users have to face enormously high
 requests of traffic: the ability to control these flows and react
-dynamically to network changes are vital to determine the success (or
-the failure) of an Internet Service Provider. To be able to provide
-new services reliably and ensure a suitable Quality Of Service (QOS),
+dynamically to network changes are vital to determine the success or
+the failure of an Internet Service Provider (note that the expression
+Internet Service Provider is used here to denote not only the
+companies that sell Internet access to the users, but also the
+companies that sell bandwidth to the ISPs). To be able to provide new
+services reliably and respect the predefined Service Level Agreement,
 service providers need to implement efficient Traffic Engineering
 mechanisms.
 
@@ -155,7 +157,7 @@ To meet these demands, the Internet Engineering Task Force (IETF)
 began to standardize Multiprotocol Label Switching (MPLS). The main
 problem with IP routing is that every router has to perform a longest
 prefix match look-up in order to forward the packet to its
-destination: when the look-up table of a router contains several
+destination: when the forwarding table of a router contains several
 hundred of thousands of entries, this operation becomes consuming in
 terms of time and computational effort. MPLS solves this problem by
 performing the longest prefix match look-up only on the edge routers
@@ -163,53 +165,61 @@ of the network: when the packet enters in the MPLS region, the IP
 header is analyzed and an initial label is applied depending on its
 destination. From that moment on, all forwarding is driven by the
 labels and all the other MPLS routers can safely ignore the IP
-headers.
+headers: since MPLS label hierarchy is flat and not structured, the
+label look-up should be much faster than IP address look-up (note that
+during the years several techniques were developed and implemented to
+improve the performance of IP routing and currently the performance of
+the two systems are comparable).
 
-The limitation of the MPLS protocols was that they were all based on
-packet, frame or cell switching technologies, while the core of the
-network was still built on Time Division Multiplexing devices that
-switched data streams instead of individual packets. In the meanwhile
-were introduced new devices that could switch the entire content of a
-fiber, or extract single wavelengths from a fiber and switch them
-separately.
+\newpage
+
+These MPLS protocols were were all based on packet, frame or cell
+switching technologies, while the core of the network was still built
+on switching devices who weren't packet based, i.e.\ Time Division
+Multiplexing devices that switched time-slots instead of individual
+packets. In the meanwhile, there were introduced new devices that
+could switch the entire content of a fiber, or extract single
+wavelengths from a fiber and switch them separately.
 
 All these different technologies were basically performing MPLS-like
-switching operations on different types of switching unit. And so
-Generalized Multiprotocol Label Switching (GMPLS) was invented to
-extend the MPLS notions and techniques to a whole new range of network
+switching operations on different types of switching unit. Generalized
+Multiprotocol Label Switching (GMPLS) was implemented to extend the
+notions and techniques of MPLS to a whole new range of network
 technologies. \\
-The great innovation brought in by GMPLS is by far the complete
-separation of the control plane and the data plane: the former is used
-to control the setup of end-to-end connections, while the latter is
-used to actually transfer the data. While the control plane is common
-to every different technology and remains IP-based, the data plane can
-now diversify and support multiple types of switching: packets,
-frames, time-slots, wavelengths and fibers can be present at the same
-time in a GMPLS network. The natural consequence of this network model
-is the presence of devices able to switch between different types of
-link layers, making an adaption between incompatible technologies.
+One important feature of GMPLS is the complete separation of the
+control plane and the data plane: the former is used to control the
+setup of end-to-end connections, while the latter is used to actually
+transfer the data. While the control plane is common to every
+different technology and remains IP-based, the data plane is
+diversified and supports multiple types of switching: packets, frames,
+time-slots, wavelengths and fibers can be present at the same time in
+a GMPLS network. The natural consequence of this network model is the
+requirement of devices able to switch between different types of link
+layers, making adaptions between incompatible technologies.
 
-Unfortunately, GMPLS has currently little standardized support for the
-automatic configuration of a path that spans through different types
-of technology, since every each of them already has its own algorithm,
-specifically designed to find an optimal path. For example, one of the
-most used protocols in IP-based networks is called Open Shortest Path
-First (OSPF), which selects the shortest path in terms of hops;
-optical networks use an extension of OSPF called Constrained Shortest
-Path First (CSPF), which chooses the shortest path that fulfills a
-precise set of requirements. At the current state of the art, there
-isn't an algorithm that could manage a network composed by different
-types of link layer technology (so called multi-layer networks).
+Unfortunately, GMPLS has currently little standardized support a path
+computation process that spans through different types of technology,
+since every each of them already has its own algorithm, specifically
+designed to find an optimal path. For example, one of the most used
+protocols in IP-based networks is called Open Shortest Path First
+(OSPF), which selects the shortest path in terms of hops; MPLS-TE
+networks use an extension of OSPF called Constrained Shortest Path
+First (CSPF), which chooses the shortest path that fulfills a precise
+set of requirements. At the current state of the art, there isn't a
+widely used and standardized algorithm that could manage a network
+composed by different types of link layer technology (so called
+multi-layer networks).
 
-The result of this lack is that these networks cannot be efficiently
-traffic engineered: a possible way to proceed would be to setup
-manually the adaptions between the different link layers and then run
-the different algorithms separately. However, this solution would only
-optimize the partial path within each segment, but not the end-to-end
-path; moreover, it quickly becomes burdensome to maintain when the
-complexity of the network increases. For a better optimization of the
-network resources, it is necessary to research an algorithm that is
-able to take all different technologies into account.
+The result of this shortcoming is that these networks cannot be
+efficiently traffic engineered: nowadays, the typical way to proceed
+would be to setup manually the adaptions between the different link
+layers and then run the different algorithms separately. However, this
+solution would only optimize the partial path within each segment, but
+not the end-to-end path; moreover, it could quickly become burdensome
+to maintain when the complexity of the network increases. For a better
+optimization of the network resources, it is necessary to research an
+algorithm that is able to take all different technologies into
+account.
 
 \newpage
 
@@ -251,7 +261,7 @@ implementation is treated. In Chapter~\ref{sec:test}, there is a
 description of the testbed that was used, along with the tests
 performed to verify and evaluate the behaviour of the
 system. Chapter~\ref{sec:conclusion} draws the conclusions on this
-thesis work and proposes some follow-ups.
+thesis work and proposes some future work.
 
 \chapter{Introduction to GMPLS}\label{sec:introgmpls}
 GMPLS is a complete suite of protocols designed to apply the concept
@@ -260,14 +270,15 @@ cover the main features of GMPLS, including a brief introduction to
 MPLS.
 
 \section{Multiprotocol Label Switching (MPLS)}
-Traditional IP routing consists in a form of packet switching: each
+Traditional IP routing consists in a form of packet routing: each
 packet is forwarded to the next hop depending on the result of a
-look-up in the routing table. While this approach is considerably
+look-up in the forwarding table. While this approach is considerably
 simple and elegant, in the mid 1990s IP routing was suffering some
 serious concerns about speed and scalability: pushed also by the need
 of a new solution for handling traffic aggregation and traffic
 engineering, the IETF began to pull together and standardize all the
-various protocols to create MPLS.
+various routing, signaling and link management protocols to create
+MPLS.
 
 \subsection{Label Switching}
 The main idea behind label switching is to associate to each packet a
@@ -281,8 +292,8 @@ label value.
 
 \newpage
 
-In a MPLS network, the label is actually part of a header that is
-inserted between the transport protocol header and the IP header,
+In an MPLS network, the label is actually contained in a header that
+is inserted between the transport protocol header and the IP header,
 called \textit{shim header} (Figure~\ref{fig:mpls_label}).
 
 \begin{figure}[!hbp]
@@ -312,17 +323,18 @@ new label to be applied.
 
 The path that a packet follows in a MPLS network is called Labeled
 Switched Path (LSP); when the packet enters into the network, the
-\textit{ingress} router, classifies the packet and assigns it to a
+\textit{ingress} router classifies the packet and assigns it to a
 specific Forwarding Equivalence Class (FEC), depending on several
-factors like for example its destination, service provided,
-application type or required quality of service; it then applies
-(\textit{pushes}) the initial label and forwards the packet to the
-next router. The packet is then forwarded from one router to another
-until it reaches the \textit{egress} router, which will proceed to
-remove (\textit{pop}) the label, analyze again the IP header and send
-the packet outside the MPLS network; the ingress and the egress
-routers are also called Label Edge Routers (LER). A simple example of
-a MPLS network can be seen in Figure~\ref{fig:mpls_net}.
+factors like for example its IP destination, service provided,
+application type or required quality of service; depending on which
+FEC it was assigned, it applies (\textit{pushes}) the initial label
+and forwards the packet to the next router. The packet is then
+forwarded from one router to another until it reaches the
+\textit{egress} router, which will proceed to remove (\textit{pop})
+the label, analyze again the IP header and send the packet outside the
+MPLS network; the ingress and the egress routers are also called Label
+Edge Routers (LER). A simple example of a MPLS network can be seen in
+Figure~\ref{fig:mpls_net}.
 
 \begin{figure}[!hbp]
   \centering
@@ -348,11 +360,12 @@ network, since it consistently reduces the number of LSPs that have to
 be setup and maintained by the routers.
 
 \subsection{Traffic Engineering}
-The evolution of the IP technology has allowed traditional IP routing
-to catch up and be able to manage efficiently the current speed of the
-networks, therefore weakening the initial impulse for the creation of
-MPLS\@. Although, MPLS has proved to be particularly suited for the
-management of networks using Traffic Engineering.
+The evolution of the hardware-based IP technology has allowed
+traditional IP routing to catch up and be able to manage efficiently
+the current speed of the networks, therefore weakening the initial
+impulse for the creation of MPLS\@. Although, MPLS has proved to be
+particularly suited for the management of networks using Traffic
+Engineering.
 
 Traffic engineering may be a familiar concept to civil engineers,
 since it was first applied to road traffic, studying how to increase
@@ -396,7 +409,7 @@ configuration; these extension to the MPLS protocol supporting Traffic
 Engineering mechanisms have taken the name of MPLS-TE.
 
 MPLS-TE aims to improve the performance of the network for different
-targets: it can assure a certain QOS to a group of streams, for
+targets: it can assure a certain QoS to a group of streams, for
 example minimizing the end-to-end delay or the packet loss rate; this
 optimization is particularly evident to the network users, since it
 improves dramatically the quality of some applications. On the other
@@ -416,34 +429,34 @@ control the service provisioning.
 
 \subsection{Switching Types}
 
-The great innovation of GMPLS is the ability to seamlessly switch many
-different network technologies: packet frames, TDM time-slots, fibers
-or wavelengths are all treated in the same way. This abstraction makes
-the provisioning of services much more efficient and simplifies
-enormously the setup of end-to-end connections over network segments
-composed by different types of link-layer technology. The GMPLS
-protocol defines a set of switchable quantities, called Switching
-Types, that are diversified based on the transport layer technology
-involved: for example, MPLS routers are defined as \textit{packet
-  switch capable (PSC)}, since they are able to recognize and switch
-single packets. Ethernet switches are simply \textit{Layer 2 switch
-  capable (L2SC)} and Time Division Multiplexing switches are called
-\textit{TDM Capable}. Moving on to the optical devices, there is a
-distinction between the devices that switch data based on the
-wavelength on which the data is received (\textit{Lambda Switch
-  Capable (LSC)} and the ones that forward it based on which actual
-fiber carried the information (\textit{Fiber Switch Capable (FSC)}.
+The great innovation of GMPLS is the ability to seamlessly control
+many different network technologies: packet frames, TDM time-slots,
+fibers or wavelengths are all treated in a similar way. This
+abstraction makes the service provisioning process more linear and
+simplifies enormously the setup of end-to-end connections over network
+segments composed by different types of link-layer technology. The
+GMPLS protocol defines a set of switchable entities, called Switching
+Types (shown in Table~\ref{tab:gmpls_iscd}), that are diversified
+based on the transport layer technology involved: for example, MPLS
+routers are defined as \textit{packet switch capable (PSC)}, since
+they are able to recognize and switch single packets. Ethernet
+switches are simply \textit{Layer 2 switch capable (L2SC)} and Time
+Division Multiplexing switches are called \textit{TDM Capable}. Moving
+on to the optical devices, there is a distinction between the devices
+that switch data based on the wavelength on which the data is received
+(\textit{Lambda Switch Capable (LSC)} and the ones that forward it
+based on which actual fiber carried the information (\textit{Fiber
+  Switch Capable (FSC)}.
 
-Although we have classified these network devices based on the
-quantities they are able to switch, a clarification needs to be made
-in order to better understand the GMPLS architecture: since there are
-usually many types of link layer technology involved in this kind of
-network, it is not particularly correct to define which quantity a
-device can switch, because a device could switch more than
-one. Therefore, it would be better to clarify which specific interface
-is capable of switching a certain quantity: this is done by a special
-descriptor called \textit{Interface Switching Capability Descriptor}
-(ISCD).
+Although we have classified these network devices based on what they
+are able to switch, a clarification needs to be made in order to
+better understand the GMPLS architecture: since there are usually many
+types of link layer technology involved in this kind of network, it is
+not particularly correct to define which quantity a device can switch,
+because a device could switch more than one. Therefore, it would be
+better to clarify which specific interface is capable of switching a
+certain quantity: this is done by a special descriptor called
+\textit{Interface Switching Capability Descriptor} (ISCD).
 
 \begin{table}[!hbp]
   \begin{center}
@@ -462,7 +475,8 @@ descriptor called \textit{Interface Switching Capability Descriptor}
     \end{tabular}
     \caption[Interface Switching Capability Descriptors]{The possible
       values of the Switching Capability field in the Interface
-      Switching Capability Descriptor as defined by RFC4205.}
+      Switching Capability Descriptor as defined by
+      RFC4205~\cite{rfc4205}.}
     \label{tab:gmpls_iscd}
   \end{center}
 \end{table}
@@ -470,24 +484,30 @@ descriptor called \textit{Interface Switching Capability Descriptor}
 \subsection{Label Switching, Again}
 The essential feature of MPLS has obviously still a great importance
 in GMPLS, even though there are some differences: while in MPLS the
-label is assigned to a packet in a rather unpredictable and arbitrary
-way and has no logical bound with the contents of the packet, this is
-not the case of GMPLS\@. In fact, if we think about \textit{what} is
-being switched in a GMPLS network, we can quickly realize that every
-switchable data stream also represents a precise physical
-resource. For example, in an optical cross-connect a label identifies
-a specific wavelength, in a TDM system the label is associated to a
-specific time-slot and in a fiber switch the label is directly linked
-to a specific port or fiber.
+label is assigned to a packet in a rather arbitrary way and hasn't a
+direct connection with the contents of the packet, this is not the
+case of GMPLS\@. In fact, if we think about \textit{what} is being
+switched in a GMPLS network, we can quickly realize that a switchable
+data stream could also represents a precise physical resource. For
+example, in an optical cross-connect a label identifies a specific
+wavelength, and in a TDM system the label is associated to a specific
+time-slot and in a fiber switch the label is directly linked to a
+specific port or fiber.
 
-Therefore, in GMPLS the label has an actual meaning and is directly
-connected to some physical property of the network. This brings some
-other consequences: first of all, it is likely that the label will
-belong to a much smaller set of values, for example the available
-wavelengths in an optical network segment. Another implication is that
-the label needs to be carefully analyzed and interpreted: since its
-content represents now an actual resource, it needs to be correctly
-understood by any router involved in the process.
+Therefore, in GMPLS the label can have an actual meaning and be
+directly connected to some physical property of the network. This
+brings some other consequences: first of all, it is likely that the
+label will belong to a much smaller set of values, for example the
+available wavelengths in an optical network segment. Another
+implication is that the label needs to be carefully analyzed and
+interpreted: since its content represents now an actual resource, it
+needs to be correctly understood by any router involved in the
+process. Figure~\ref{fig:gmpls_label} shows an example of GMPLS
+Generalized Label. Given this description of what a label should be,
+we can understand how a Label Switched Path (LSP) works: every router
+in the path is a cross-connected device, which means that is
+programmed to receive data from a certain resource and forward it to
+another.
 
 \begin{figure}[!tbp]
   \begin{center}
@@ -495,24 +515,19 @@ understood by any router involved in the process.
       \bitheader{0,7,15,23,31} \\
       \bitbox{32}{Generalized Label}
     \end{bytefield}
-    \caption[GMPLS label]{The GMPLS 32-bit Generalized Label.}
+    \caption[GMPLS label]{An example of GMPLS Generalized Label.}
     \label{fig:gmpls_label}
   \end{center}
 \end{figure}
-
-Given this description of what a label should be, we can understand
-how a Label Switched Path (LSP) works: every router in the path is a
-cross-connected device, which means that is programmed to receive data
-from a certain resource and forward it to another.
 
 Every resource is associated to a label that explains its
 characteristics: the LSP consists of a series of triplets
 \textit{\{device, interface, label\}} that represents a sequence of
 cross-connected devices able to deliver traffic. Then, it can ensure a
-full or a partial connectivity supporting a wide range or services and
+full or a partial connectivity supporting a wide range of services and
 applications.
 
-The main innovation of the GMPLS LSP is the introduction of
+Another change introduced by the GMPLS LSP is the introduction of
 bidirectional paths: when in MPLS we had to setup two different
 unidirectional paths, in GMPLS we can use a single bidirectional
 path. This has some technical advantages: it requires less memory and
@@ -527,30 +542,29 @@ In packet switching networks, the control plane and the data plane can
 be delivered using the same link: for example, in IP routing the
 information about the destination of the packet is carried with the
 packet itself. In these cases, the control plane and the data plane
-can be actually considered coincident. In transport networks though,
-the devices are not able to recognize single packets and they switch
-entire time-slots, fibers or wavelengths; therefore, the control
-information about the data cannot be transmitted using the same medium
-(\textit{in-band} control).
+can be considered actually coincident. In transport networks though,
+the devices may not able to recognize single packets and they switch
+entire time-slots, fibers or wavelengths; therefore, in some cases the
+control information about the data cannot be transmitted using the
+same medium (\textit{in-band} control).
 
-The control plane in GMPLS is generally referred to as the Multi-Layer
-Control Plane (MLCP) and is completely separated from the data plane;
-it controls the operations of GMPLS network \textit{out-of-band}. \\
-This approach means that a failure on the control plane will not
-affect the data plane and vice versa. This separation adds also a
-layer of abstraction between the control and the data plane, thus
-making possible the interaction between many different data plane
-technologies.
+We refer to the control plane in GMPLS as the Multi-Layer Control
+Plane (MLCP), an entity which is completely separated from the data
+plane; it controls the operations of GMPLS network
+\textit{out-of-band}.  This approach means that a failure on the
+control plane will not affect the data plane and vice versa. This
+separation adds also a layer of abstraction between the control and
+the data plane, thus simplifying the interaction between many
+different data plane technologies.
 
-In order to traffic engineer the behavior of the network, MLCP uses
-routing and signaling protocols based on the IP models: most of the IP
-protocols have been extended to support GMPLS; IPv4 or IPv6 addresses
+In order to traffic engineer the behavior of the network, MLCP is
+heavily based on the IP architecture: in fact, IPv4 or IPv6 addresses
 are used to identify interfaces. This also applies in a certain
-measure to the data plane, even though \textit{unnumbered links}
-(i.e.\ links without an IP address) are also supported when IP
-addresses are not available. This is particularly important when the
-network is composed by optical devices which do not support the
-traditional IP addressing.
+measure to the data plane, even though other identifiers are supported
+when IP addresses are not available: for example, \textit{unnumbered
+  interfaces} are interfaces without an IP address, which are
+particularly important when the network is composed by optical devices
+that do not support the traditional IP addressing.
 
 \begin{figure}[!htbp]
   \centering
@@ -561,40 +575,41 @@ traditional IP addressing.
   \label{fig:gmpls_mlcp}
 \end{figure}
 
-There are three different models that the MLCP can be based on: the
-peer model, the overlay model and the augmented model. In the peer
-model, all the nodes in the network have complete knowledge and
-visibility of the other nodes in the network; in the overlay model
-instead, all the network layers are clearly separated and the nodes
-can only interact directly with the other nodes in the same layer. The
-augmented model is a kind of hybrid between the two previous models,
-allowing a certain level of peer communication, for example regarding
-routing and signaling information but not the entire network
-topology. These different models give to MLCP a great flexibility when
-dealing with different types of networks.
+There are three different high-level abstract models that the MLCP can
+be based on: the peer model, the overlay model and the augmented
+model. In the peer model, all the nodes in the network have complete
+knowledge and visibility of the other nodes in the network; in the
+overlay model instead, all the network layers are clearly separated
+and the nodes can only interact directly with the other nodes in the
+same layer. The augmented model is a kind of hybrid between the two
+previous models, allowing a certain level of peer communication, for
+example regarding routing and signaling information but not the entire
+network topology. These different models give to MLCP a great
+flexibility when dealing with different types of networks and
+organizational models.
 
 \subsection{Tunnels and Hierarchies}
 
-The technique used by MPLS to establish tunnels within a network was
-\textit{label stacking}, i.e. adding more labels to a packet and
-letting the MPLS routers analyze only the topmost one; although this
-approach works in a network where packets, frames or cells are
-switched, it doesn't with the network model proposed by GMPLS, since
-some of the network technologies involved do not support stacking: for
-example, it is not possible to encapsulate a wavelength inside another
-wavelength and extract it back at the end of the tunnel. This is also
-related to the fact that in GMPLS the label is logically associated
-with the physical resource and to change the label would mean to
-modify in some way the physical resource. Therefore, the meaning of
-LSP tunnel changes completely in GMPLS: the hierarchy of the tunnels
-is now based on the natural difference in granularity of the different
-network technologies. This means that the LSP tunnels follow the same
-hierarchy of the physical architecture: packet may be nested in a
-time-slot, time-slots may be grouped in a wavelength and wavelengths
-may be nested in a fiber (as shown in
+The technique used by MPLS to establish nested tunnels across a
+network was \textit{label stacking}, i.e. adding more labels to a
+packet and letting the MPLS routers analyze only the topmost one;
+although this approach works in a network where packets, frames or
+cells are switched, it doesn't with the network model proposed by
+GMPLS, since some of the network technologies involved do not support
+stacking: for example, it is not possible to encapsulate a wavelength
+inside another wavelength and extract it back at the end of the
+tunnel. This is also related to the fact that in GMPLS the label is
+associated with the physical resource and to change the label would
+mean to modify in some way the physical resource. Therefore, the
+meaning of LSP tunnel changes completely in GMPLS: the hierarchy of
+the tunnels is now based on the natural difference in granularity of
+the different network technologies. This means that the LSP tunnels
+follow the same hierarchy of the physical architecture: packet may be
+nested in a time-slot, time-slots may be grouped in a wavelength and
+wavelengths may be nested in a fiber (as shown in
 Figure~\ref{fig:gmpls_hierarchy}).
 
-This solution offers a better scalability to the system, allowing the
+This solution offers a good scalability to the system, allowing the
 aggregation of multiple LSP tunnels and offering the possibility of a
 more efficient traffic engineering.
 
@@ -609,17 +624,17 @@ more efficient traffic engineering.
 
 \subsection{GMPLS Protocols}
 
-In order to make this architecture efficient, a wide range of
-protocols has been extended or invented to support GMPLS: these
-protocols are used for the routing, the signaling and the link
-management of a GMPLS network.
+In order to implement this architecture, a wide range of protocols has
+been extended or invented to support GMPLS: these protocols are used
+for the routing, the signaling and the link management of a GMPLS
+network.
 
 The routing protocols have the task to manage information about the
-topology of the network, distributing it across the network: these
-protocols are essential for the routing algorithms. The ones currently
-available in GMPLS are Open Shortest Path First with Traffic
+topology of the network and distribute it across the network: these
+protocols are essential for the path computation algorithms. The ones
+currently available in GMPLS are Open Shortest Path First with Traffic
 Engineering additions (OSPF-TE) and Intermediate System to
-Intermediate System (IS-IS). OSPF-TE will be taken into consideration.
+Intermediate System (IS-IS-TE). OSPF-TE will be taken into consideration.
 
 The signaling consists of the process of establishing and removing
 Label Switched Paths: they are very important for service provisioning
@@ -642,21 +657,21 @@ across the network. LMP will be explained briefly.
 Open Shortest Path First (OSPF) is an Interior Gateway Protocol (IGP)
 and, more specifically, a link-state routing protocol: this means that
 it was designed to work within an Autonomous System (AS) by exchanging
-information about the link-state configuration of each router. Special
+information about the link-state configuration of each router. Other
 routers called Autonomous System Boundary Routers (ASBR) distribute,
 inside the network, information coming from other Autonomous Systems.
 
 To handle the traffic more efficiently and increase the scalability of
-the architecture the AS is divided into several areas: these areas are
-connected by routers called Area Border Routers (ABR) which have the
-task to propagate the information of their own area to other areas and
-receive information from other areas. Inside an Autonomous System
+the architecture the AS may be divided into several areas: these areas
+are connected by routers called Area Border Routers (ABR) which have
+the task to propagate the information of their own area to other areas
+and receive information from other areas. Inside an Autonomous System
 there is a primary area called the \textit{backbone}: all other areas
-must be connected to the backbone and the routers inside the backbone
+must be connected to the backbone; the routers inside the backbone
 area are called backbone routers.
 
 There are five types of messages that the routers can exchange in
-OSPF: Hello, Database Description, Link State Request, Link State
+OSPF: Hello, Link Database Description, Link State Request, Link State
 Update, and Link State Acknowledge. They all share the same OSPF
 header and are briefly described in Table~\ref{tab:ospf_messages}.
 
@@ -697,7 +712,7 @@ State Update'' message, because it carries along one or more LSAs and
 it is exchanged between adjacent routers at specific intervals. For
 Traffic Engineering purposes, a special type of LSA is introduced: to
 make it invisible to the normal OSPF routing, this LSA is made
-\textit{opaque}; this LSA will be ignored by every router but the ones
+\textit{opaque}; this LSA will be considered only by the routers
 involved in the GMPLS routing process.
 
 \newpage
@@ -741,12 +756,11 @@ bandwidth, the reservable bandwidth etc.
 The TE information will be then used to create a new type of Database,
 called the Traffic Engineering Database (TED); the TED has a critical
 importance in the TE routing mechanisms, since it is the main source
-of information for the Constrained Shortest Path First (CSPF)
-algorithms that are employed in this context. Using the TED, a new
-model of the network that takes in account TE variables can be built,
-while CSPF algorithms compute network paths between nodes in the
-network. In the next chapter, this type of algorithm will be
-thoroughly reviewed and explained.
+of information for the path computation algorithms that are employed
+in this context. Using the TED, a new model of the network that takes
+in account TE variables can be built, while CSPF algorithms compute
+network paths between nodes in the network. In the next chapter, this
+type of algorithm will be thoroughly reviewed and explained.
 
 \subsection{RSVP-TE}
 
@@ -823,8 +837,8 @@ composed by objects and sub-objects is encapsulated inside a IP
 packet.
 
 \subsubsection{LSP Establishment}
-One of the main improvements of RSVP-TE over RSVP is the possibility
-of creating bidirectional paths: this requires a full set of Path and
+One of the main changes introduced by GMPLS in RSVP is the possibility
+to create bidirectional paths: this requires a full set of Path and
 Resv messages to be exchanged between two LSRs. The ingress LSR sends
 a \textit{Path} message downstream to the next router initiating the
 creation of the LSP\@. This \textit{Path} message contains the
@@ -938,7 +952,7 @@ forwarded along the path, each node listed in the ERO is subsequently
 removed. When the Path message reaches the egress LSR, the ERO list is
 therefore empty and there is no other information of which path the
 message has followed except for the previous hop: to be able to
-recover this information, the list of abstract nodes traversed is
+recover this information, the list of abstract nodes traversed may be
 copied in the Record Route Object (RRO). The egress router may read
 this object to know the exact path and eventually share it with the
 ingress router in a Resv message.
@@ -963,7 +977,7 @@ which labels have to be installed on the interfaces of a node. The
 label ERO sub-objects (both downstream and upstream may be specified)
 are added next to the already existing ERO sub-objects. This method
 makes a lot easier to distribute the GMPLS generalized labels and is,
-in fact, the default method utilized in GMPLS for setting up a LSP.
+in fact, one of the methods utilized in GMPLS for setting up a LSP.
 
 \subsection{LMP}
 
@@ -976,7 +990,8 @@ the other node will certainly understand. The task of LMP is to help
 these nodes to discover the characteristics and the identifiers of the
 links to which they are connected; moreover, this protocol has proved
 to be extremely useful to monitor the network, detect failures and
-isolate them. The main features of LMP, described in RFC4204, are:
+isolate them. The main features of LMP, described in
+RFC4204~\cite{rfc4204}, are:
 \begin{itemize}
 \item \textbf{Link correlation} \\
   Data links are aggregated into TE links and data links features are
@@ -998,18 +1013,18 @@ isolate them. The main features of LMP, described in RFC4204, are:
 
 \chapter{GMPLS Path Computation}\label{sec:gmplspath}
 
-This chapter will focus on the concepts on which is based path
-computation in GMPLS, starting from the basic definitions; later, it
-will proceed to describe the specific architecture and algorithms
-involved. Then, it will treat the various constraints that need to be
-analyzed.
+This chapter will focus on the concepts regarding the path computation
+process in GMPLS, starting from the basic definitions; later, it will
+proceed to describe the specific architecture and algorithms
+involved. In the end, it will treat the various constraints that need
+to be analyzed.
 
 \section{Basic Definitions}
 
 A \textit{transport service} is a system designed to provide a range
 of services to the end user by delivering traffic from the information
 source to the information destination while ensuring a certain
-quality; this quality of service (QOS) is arranged on the base of a
+quality; this quality of service (QoS) is arranged on the base of a
 deal between the service provider and the end user. A \textit{path} is
 a sequence of network resources of the service provider, which are
 able to provide the aforementioned service if provisioned correctly.
@@ -1029,8 +1044,8 @@ this thesis will only treat the case of a single centralized node.
 
 \section{Path Computation Element}
 
-The Path Computation Element (PCE) is defined by the IETF in RFC4655
-as:
+The Path Computation Element (PCE) is defined in
+RFC4655~\cite{rfc4655} as:
 \begin{quote}
   \textit{``An entity (component, application, or network node) that
     is capable of computing a network path or route based on a network
@@ -1108,8 +1123,8 @@ reply. This model is shown in Figure~\ref{fig:pce_external}.
 \end{figure}
 
 If there aren't important logical changes, then why the external PCE
-model has been proposed? There are a number of reasons that could
-explain why this model was created:
+model has been proposed? The following points offer a broader
+explanation of the external model:
 \begin{itemize}
 \item Path computation is generally a computationally intensive
   operation and requires a significant amount of resources: even if
@@ -1119,26 +1134,24 @@ explain why this model was created:
 \item Since it requires a considerable amount of resources to run, it
   is more likely that the PCE won't be embedded in a regular router,
   but would be instead deployed in a separate device.
-\item Since PCE is designed to provide on-line path computation, the
-  response should be quick, in the order of few seconds.
 \item The computational power required grows with the size and the
   complexity of the network, i.e.\ multiple constraints like
   bandwidth, latency, cost or QOS to keep in consideration.
 \item The main function of a router is the routing process: thus, its
-  visibility of the network is limited, its topology knowledge is
-  incomplete and it is unfit to perform the complex calculations
+  visibility of the network domains is limited, its topology knowledge
+  is incomplete and it is unfit to perform the complex calculations
   required by a modern multi-layer network.
 \item In a very large network, the size of the TED increases very
-  quickly: moving the database to a dedicated PCE server would
-  decrease the response time of the path requests.
+  quickly: moving the database from a normal router to a dedicated PCE
+  server would decrease the response time of the path requests.
 \item If a failure should occur in the network, the PCE could provide
   emergency routing alternatives because of its knowledge of the
-  network and its fast response time.
+  network.
 \end{itemize}
 
 As we have seen, the PCE uses the information available in the TED to
 compute the requested paths; if the PCE only uses that information,
-it's called \textit{stateless}. Instead, a PCE is called
+it's called \textit{stateless}. A PCE is called
 \textit{stateful} if it uses also the information of the
 already-computed paths and reserved resources to gain a broader
 knowledge of the network status; although this approach allows to
@@ -1156,10 +1169,10 @@ speed, the reliability and the success of the whole PCE.
 \section{Constrained Path Computation}
 
 This section will start from the basics of path computation, defining
-what is a graph, what is a path and what are the most common path
+what a graph is, what a path is and describe the most common path
 computation problems. Later it will explain the fundamental algorithms
-that have been discovered. The last part will then focus on how to
-extend these algorithms to support constrained path computation.
+that are known. The last part will then focus on how to extend these
+algorithms to support constrained path computation.
 
 \subsection{Basic Definitions}
 
@@ -1331,14 +1344,16 @@ Let's analyze the pseudo-code:
   remain ``\(\infty\)'' and its predecessor ``null''.
 \end{itemize}
 
-This algorithm mathematical performance is \(O(|V||A|)\): the
-initialization runs in \(O(|V|)\), each of the |V|-1 iterations runs
-in \(O(|A|)\) and the final negative loop check runs in \(O(|A|)\).
+This algorithm's theoretical performance is \(O(|V||A|)\), where
+\(|V|\) is the number of vertices and \(|A|\) is the number of arcs:
+the initialization runs in \(O(|V|)\), each of the |V|-1 iterations
+runs in \(O(|A|)\) and the final negative loop check runs in
+\(O(|A|)\).
 
 \subsubsection{Dijkstra}
 
 The Dijkstra algorithm is perhaps the most well-known path computation
-algorithm: it solves efficiently the single-source computation problem
+algorithm: it efficiently solves the single-source computation problem
 in weighted graphs without negative-weight arcs. While the algorithm
 is running, two sets of vertices are maintained: one containing the
 \textit{labeled vertices}, i.e.\ the nodes which shortest path from
@@ -1431,15 +1446,15 @@ The Breadth First Search algorithm can also solve the single-source
 computation in a weighted graph; it supports negative-weight arcs, but
 it can't detect negative-weight loops. Instead of choosing a vertex
 and relaxing all the arcs originating from that vertex like the
-Dijkstra algorithm, the BFS keeps all the labeled vertices in a set F;
-then, it continuously tries to re-label the vertices in F by relaxing
-every arc originating from them.
+Dijkstra algorithm, the BFS algorithm keeps all the labeled vertices
+in a set F; then, it continuously tries to re-label the vertices in F
+by relaxing every arc originating from them.
 
 One interesting quality of the BFS algorithm is that if two vertices
-are connected by several paths with the same cost, it will always be
-chosen the path with the smallest number of hops: this is a desirable
-feature in GMPLS, because it simplifies the setup, the management and
-the removal of the LSP\@. Pseudo-code follows:
+are connected by several paths with the same cost, it will always
+choose the path with the smallest number of hops: this is a desirable
+feature in GMPLS, because it simplifies the setup, management and
+removal of LSPs\@. Pseudo-code follows:
 
 \begin{quote}
 \begin{lstlisting}
@@ -1459,6 +1474,8 @@ while F != 0 do
 \end{lstlisting}
 \end{quote}
 
+\newpage
+
 \begin{itemize}
 \item Lines 1-5: initialization of the basic data structures; the F
   set contains the source vertex.
@@ -1470,15 +1487,18 @@ while F != 0 do
 \end{itemize}
 
 Like for Dijkstra's algorithm, also BFS can be optimized for
-single-pair shortest path problems by editing line 8 in (d[dest] is the
-path distance estimate for the destination node):
+single-pair shortest path problems by changing line 10 into:
 \begin{quote}
 \begin{verbatim}
 if (d[v] > d[u] + w(a) && d[u] + w(a) < d[dest]) then
 \end{verbatim}
 \end{quote}
 
-The BFS algorithm runs in \(O(|V|+|E|)\), which is considerably faster
+Note that d[dest] is the path distance estimate for the destination
+node: an arc relaxation is performed only if the path cost doesn't
+exceed it.
+
+The BFS algorithm runs in \(O(|V|+|A|)\), which is considerably faster
 than the other algorithms previously described; this is why it is
 widely used to solve many shortest-path computation problems (the
 performance of Dijkstra is better only in some single-pair problems).
@@ -1487,26 +1507,24 @@ performance of Dijkstra is better only in some single-pair problems).
 
 All the algorithms that have been described return a group of shortest
 paths or a single shortest path, taking into consideration a single
-constraint, which is represented by the weight of the arc. Although,
-in a multi-layer network, there are many different constraints to
+variable, which is represented by the arc metric. However, in a
+traffic engineered network, there are many different constraints to
 consider, which have to be analyzed at the same time in order to
 compute a meaningful answer: \textit{constraint-based algorithms} are
 able to compute network paths while respecting a predefined set of
-constraints.
-
-First of all, we need to make a distinction between \textit{link-type}
-constraints and \textit{path-type} constraints: while link-type
-constraints describe intrinsic characteristics of the link like the
-available bandwidth or the supported switching capabilities, path-type
-constraints define requirements to be applied to the final path, such
-as the end-to-end delay or the total weight sum. Since these two types
+constraints. First of all, we need to make a distinction between
+\textit{link-type} constraints and \textit{path-type} constraints:
+while link-type constraints describe intrinsic characteristics of the
+link, such as the available bandwidth or the supported switching
+capabilities, path-type constraints define requirements to be applied
+to the final path, such as the end-to-end delay. Since these two types
 of constraints impact differently on the behaviour of the algorithm,
 they need to be considered in two separate phases.
 
 Link-type requirements are easily fulfilled by analyzing the network
 representation before actually running the path computation algorithm:
 if a link does not respect one of the link-type constraints, it is
-immediately removed from the graph; for example, if the client
+immediately pruned from the graph; for example, if the client
 requests a certain minimum bandwidth to be respected  on the path, the
 algorithm can check the available bandwidths of all the links and
 prune the unfit ones. An example can be seen in
@@ -1549,14 +1567,14 @@ be designed; there are different approaches that can be followed:
   SPF algorithm terminates, evaluate them.
 \item Configure a SPF algorithm to compute several shortest paths and then
   sequentially request and evaluate them.
-\item Compute concurrently all the possible paths while evaluating the
+\item Concurrently compute all the possible paths while evaluating the
   requested constraints and immediately discarding the unfit paths.
 \end{enumerate}
 
 One of the solutions developed to solve the CSPF problem is to choose
 one of the basic single-source algorithms; then, that algorithm is
 modified to be able to process a set of constraints during the path
-computation: a good moment for analyzing path constraints is during
+computation: a good phase for analyzing path constraints is during
 arc relaxation, since it is basically the moment when the nodes are
 added (or re-added) to the working sub-paths. If any sub-path doesn't
 fulfill one of the path constraints (and this specific constraint
@@ -1600,16 +1618,16 @@ by three American universities, with the contribution of external
 organizations such as the Massachusetts Institute of Technology (MIT),
 the NASA and the National Science Foundation (NSF).
 
-Its goal is to prove the power and the flexibility of network composed
-by both packet and circuit switched segments in order to enable
-dynamic end-to-end service provisioning. It is composed by a variety
-of UNIX daemons and some other elements:
+The goal of the DRAGON project is to prove the power and the
+flexibility of network composed by both packet and circuit switched
+segments in order to enable dynamic end-to-end service
+provisioning. It is composed by the following UNIX daemons:
 
 \begin{itemize}
 \item \textbf{OSPF-TE}: the OSPF daemon is an enhanced version of the
-  GNU Zebra OSPF daemon; it has been added the traffic engineering
-  support for opaque LSAs and parts of the LMP protocol have been
-  incorporated. It is written in C.
+  GNU Zebra OSPF daemon; it has been extended with the traffic
+  engineering support for opaque LSAs and parts of the LMP protocol
+  have been incorporated. It is written in C.
 \item \textbf{RSVP-TE}: the RSVP daemon is based on the KOM-RSVP open
   source daemon. It is written in C++.
 \item \textbf{PCE}: the PCE component is provided by the NARB/RCE
@@ -1634,16 +1652,15 @@ representing the interactions can be seen below:\\\\
 \end{figure}
 
 Our main point of interest is represented by the NARB/RCE couple,
-which is responsible for the provisioning and the management of
-network resources; while the NARB (\textit{Network Aware Resource
-  Broker}) performs higher-level functions like domain level topology
-abstraction, inter-domain path computation, inter-domain routing and
-end-to-end LSP management, the RCE (\textit{Resource Computation
-  Element}) provides the raw resource database and the path
-computations capabilities.
+which is responsible for the management of network resources; while
+the NARB (\textit{Network Aware Resource Broker}) performs
+higher-level functions like domain level topology abstraction,
+inter-domain path computation, inter-domain routing and end-to-end LSP
+management, the RCE (\textit{Resource Computation Element}) provides
+the raw resource database and the path computations capabilities.
 
 Therefore, the path computation algorithm is a module which is
-inserted inside the RCE; the RCE can load many different algorithms
+located inside the RCE; the RCE can load many different algorithms
 concurrently and, depending on the path request, dynamically choose
 which solution fits best. We will now analyze in closer detail the
 RCE.
@@ -1689,14 +1706,14 @@ repeatedly to other network elements. Therefore, the path computation
 process can run faster eliminating also the possibility of
 inconsistent states. Each time a sane request is received by the RCE,
 a specific LSP is sent back to the client; this LSP has been computed
-taking into consideration both the Service Level Agreement (SLA) and
-user specified requirements.
+taking into consideration the predefined Service Level Agreement and
+user specified constraints.
 
 \section{PCEN Module}
 
-The RCE module that performs the actual path computation is the PCEN;
-the PCEN can use as computation logic any path computation module that
-is available: below it the basic structure of the PCEN module is
+The PCEN can use as computation logic any path computation module that
+is available: each of these computation models are implemented in C++
+class. Below, the basic structure of the PCEN C++ class is
 represented:
 
 \begin{figure}[!htbp]
@@ -1713,7 +1730,8 @@ represented:
   request with the information retrieved from the TED.
 \item \textbf{BuildTopology()}: in this block, the network topology
   internal representation is built upon the information received from
-  the TED.
+  the TED. This action is repeated at every request to provide the
+  most up-to-date representation of the network.
 \item \textbf{PruneTopology()}: all the link-type constraints
   contained in request are verified; all the links that do not fulfill
   these requirements are pruned and the network graph is updated.
@@ -1897,10 +1915,10 @@ layer: the software can use an abstract function to verify the
 specific constraints of each layer by implementing a different
 function for each different layer (with the so-called \textit{function
   polymorphism} it is even possible for this function to keep the same
-name: the compiler will automatically choose the right function for
-the right class). This special software configuration allows a
-scalable and flexible management of the various constraints involved
-in the multi-layer path computation problem.
+name: the program will automatically choose the right function for the
+right class). This software configuration allows a scalable and
+flexible management of the various constraints involved in the
+multi-layer path computation problem.
 
 \chapter{Testing and Verification}\label{sec:test}
  
@@ -2087,12 +2105,13 @@ have been noted (see also Appendix A):
 \item If a client issues a request for a path that connects two nodes
   and these two hosts do not share interfaces with a common switching
   and encoding capability, an error message is returned because no
-  path can be computed. This represents the correct behaviour defined
-  in RFC3471.
-\item The path computation request does not need to specify the
-  switching and the encoding capability anymore: the algorithm goes
-  through all the available interfaces of the two nodes and chooses
-  automatically the compatible matches.
+  path can be computed. This is the correct behaviour defined in
+  RFC3471~\cite{rfc3471}.
+\item Previously the path computation request needed to specify the
+  switching and the encoding capability of the two nodes: this is not
+  longer necessary because the algorithm goes through all the
+  available interfaces and chooses automatically the compatible
+  matches.
 \item Since the testing program has been modified to support different
   type of algorithms and network configurations, it is possible to
   obtain different paths for the same pair of source-destination
@@ -2126,10 +2145,10 @@ observed:
   wavelength.
 \item The management of the constraints is layer-dependent: when the
   tunnel is initiated, the set of constraints that affect the current
-  layer is ``frozen'' and a new set of constraints is introduced; when
-  the tunnel ends, the previous set of constraints is reverted. This
-  guarantees that the upper layer still satisfies its path
-  requirements, treating the tunnel as a virtual link.
+  layer is ``suspended'' and a new set of constraints is introduced;
+  when the tunnel ends, the previous set of constraints is
+  reverted. In this way the upper layer satisfies its path
+  requirements by treating the tunnel as a virtual link.
 \item The algorithm is able to manage all the labels (both downstream
   and upstream) associated to the optical segment links; from these
   labels, the wavelengths are extracted and converted in a human
@@ -2137,15 +2156,15 @@ observed:
 \end{itemize}
 
 These tests have proved that the developed algorithm fulfills the
-foreseen objectives, allowing to the RCE to successfully compute paths
-in a multi-layer environment.
+foreseen objectives, allowing the RCE to successfully compute paths in
+a multi-layer environment.
 
 \section{Performance Evaluation}
 
 In this section, the performance of the implemented algorithm will be
 evaluated considering the usage of two resources: \textit{time},
-intended as the response time of the algorithm and \textit{space},
-intended as the memory needed to run it.
+defined as the response time of the algorithm and \textit{space},
+defined as the memory needed to run it.
 
 \subsection{Time Efficiency}
 The time efficiency of the algorithm has been measured starting from
@@ -2173,16 +2192,17 @@ behaviour of the algorithm:
 \begin{enumerate}
 \item The path computation request includes two neighbours with L2SC
   interfaces (vE1 and vEC1 in Figure~\ref{fig:testbed_model}); the RCE
-  doesn't need to setup LSP tunnels.
+  doesn't need to consider LSP tunnels.
 \item The source and the destination requested belong to the optical
   layer and are connected through an optical cross-connect (vROADM2
   and vROADM3 in Figure~\ref{fig:testbed_model}); the RCE needs to
-  check for wavelength continuity but doesn't need to setup a tunnel.
+  check for wavelength continuity but still doesn't need to consider
+  tunnels.
 \item In the last case, the source and destination are at the opposite
   sides of the testbed (LR1 and LR2 in
   Figure~\ref{fig:testbed_model}); the path is composed by a high
-  number of hops and two nested LSP tunnels have to be setup by the
-  RCE.
+  number of hops and two nested LSP tunnels have to be considered by
+  the RCE.
 \end{enumerate}
 
 Each of these test cases has been executed in three different runs
@@ -2297,7 +2317,9 @@ Here is a short summary of the time performances of the tests:
 \begin{figure}[!htbp]
   \begin{center}
     \includegraphics[width=1\textwidth]{img/time_graph}
-    \caption[Algorithm time efficiency graph]{Time efficiency graph.}
+    \caption[Algorithm time efficiency graph]{Time efficiency graph
+      (note that the y axis of the graph is represented using a
+      logarithmic scale).}
     \label{fig:time_graph}
   \end{center}
 \end{figure}
@@ -2308,23 +2330,22 @@ checking; the computation of this test runs faster than the second
 case, where the constraints relative to the optical layer have also to
 be taken in consideration. Furthermore, the first two tests run
 significantly faster than the last one, which is by far more complex,
-requiring multiple constraints checking and the creation/destruction
-of two nested LSP tunnels. 
+requiring multiple constraints checking and the consideration of two
+nested LSP tunnels.
 
 Analyzing the behaviour of the different tests in
-Figure~\ref{fig:time_graph}, some trends can be observed (note that
-the y axis of the graph is represented using a logarithmic scale): the
-time needed to verify the sanity of the request, remove the unfit
-links and send back the computed path is almost irrelevant compared to
-the rest of the algorithm time. Most of the time was therefore spent
-on building the internal network topology and running the path
+Figure~\ref{fig:time_graph}, some trends can be observed: the time
+needed to verify the sanity of the request, remove the unfit links and
+send back the computed path is almost irrelevant compared to the rest
+of the algorithm time. Most of the time was therefore spent on
+building the internal network topology and running the path
 computation algorithm: here can be observed the influence of the path
 complexity, since it modifies the ratio between these two intervals
 from 1-to-3 in the simple cases to 1-to-10 in the last case. While the
 time used to create the internal representation of the network remains
 constant, the time spent to compute the path diversified the three
-tests, giving the most significant contribute to the total response
-time; although, the performance of the algorithm could be improved in
+tests, giving the most significant contribution to the total response
+time. Although, the performance of the algorithm could be improved in
 some cases by implementing a cache for the network representation: if
 the network topology doesn't change, this could improve the efficiency
 of the algorithm by keeping the previously computed representation.
@@ -2332,17 +2353,16 @@ of the algorithm by keeping the previously computed representation.
 Considering the environment where the tests have been performed, we
 can say that the whole RCE element maintains a good performance,
 assuring that all the computation requests are managed in the order of
-milliseconds; in fact, we can see that the minimum values are
+milliseconds. In fact, we can see that the minimum values are
 generally very close to the average values while the maximum values
 are a lot higher (also the standard deviation values are relatively
 small compared the difference between the average and the maximum
-values): this could be explained by the high-load caused by the
-multiple virtual machines running on the same physical server.
+values).
 
 \subsection{Space Efficiency}
 
-The \textit{space efficiency} of the algorithm has been analyzed
-considering the usage of memory during a series of different tests; in
+The \textit{space efficiency} of the algorithm has been analyzed by
+measuring the usage of memory during a series of different tests; in
 order to make the test meaningful, the results have been compared to
 the performances of other two algorithms available in the RCE, the
 Ethernet-only Dijkstra algorithm and the optical-only BFS
@@ -2398,52 +2418,51 @@ incrementing the number of requests or the complexity of the required
 path does not cause the RCE to grow exponentially in size.
 
 Analyzing the valgrind report more accurately, we can see that almost
-every test is affected by a memory leak; this is caused by two
-factors: first of all, there isn't a ``graceful'' way to stop the
+every test is affected by a memory leak. This memory leak is caused by
+two factors: first of all, there isn't a ``graceful'' way to stop the
 execution of the RCE, so it is necessary to terminate it abruptly by
 sending a SIGTERM signal; this causes some allocated data structures
 to not be freed correctly (this happens with the first two
 algorithms). The other factor is represented by the internal RCE
 message handling procedures: to be able to send and receive messages
-asynchronously, a complex class of timers has been implemented; the
-internal functions of this software component contains a bug that
-creates a 40 byte memory leak for each request. This small memory leak
+asynchronously, a complex class of timers has been implemented and the
+internal functions of this software component contain a bug that
+causes a 40 byte memory leak for each request. This small memory leak
 becomes relevant when the RCE has to handle 1000 messages, creating a
-40 KB total memory leak. \\
-With all the selected algorithms, the footprint of the RCE remains
-relatively small: the implemented version of the RCE never exceeds the
-200 KB memory limit when computing one thousand consecutive
-requests. In fact, the physical network devices that actually act as
-RCE in a network are provided with several hundreds of megabytes of
-RAM.
+40 KB total memory leak. With all the selected algorithms, the
+footprint of the RCE remains relatively small: the implemented version
+of the RCE never exceeds the 200 KB memory limit when computing one
+thousand consecutive requests. In fact, the physical network devices
+deployed in a GMPLS network are provided with several hundreds of
+megabytes of RAM.
 
 \chapter{Conclusion and future work}\label{sec:conclusion}
 
 \section{Conclusion}
 
-This thesis work have been focused on the improvement of the automatic
-path-setup process in a complex multi-layered network: a path
+This thesis work has been focused on the improvement of the automatic
+path-setup process in a complex multi-layered network. A path
 computation algorithm has been developed and thoroughly tested,
 proving that it is feasible to simplify the current manual process
 with a faster and more dynamic one. The implemented solution can
 handle successfully a wide range of path constraints, showing also the
-capability of adapting itself in case of network topology changes; in
+capability of adapting itself in case of network topology change. In
 addition, the support of user-defined constraints makes the system
 more flexible, allowing a finer degree of configuration.
 
-This multi-layer algorithm permitted to deploy the RCE in a
-multi-layer environment: the multiple tests that were executed have
+This multi-layer algorithm allowed the RCE to be deployed in a
+multi-layer environment. The multiple tests that were executed have
 shown that the chosen solution maintains an overall good performance;
 furthermore, since the RCE returns proper RSVP-TE ERO messages, there
 is no need to further process the results of the path computation and
 it is immediately possible to signal the LSPs. The path computation
 element has been tested in an environment composed by several virtual
-nodes running on the same physical server; considering this special
-network setup, the response times of the algorithm have been fairly
-good. We have also seen that increasing the number of nodes involved
-in the path computation does not lead to an exponential increase of
-time and memory usage. Therefore, this solution appears to be a very
-good candidate for the problem of end-to-end service provisioning in
+nodes running on the same physical server; considering this network
+setup, the response times of the algorithm have been fairly good. We
+have also seen that increasing the number of nodes involved in the
+path computation does not lead to an exponential increase of time and
+memory usage. Therefore, this solution appears to be a very good
+candidate for the problem of end-to-end service provisioning in
 complex multi-layer networks.
 
 \section{Future Work}
@@ -2474,7 +2493,7 @@ the needs of the Traffic Engineers.
 \phantomsection
 \renewcommand\bibname{References}
 \addcontentsline{toc}{chapter}{References} \nocite{*}
-\bibliography{bibliography} \bibliographystyle{is-alpha}
+\bibliography{bibliography} \bibliographystyle{is-abbrv}
 
 \appendix
 
