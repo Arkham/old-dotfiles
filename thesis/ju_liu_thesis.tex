@@ -2662,6 +2662,52 @@ HOP-TYPE [strict]: 172.16.100.154
 \end{verbatim}
 }
 
+\chapter{DRAGON software changes}
+The following table contains the changes that were introduced in the
+DRAGON environment: for each addition and modification the importance
+is indicated.
+
+\begin{table}[!htbp]
+  \begin{center}
+    \begin{tabular}{|l|p{0.45\textwidth}|l|}
+      \hline
+      \textbf{File} & \textbf{Changes} & \textbf{Importance} \\\hline
+      \$NARB/rce/pcen\_mlr.cc & New PCEN module, source file &
+      Critical \\\hline
+      \$NARB/rce/pcen\_mlr.hh & New PCEN module, headers file &
+      Critical \\\hline
+      \$NARB/rce/pcen\_bfs.cc & Added support for multi-layer paths &
+      Critical \\\hline
+      \$NARB/rce/pcen\_bfs.hh & Added support for multi-layer path
+      computation & Critical \\\hline
+      \$NARB/rce/rce\_apiserver.cc & Enabled scheduling of both api
+      reader and writer & Moderate \\\hline
+      \$NARB/rce/rce\_lsp.cc & Added LSP\_OPT\_PCEN\_MLR object
+      support & Moderate \\\hline
+      \$NARB/rce/rce\_lsp.hh & LSP\_OPT\_PCEN\_MLR object defined &
+      Moderate \\\hline
+      \$NARB/rce/rce\_pcen.cc & Redefined filtering functions; added
+      sane comments to the path computation algorithm; improved
+      mechanism for packet generation & Critical \\\hline
+      \$NARB/rce/rce\_pcen.hh & Added support for unnumbered
+      interfaces; PCENNode object redefined & Critical \\\hline
+      \$NARB/rce/rce\_test.cc & Added support for new objects; ERO
+      sub-objects redefined with a more structured approach; added
+      support for unnumbered interfaces; objects parsing function
+      rewritten & Critical \\\hline
+      \$NARB/rce/resource.cc & Implemented new functions for Grid
+      objects & Critical \\\hline
+      \$NARB/rce/resource.hh & Added Grid, WaveGrid and GenericGrid
+      objects & Critical \\
+      \hline
+    \end{tabular}
+    \caption[DRAGON software changes]{DRAGON software
+      changes. The \$NARB variable indicates the path where the
+      narb-sw package is installed.}
+    \label{tab:dragon_changes}
+  \end{center}
+\end{table}
+
 \chapter{RCE stack and heap profile}
 This appendix contains the graphs obtained by monitoring the RCE usage
 of system resources; more specifically, they were obtained with the
