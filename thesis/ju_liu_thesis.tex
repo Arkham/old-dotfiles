@@ -3163,6 +3163,580 @@ recupero in caso di errori e le tecniche di \textit{fate sharing}.
 
 \subsection*{Tunnel e gerarchie}
 
+Se la tecnica utilizzata da MPLS per stabilire dei tunnel era il label
+stacking, cioè aggiungere più etichette allo stesso pacchetto e
+considerare solo l'etichetta più esterna, questo approccio è tuttavia
+incompatibile con alcune tecnologie di rete presenti in GMPLS: per,
+esempio non è possibile incapsulare una lunghezza d'onda all'interno
+di un'altra lunghezza d'onda ed estrarre i dati integri alla fine del
+tunnel. Questo fatto è causato dalla relazione diretta che esiste tra
+l'etichetta e la risorsa fisica: cambiare l'etichetta significherebbe
+cambiare anche la risorsa fisica. Perciò, l'unico modo per poter
+garantire la creazione di tunnel è mantenere la gerarchia della
+granularità delle diverse tecnologie di rete. In altre parole, i
+tunnel LSP seguono la stessa gerarchia delle architetture fisiche: i
+pacchetti possono essere incapsulati in slot di tempo, gli slot di
+tempo possono essere incapsulati in lunghezze d'onda e le lunghezze
+d'onda possono essere incapsulate in fibre ottiche. La figura seguente
+ne mostra una rappresentazione grafica:\\
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.9\textwidth]{img/gmpls_hierarchy}
+  \caption[]{La gerarchia degli LSP GMPLS: i pacchetti sono
+    incapsulati in slot di tempo, che sono incapsulati in lunghezze
+    d'onda, che sono incapsulate in fibre ottiche.}
+\end{figure}
+
+\subsection*{Protocolli GMPLS}
+
+GMPLS è composto da moltissimi protocolli, che sono stati inventati o
+estesi dal consorzio IETF; questi protocolli sono utilizzati
+all'interno di una rete GMPLS per l'instradamento, la segnalazione e
+la gestione dei collegamenti. 
+
+I protocolli di instradamento hanno il compito di gestire le
+informazioni che riguardano la topologia di rete e distribuirle
+attraverso la rete stessa: essi sono fondamentali per gli algoritmi di
+computazione. \\
+I protocolli di instradamento più diffusi sono \textit{Open Shortest
+  Path First con supporto al Traffic Engineering} (OSPF-TE) e
+\textit{Intermediate System to Intermediate System con supporto al
+  Traffic Engineering} (IS-IS-TE). OSPF-TE verrà particolarmente
+approfondito.
+
+Il processo di segnalazione consiste nello stabilire e rimuovere LSP:
+questi protocolli sono molto importanti per la fornitura di servizi in
+quanto gestiscono la prenotazione delle risorse di rete e garantiscono
+una determinata Quality of Service. I protocolli più diffusi in questo
+campo sono \textit{Resource ReserVation Protocol with TE additions}
+(RSVP-TE) e \textit{Constraint-based Routing-Label Distribution
+  Protocol} (CR-LDP). In seguito si analizzeranno in dettaglio i
+meccanismi di RSVP-TE.
+
+Per quanto riguarda la gestione dei collegamenti, questo tipo di
+protocolli viene utilizzato all'interno di una rete GMPLS per scoprire
+nuovi collegamenti o verificare la connettività dei collegamenti
+esistenti. Un nuovo protocollo chiamato \textit{Link Management
+  Protocol} (LMP) è stato introdotto per controllare la validità dei
+Link Advertisement che sono continuamente scambiati attraverso la
+rete.
+
+Per scopo di semplicità la descrizione dei tre protocolli non è stata
+inclusa in questo riassunto, ma si rimanda alla versione in inglese
+della tesi per un approfondimento.
+
+\section*{Principali requisiti ottici}
+
+Anche di questo argomento non si è ritenuto opportuno fornire un
+resoconto completo ma si preferisce rimandare alla parte inglese del
+lavoro.
+
+\newpage
+
+\section*{Calcolo di percorsi in GMPLS}
+
+\subsection*{Definizioni fondamentali}
+
+Un servizio di trasporto di rete è un sistema progettato per fornire
+una serie di servizi all'utente finale trasmettendo informazioni da
+una sorgente ad una destinazione; questa trasmissione deve in genere
+essere garantita con una determinata qualità del servizio, che viene
+stipulata in precedenza tra l'utente e il gestore di servizi di
+rete. Un percorso è una sequenza di risorse di rete degli ISP che
+permettono di fornire il servizio sopra descritto se configurato
+correttamente.
+
+La computazione di percorsi può essere descritta come l'intero
+processo di scelta di un percorso specifico o di un gruppo di percorsi
+tra un insieme di possibili alternative; questo processo può essere
+compiuto sia prima che alcun servizio venga richiesto
+(\textit{off-line computation}) oppure nel momento in cui il servizio
+è richiesto (\textit{on-line computation}). Esistono anche approcci
+ibridi che supportano entrambi i comportamenti (si noti che GMPLS
+adotta un approccio ibrido che preferisce la on-line
+computation). Un'altra differenza importante dipende dal fatto che
+tutti i percorsi siano calcolati sullo stesso nodo (approccio
+centralizzato) oppure se il calcolo venga distribuito su più nodi
+(approccio distribuito). Nel corso di questa tesi, verrà considerato
+solo il caso di un singolo nodo di computazione.
+
+\subsection*{Path Computation Element}
+
+Il Path Computation Element (PCE) è definito nel
+RFC4655~\cite{rfc4655} come:
+
+\begin{quote}
+  \textit{"Un'entità (componente, applicazione o nodo di rete) che è in grado
+  di calcolare un percorso di rete a partire da un grafo di rete
+  mantenendo una serie di requisiti computazionali."}
+\end{quote}
+
+Possiamo capire dalla definizione che il concetto di PCE è stato
+intenzionalmente lasciato vago dagli ideatori: infatti, può essere un
+componente software, un programma \textit{standalone} o addirittura un
+nodo di rete; nel nostro caso, il PCE è una piattaforma completa, che
+conosce le risorse di rete e i multipli requisiti richiesti,
+specificatamente progettata per calcolare percorsi complessi
+all'interno di una rete GMPLS. Vediamo di capire il processo di
+computazione più in dettaglio: il processo comincia quando un client,
+il \textit{Path Computation Client} (PCC) invia una richiesta al PCE
+chiedendo il calcolo di un percorso specifico (anche il PCC è più che
+altro un'entità astratta e può essere rappresentato da un router GMPLS
+o da un secondo PCE, etc.).
+
+Il PCE calcola il percorso e lo invia al PCC, che procederà quindi a
+segnalare il nuovo LSP con una certa tranquillità. La descrizione di
+questo meccanismo contenuta nel RFC insiste sul fatto che non ci siano
+comunque garanzie che il percorso restituito dal RCE venga
+correttamente segnalato. La seguente figura rappresenta l'interazione
+tra PCC e PCE:
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{img/pce_pcc}
+  \caption[]{Il modella di interazione tra PCE e PCC: in questo caso,
+    il PCC è un router GMPLS.}
+\end{figure}
+
+\subsection*{Architettura PCE}
+
+Come abbiamo spiegato precedentemente,nell'architettura PCE la
+distinzione tra il modello centralizzato e quello distribuito è molto
+importante: multipli PCE permettono una migliore distribuzione del
+carico computazionale, aumentano la scalabilità del sistema e
+risolvono il problema del singolo-punto-di-rottura. D'altra parte, non
+è chiaro se il sistema distribuito incrementi le prestazioni del
+sistema, considerando il fatto che è necessario introdurre meccanismi
+per gestire la coerenza delle transizioni.
+
+Inoltre, l'architettura PCE effettua una distinzione importante tra
+due modelli di funzionamento, il modello integrato e quello separato;
+del primo se ne può vedere la seguente rappresentazione grafica:\\
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/pce_composite}
+  \caption[]{Il modello PCE integrato}
+\end{figure}
+
+\newpage
+
+Nel modello integrato, la funzionalità RCE viene aggiunta ad un router
+GMPLS: la componente che effettua la segnalazione degli LSP riceve una
+richiesta di un servizio e, agendo da PCC, invia al PCE una richiesta
+di calcolo: il PCE legge dalla richiesta i requisiti richiesti e
+recupera le informazioni dettagliate da un database speciale, il
+\textit{Traffic Engineering Database} (TED). In seguito, il PCE
+calcola il percorso richiesto e restituisce al PCC il percorso
+calcolato. Quando infine il PCC riceve questa risposta, può iniziare
+la procedura di segnalazione e configurazione di un nuovo LSP.
+
+Nel modello separato, invece di aggiungere la funzionalità di PCE ad
+un dispositivo esistente, si preferisce creare una nuova entità PCE
+indipendente: il meccanismo di funzionamento di questo PCE è comunque
+molto simile a quello del modello integrato. Quando il nodo esterno
+invia la richiesta di calcolo al PCE, questo recupera dal TED le
+informazioni riguardanti la topologia di rete, calcola il percorso
+richiesto e lo restituisce al nodo. Il modello separato è mostrato
+nella seguente figura:
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.65\textwidth]{img/pce_external}
+  \caption[]{Il modello PCE separato: notare la separazione del
+    componente TED/PCE.}
+\end{figure}
+
+Per comprendere meglio la differenza operativa tra questi modelli, si
+propongono i seguenti spunti di riflessione:
+
+\begin{itemize}
+\item Il calcolo dei percorsi di rete è generalmente un'operazione
+  molto pesante dal punto di vista computazionale e richiede una
+  quantità significativa di risorse; per quanto il software sia
+  progettato adeguatamente, lo sforzo che si richiede all'hardware dei
+  noi non può essere sottovalutato. Inoltre, lo sforzo computazionale
+  aumenta con l'ingrandirsi della rete e con l'aggiunta di multipli
+  requisiti da considerare contemporaneamente (per esempio, la banda,
+  la latenza, il costo del percorso, il QoS, etc.)
+\item In reti molto grandi, le dimensioni del database di rete, il
+  TED, crescono molto velocemente: avere una macchina progettata come
+  database può semplificare e velocizzare il recupero dei dati.
+\item Dato che un calcolo di questo genere richiede molte risorse, è
+  forse preferibile che il PCE non sia incorporato ad un router
+  qualunque, ma ad una macchina progettata per quel ruolo. Infatti, la
+  maggior parte dei router è progettata per compiere funzioni di
+  instradamento e commutazione, mentre la funzione computazionale del
+  PCE è inusuale.
+\item In caso di rotture di apparecchi di rete, il PCE può fornire
+  percorsi di emergenza grazie alla sua conoscenza avanzata delle
+  caratteristiche della topologia di rete.
+\end{itemize}
+
+\subsection*{Algoritmi di calcolo di percorsi}
+
+\subsubsection*{Definizioni}
+
+La modalità più diffusa per rappresentare una rete è il grafo: i
+vertici rappresentano i nodi di rete mentre gli archi rappresentano i
+collegamenti; ad ogni arco può essere anche assegnato un numero, il
+peso, che indica il costo specifico di quel collegamento. Se
+supponiamo che il costo di ogni collegamento sia uguale, possiamo
+usare 1 per ogni arco; se invece vogliamo sottolineare le differenze
+tra i vari collegamenti, possiamo usare pesi nulli o anche negativi.
+
+\begin{figure}[!hbp]
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{img/graph_example}
+    \caption[]{La rappresentazione di una rete mediante grafo: i
+      vertici sono i nodi di rete, gli archi sono i collegamenti e i
+      numeri associati agli archi il costo del collegamento.}
+  \end{center}
+\end{figure}
+
+Un percorso di rete è una sequenza di archi adiacenti che connettono
+paia di vertici: nell'esempio riportato, i nodi A e D sono connessi
+dai percorsi A-D, A-B-E-D, A-B-E-G-F-C-D e così via. Se un percorso
+visita lo stesso nodo due volte, si formerà un \textit{loop}: ad
+esempio, il percorso A-B-E-G-F-C-A-D contiene un loop, poiché il nodo
+A è visitato due volte. Se sommiamo tutti i pesi degli archi che
+compongono un percorso, otteniamo il peso totale del percorso: se due
+percorsi connettono lo stesso paio di nodi e il peso totale del primo
+è minore di quello del secondo, diremo che il primo percorso è più
+breve. 
+
+Questo se assumiamo di considerare il peso totale la variabile da cui
+decidere la \textit{"lunghezza"} di un percorso, e non per esempio il
+numero di nodi, o la somma di qualche altra variabile.\\
+I problemi più comuni che si affrontano nel calcolo dei percorsi di
+rete si distingue in varie categorie, contraddistinte da essere:
+
+\begin{itemize}
+\item Singola sorgente: dato uno nodo sorgente, si calcolano tutti i
+  percorsi più brevi che arrivano agli altri nodi nella rete.
+\item Singola destinazione: dato un nodo destinazione, si calcolano
+  tutti i percorsi più brevi che partono dagli altri nodi nella rete.
+\item Singola coppia: dati un nodo sorgente e uno destinazione, si
+  calcola il percorso più breve che dal nodo sorgente porta alla
+  destinazione.
+\item Ogni coppia: data una rete, si calcolino tutti i percorsi più
+  brevi tra le possibili coppie di nodi nella rete.
+\end{itemize}
+
+In realtà, la soluzione agli ultimi tre tipi di problemi può essere
+ricondotta alla soluzione del primo problema: nei problemi a singola
+destinazione, è sufficiente invertire la direzione di ogni percorso;
+nel problema a singola coppia è necessario fermarsi quando il nodo
+destinazione è stato raggiunto, mentre nel problema che considera ogni
+coppia di nodi della rete, è sufficiente ripetere il problema a
+singola sorgente per ogni nodo nella rete. Di conseguenza, nella
+versione in inglese della tesi sono stati considerati tutti gli
+algoritmi a singola sorgente; per motivi di brevità se ne rimanda la
+trattazione in quel punto.
+
+\newpage
+
+\section*{Progettazione del software}
+
+\subsection*{Scelta dell'algoritmo}
+
+L'algoritmo CSPF che è stato progettato nel corso di questa tesi
+ricerca tutti i percorsi senza loop tra un nodo sorgente e un nodo
+destinazione all'interno di una rete multilayer. I requisiti che sono
+stati considerati includono sia requisiti generali del percorso, come
+costo totale o latenza, sia requisiti specifici ad un livello di
+tecnologia di rete, come ad esempio la continuità delle lunghezze
+d'onda nei tratti ottici della rete. Inoltre, un insieme di requisiti
+configurabili dall'utente è stato aggiunto per permettere un maggior
+livello di personalizzazione e flessibilità.
+
+L'algoritmo a singola sorgente che è stato scelto come modello è il
+\textit{Breadth First Search}: questo algoritmo è in grado di trovare
+tutti i possibili percorsi tra due nodi ed è conosciuto per essere
+particolarmente efficace sui grafi di rete. Per una trattazione
+approfondita dell'algoritmo e delle motivazioni che hanno spinto a
+questa scelta, si rimanda alla versione inglese della tesi.
+
+\subsection*{Supporto multilayer}
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=1\textwidth]{img/multi_path}
+    \caption[]{Un esempio di percorso di rete multilayer.}
+  \end{center}
+\end{figure}
+
+Come possiamo vedere dall'esempio di percorso multilayer sopra
+riportato, sono presenti tre diverse tecnologie di rete: nella regione
+MPLS si trasmettono pacchetti, nella regione Ethernet si trasmettono
+trame e nella regione ottica si commutano lunghezze d'onda. Nei punti
+di contatto tra i diversi livelli è presente un cosiddetto livello di
+adattamento: in pratica, quando verrano segnalati gli LSP in
+corrispondenza dei livelli di adattamento si configureranno i tunnel
+LSP.
+
+Il percorso che è restituito dall'algoritmo è composto da una sequenza
+di collegamenti di rete: perciò, la struttura software che è stata
+creata consiste di un oggetto \textit{Path} che è composto da oggetti
+di tipo \textit{Link}, ognuno dei quali contiene:
+
+\begin{itemize}
+\item Indirizzo remoto e locale.
+\item Interfacci remota e locale.
+\item Switching types supportati.
+\item Costo.
+\item Banda massima, banda disponibile e banda libera.
+\end{itemize}
+
+A causa però della complessità del modello di rete, le informazioni
+contenute nell'oggetto di tipo Link non è sufficiente in alcune
+occasioni: quindi, è stato creato un nuovo oggetto Grid da associare
+all'oggetto Link. Questo oggetto contiene tutti i requisiti che sono
+specifici ad un tipo di tecnologia di rete: infatti, la classe Grid è
+in realtà una class astratta da cui ogni tipo di Grid specifico viene
+derivato. Per esempio, l'oggetto WaveGrid contiene tutte le
+informazioni che riguardano il livello ottico, come la disponibilità
+delle lunghezze d'onda, la continuità della lunghezze d'onda, le
+possibilità di conversione e le interfacce non selezionabili. Se
+d'altro canto un oggetto di tipo Link contiene tutte le informazioni
+necessarie all'algoritmo, ad esso viene associato un oggetto vuoto
+chiamato GenericGrid. Questo approccio a classi base e derivate
+semplifica enormemente l'espansione della piattaforma: per esempio, la
+creazione di un oggetto VLAN Grid può aggiungere il supporto alla
+continuità dei tag VLAN. La seguente figura mostra un grafo delle
+relazioni tra oggetti Grid:\\
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=0.7\textwidth]{img/grid_uml}
+    \caption[]{Rappresentazione UML della classe Grid e derivate.}
+  \end{center}
+\end{figure}
+
+\subsection*{Piattaforma DRAGON}
+
+Per una descrizione dettagliata di questa piattaforma si rimanda alla
+versione in inglese della tesi.
+
+\section*{Verifica e testing}
+
+\subsection*{Laboratorio GMPLS}
+
+La verifica della piattaforma realizzata è stata effettuata
+all'interno del laboratorio GMPLS di Acreo, un'azienda di Stoccolma
+che si occupa di reti ottiche e nuove tecnologie. Il laboratorio era
+composto da diversi dispositivi di rete, di cui alcuni erano
+dispositivi veri e propri, mentre altri erano virtualizzati. Ecco la
+lista dei dispositivi presenti:
+
+\begin{itemize}
+\item Router Juniper IP/MPLS: nella rete erano presenti tre router
+  Juniper M-series IP/MPLS. Questi dispositivi non sono stati
+  coinvolti nella fase di testing.
+\item Linux IP/MPLS routers: tre router IP/MPLS sono stati
+  implementati modificando il kernel Linux per supportare MPLS. Sono
+  identificati come LR1, LR2 e LR3.
+\item Switch Switchcore Ethernet: questi dispositivi sono switch
+  Switchcore Xpeedium2 RD1100 Ethernet. Sono stati controllati tramite
+  cavo seriale da un server Linux. Questi switch sono identificati con
+  le sigle SwCE1, SwCE2 e SwCE3.
+\item Switch ottici Transmode: nel laboratorio erano presenti tre
+  switch ottici con multipli moduli, quali add-drop MUX e OXO
+  cross-connects. Questi dispositivi non sono stati coinvolti nella
+  fase di testing.
+\end{itemize}
+
+La rete virtualizzata è stata realizzata utilizzando due server, le
+cui specifiche si possono trovare nella tabella seguente:
+
+
+\begin{table}[!htbp]
+  \begin{center}
+    \begin{tabular}{|l|l|l|}
+      \hline
+      Servers & \textbf{HP xw8400} & \textbf{Dell Optiplex GX62} \\
+      \hline \hline
+      Processor & Intel Xeon 5335 & Intel Dual Core\\ \hline
+      Core speed & 2.66 GHz & 3.00 GHz \\ \hline
+      RAM & 4 GB & 3 GB \\ \hline
+      Disk storage & 1 TB & 250 GB \\ \hline
+      Operative System & 32-bit Ubuntu Feisty 7.04 & 32-bit Ubuntu Edgy
+      6.10 \\ \hline
+      Linux kernel & 2.6.20-16 & 2.6.17-17 \\ \hline
+      VMware Server & 1.0.3, build=44356 & 1.0.1, build=29996 \\ \hline
+      \multirow{3}{*}{Virtual Machines} & vROADM1, vROADM2 & vE1, vE2,
+      vE3 \\
+      & vROADM3, vOXC1 & \\
+      & vEC1, vEC2, vEC3 & \\ \hline
+    \end{tabular}
+    \caption[]{Specifiche software e hardware dei server che
+      ospitavano la rete virtuale.}
+  \end{center}
+\end{table}
+
+Segue una rappresentazione del laboratorio con legenda annessa:
+
+\newpage
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{img/testbed_model}
+    \caption[]{Il laboratorio GMPLS}
+  \end{center}
+\end{figure}
+ 
+\begin{table}[!htbp]
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|}
+      \hline
+      Node & Type & Description & ID \\ \hline
+      vEC1 & Virtual & Ethernet/Optical border & 172.16.100.230 \\
+      vEC2 & Virtual & Ethernet/Optical border & 172.16.100.231 \\
+      vEC3 & Virtual & Ethernet/Optical border & 172.16.100.232 \\
+      vROADM1 & Virtual & Optical Add-Drop Mux & 172.16.100.233 \\
+      vROADM2 & Virtual & Optical Add-Drop Mux & 172.16.100.234 \\
+      vROADM3 & Virtual & Optical Add-Drop Mux & 172.16.100.235 \\
+      vOXC1 & Virtual & Optical Cross-connect & 172.16.100.236 \\
+      vE1 & Virtual & Ethernet & 172.16.100.243 \\
+      vE2 & Virtual & Ethernet & 172.16.100.244 \\
+      vE3 & Virtual & Ethernet & 172.16.100.245 \\
+      vLR1 & Virtual & Linux IP/MPLS & 172.16.100.251 \\
+      vLR2 & Virtual & Linux IP/MPLS & 172.16.100.252 \\
+      vLR3 & Virtual & Linux IP/MPLS & 172.16.100.253 \\
+      LR1 & Physical & Linux IP/MPLS & 172.16.100.248 \\
+      LR2 & Physical & Linux IP/MPLS & 172.16.100.249 \\
+      LR3 & Physical & Linux IP/MPLS & 172.16.100.250 \\
+      SwCE1 & Physical & Switchcore Ethernet & 172.16.100.240 \\
+      SwCE2 & Physical & Switchcore Ethernet & 172.16.100.241 \\
+      SwCE3 & Physical & Switchcore Ethernet & 172.16.100.242 \\
+      \hline
+    \end{tabular}
+    \caption[]{Legenda dei nodi rete: nome, tipo, descrizione e
+      indirizzo.}
+  \end{center}
+\end{table}
+
+\subsection*{Valutazione dell'efficienza}
+
+L'efficienza dell'algoritmo implementato è stata valutata
+considerando l'utilizzo di due risorse: il \textit{tempo}, definito
+come il tempo di risposta dell'algoritmo e lo spazio, definito come la
+memoria necessaria per eseguirlo.
+
+\subsubsection*{Efficienza nel tempo}
+
+L'efficienza nel tempo dell'algoritmo è stato misurato attraverso il
+tempo di risposta, cioè l'intervallo di tempo che è intercorso tra il
+momento in cui l'algoritmo ha ricevuto la richiesta di computazione e
+il momento in cui l'algoritmo ha inviato al client il percorso
+calcolato. Il tempo di risposta è stato successivamente diviso in
+multipli intervalli per definire con maggior precisione le fasi di
+computazione dell'algoritmo:
+
+\begin{itemize}
+\item i1 = intervallo di tempo usato per verificare la sanità della
+  richiesta di computazione inviata dal client;
+\item i2 = intervallo di tempo usato per costruire la rappresentazione
+  interna della topologia di rete tramite i dati ricavati dal TED;
+\item i3 = intervallo di tempo usato per rimuovere i collegamenti non
+  adatti ai requisiti;
+\item i4 = intervallo di tempo usato per calcolare i percorsi adatti e ordinarli;
+\item i5 = intervallo di tempo usato per creare l'oggetto finale del
+  percorso e inviarlo al client;
+\end{itemize}
+
+I tempi di risposta sono stati calcoli eseguendo diverse topologie di
+test:
+
+\begin{enumerate}
+\item La richiesta di calcolo di un percorso tra due nodi vicini
+  entrambi sul livello Ethernet (vE1 e vEC1). Il componente PCE non
+  considera la creazione di tunnel LSP.
+\item Il nodo sorgente e il nodo destinazione appartengono al livello
+  ottico e sono separati da uno switch ottico (vROADM2 e vROADM3); il
+  componente PCE deve soddisfare i requisiti del livello ottico, ma
+  non deve ancora considerare alcun tunnel.
+\item Nell'ultimo caso il nodo sorgente e il nodo destinazione sono ai
+  poli opposti del laboratorio (LR1 e LR2); il percorso richiesto è
+  composto da molti nodi e il componente PCE deve considerare la
+  creazione di due tunnel LSP annidati.
+\end{enumerate}
+
+Ognuno di questi test è stato eseguito con 10, 100 e 1000 iterazioni;
+sono stati calcolati il valore medio, il valore massimo, il valore
+minimo e la deviazione standard. Per vedere i dati riguardanti le
+simulazioni, si rimanda ancora alla versione inglese della tesi. Nella
+seguente figura è presentato un riassunto dei vari test eseguiti con
+1000 iterazioni:
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=1\textwidth]{img/time_graph}
+    \caption[]{Grafo che rappresenta l'efficienza nel tempo (notare
+      che l'asse del tempo è rappresentato in scala logaritmica).}
+  \end{center}
+\end{figure}
+
+\subsubsection*{Efficienza nello spazio}
+
+Lo spazio utilizzato dall'algoritmo è stato misurato tramite il
+programma valgrind\footnote{\url{http://valgrind.org/}}; all'inizio, il programma
+è stato lanciato per monitorare l'algoritmo. Poi, è stata inviata una
+serie di richieste di computazione all'algoritmo e si è atteso che
+venissero tute calcolate. A quel punto, si è fermato valgrind per
+generare l'output di utilizzo di memoria. Si veda l'appendice B per le
+informazioni dettagliate. La seguente tabella riporta i valori
+registrati:
+
+\begin{table}[!htbp]
+  \begin{center}
+    \begin{tabular}{|l|c|c|c|c|}
+      \hline
+      \textbf{Type} & \textbf{Requests} & \textbf{Memory, Start}
+      & \textbf{Memory, End} & \textbf{Memory, Peak} \\ \hline
+      Ethernet & 10 & 70 KB & 80KB & 90 KB \\
+      & 100 & 70 KB & 80KB & 100 KB \\
+      & 1000 & 70 KB & 150KB & 160 KB \\ \hline
+      Optical & 10 & 65 KB & 80 KB & 85 KB \\
+      & 100 & 70 KB & 80 KB & 100 KB \\
+      & 1000 & 70 KB & 140 KB & 160 KB \\ \hline
+      Multi & 10 & 70 KB & 70 KB & 110 KB \\
+      & 100 & 70 KB & 70 KB & 120 KB \\
+      & 1000 & 70 KB & 120 KB & 180 KB \\
+      \hline
+    \end{tabular}
+    \caption[]{Efficienza nello spazio: tre test diversi sono stati
+      ripetuti con interazioni da 10, 100 e 1000 iterazioni. Tre
+      diversi algoritmi sono stati utilizzati: quello solo Ethernet,
+      quello solo ottico e quello implementato multilayer.}
+  \end{center}
+\end{table}
+
+\section*{Conclusione}
+
+Questa tesi è stata incentrata sul miglioramento del processo di
+configurazione automatica di percorsi in una rete multilayer
+complessa; un algoritmo di computazione è stato progettato e
+verificato, provando che è fattibile semplificare il processo manuale
+con uno più veloce e più dinamico. La soluzione realizzata può gestire
+un gran numero di requisiti computazionali, mostrando la capacità di
+adattarsi in caso di modifiche alla topologia di rete. Inoltre, una
+serie di requisiti definibili dall'utente rendono il sistema più
+flessibile e permettono un grado più fine di configurazione.
+
+Questo algoritmo multilayer è stato installato in un ambiente
+multilayer; i vari test che sono stati eseguiti hanno mostrato che la
+soluzione scelta mantiene un livello di prestazione buono. L'elemento
+computazionale è stato utilizzato in una rete composta da molti nodi
+virtualizzati: considerando questa configurazione speciale, anche il
+tempo di risposta nell'ordine del millisecondo risulta essere
+convincente. All'aumento del numero di nodi coinvolti nel calcolo non
+corrisponde un aumento esponenziale né del tempo di risposta né dello
+spazio utilizzato dall'algoritmo: quindi, la soluzione sembra essere
+un'ottima candidata per contribuire a risolvere il problema della
+fornitura di servizi nelle reti multilayer complesse.
+
 \end{document}
 
 %%% Local Variables: 
