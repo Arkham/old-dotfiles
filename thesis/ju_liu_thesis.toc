@@ -1,0 +1,59 @@
+\select@language {italian}
+\select@language {english}
+\contentsline {chapter}{List of Figures}{ix}{chapter*.2}
+\contentsline {chapter}{List of Tables}{x}{chapter*.3}
+\contentsline {chapter}{List of Abbreviations}{xi}{chapter*.3}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Objectives}{3}{section.1.1}
+\contentsline {section}{\numberline {1.2}Thesis Outline}{3}{section.1.2}
+\contentsline {chapter}{\numberline {2}Introduction to GMPLS}{5}{chapter.2}
+\contentsline {section}{\numberline {2.1}Multiprotocol Label Switching (MPLS)}{5}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}Label Switching}{5}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.2}Traffic Engineering}{7}{subsection.2.1.2}
+\contentsline {section}{\numberline {2.2}Generalized MPLS}{8}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Switching Types}{8}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Label Switching, Again}{9}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}Control and Data Planes}{10}{subsection.2.2.3}
+\contentsline {subsection}{\numberline {2.2.4}Tunnels and Hierarchies}{11}{subsection.2.2.4}
+\contentsline {subsection}{\numberline {2.2.5}GMPLS Protocols}{12}{subsection.2.2.5}
+\contentsline {subsection}{\numberline {2.2.6}OSPF-TE}{13}{subsection.2.2.6}
+\contentsline {subsection}{\numberline {2.2.7}RSVP-TE}{15}{subsection.2.2.7}
+\contentsline {subsubsection}{LSP Establishment}{16}{section*.16}
+\contentsline {subsubsection}{LSP Removal}{17}{section*.18}
+\contentsline {subsubsection}{Error Handling}{18}{section*.20}
+\contentsline {subsubsection}{Explicit Route Object}{18}{section*.21}
+\contentsline {subsection}{\numberline {2.2.8}LMP}{19}{subsection.2.2.8}
+\contentsline {chapter}{\numberline {3}GMPLS Path Computation}{21}{chapter.3}
+\contentsline {section}{\numberline {3.1}Basic Definitions}{21}{section.3.1}
+\contentsline {section}{\numberline {3.2}Path Computation Element}{22}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}PCE Architecture}{22}{subsection.3.2.1}
+\contentsline {section}{\numberline {3.3}Constrained Path Computation}{25}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Basic Definitions}{25}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Basic Single Source Algorithms}{26}{subsection.3.3.2}
+\contentsline {subsubsection}{Bellman-Ford}{27}{section*.28}
+\contentsline {subsubsection}{Dijkstra}{28}{section*.29}
+\contentsline {subsubsection}{Modified Dijkstra}{30}{section*.30}
+\contentsline {subsubsection}{Breadth First Search}{30}{section*.31}
+\contentsline {subsection}{\numberline {3.3.3}Constraint-based Algorithms}{31}{subsection.3.3.3}
+\contentsline {chapter}{\numberline {4}Software Implementation}{35}{chapter.4}
+\contentsline {section}{\numberline {4.1}Candidate CSPF Algorithm}{35}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Choosing the Algorithm}{35}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Implementation Details}{37}{subsection.4.1.2}
+\contentsline {section}{\numberline {4.2}Multi-layer support}{38}{section.4.2}
+\contentsline {section}{\numberline {4.3}DRAGON Software Suite}{40}{section.4.3}
+\contentsline {section}{\numberline {4.4}Resource Computation Element}{41}{section.4.4}
+\contentsline {section}{\numberline {4.5}PCEN Module}{43}{section.4.5}
+\contentsline {chapter}{\numberline {5}Testing and Verification}{45}{chapter.5}
+\contentsline {section}{\numberline {5.1}Testbed Environment}{45}{section.5.1}
+\contentsline {section}{\numberline {5.2}Software Implementation}{48}{section.5.2}
+\contentsline {section}{\numberline {5.3}Performance Evaluation}{50}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Time Efficiency}{50}{subsection.5.3.1}
+\contentsline {subsection}{\numberline {5.3.2}Space Efficiency}{53}{subsection.5.3.2}
+\contentsline {chapter}{\numberline {6}Conclusion and future work}{55}{chapter.6}
+\contentsline {section}{\numberline {6.1}Conclusion}{55}{section.6.1}
+\contentsline {section}{\numberline {6.2}Future Work}{56}{section.6.2}
+\contentsline {chapter}{References}{57}{section*.46}
+\contentsline {chapter}{\numberline {A}RCE behaviour}{61}{appendix.A}
+\contentsline {chapter}{\numberline {B}DRAGON software changes}{65}{appendix.B}
+\contentsline {chapter}{\numberline {C}RCE stack and heap profile}{67}{appendix.C}
+\contentsline {chapter}{\numberline {D}Thesis summary (in italian)}{71}{appendix.D}
